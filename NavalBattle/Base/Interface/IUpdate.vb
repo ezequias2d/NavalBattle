@@ -15,7 +15,7 @@ Public Interface IUpdate
     ''' <summary>
     ''' Determina se está ativado o Update
     ''' </summary>
-    ''' <returns> Se update está ativado </returns>
+    ''' <returns> Se update está ativo </returns>
     Property UpdateEnable As Boolean
 
     ''' <summary>

@@ -8,11 +8,13 @@
 ''-----------------------------------------------------------------------------
 #End Region
 
+''' <summary>
+''' Animação composta de Sequência de Frames
+''' </summary>
 Public Structure Animation
-
     Private _Frames As IEnumerable(Of Frame)
     Private _Enumerator As IEnumerator(Of Frame)
-    Private _Current As Frame
+    Private _Frame As Frame
 
     ''' <summary>
     ''' Cria nova animação
@@ -53,16 +55,23 @@ Public Structure Animation
             _Enumerator.Reset()
             _Enumerator.MoveNext()
         End If
-        _Current = _Enumerator.Current()
+        _Frame = _Enumerator.Current()
     End Sub
 
     ''' <summary>
     ''' Pega o frame atual
     ''' </summary>
     ''' <returns> Frame atual </returns>
-    Public Function Current() As Frame
-        Return _Current
-    End Function
+    Public Property Current As Frame
+        Get
+            Return _Frame
+        End Get
+        Set(value As Frame)
+            If Frames.Contains(value) Then
+                _Frame = value
+            End If
+        End Set
+    End Property
 
     ''' <summary>
     ''' Seleciona frame de index especifico
@@ -76,6 +85,6 @@ Public Structure Animation
         For i = 0 To index
             _Enumerator.MoveNext()
         Next
-        _Current = _Enumerator.Current()
+        _Frame = _Enumerator.Current()
     End Sub
 End Structure

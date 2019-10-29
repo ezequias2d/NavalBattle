@@ -62,11 +62,11 @@ Public Class Sprite
     ''' Camada de sobreposição de sprites
     ''' </summary>
     ''' <returns> Camada do sprite </returns>
-    Public Property LayerDepth As Single
+    Public Property LayerDepth As UShort Implements IDrawable.LayerDetph
         Get
             Return _layerDepth
         End Get
-        Set(value As Single)
+        Set(value As UShort)
             _layerDepth = value
         End Set
     End Property
@@ -114,7 +114,7 @@ Public Class Sprite
     Private _DrawEnable As Boolean
     Private _Position As Vector2
     Private _Angle As Single
-    Private _layerDepth As Single
+    Private _layerDepth As UShort
     Private _Scale As Vector2
     Private _Layer As Long
     Private _Frame As Frame
@@ -144,19 +144,37 @@ Public Class Sprite
     ''' </summary>
     ''' <param name="spriteBatch"> SpriteBatch </param>
     Public Sub Draw(ByRef spriteBatch As SpriteBatch) Implements IDrawable.Draw
-        If Frame.texture Is Nothing Then
-            Return
-        End If
+        Frame.Draw(spriteBatch, Me, LayerDepth)
+    End Sub
 
-        spriteBatch.Draw(Frame.texture,
-                         Position,
-                         Frame.source,
-                         Frame.tint,
-                         MathHelper.ToRadians(Angle),
-                         Frame.origin,
-                         Scale,
-                         Frame.effects,
-                         LayerDepth)
+    ''' <summary>
+    ''' Desenha no SpriteBatch.
+    ''' </summary>
+    ''' <param name="spriteBatch"> SpriteBatch </param>
+    ''' <param name="layerDepthDelta"> LAyerDepth adicional </param>
+    Public Sub Draw(ByRef spriteBatch As SpriteBatch, layerDepthDelta As UShort) Implements IDrawable.Draw
+        Frame.Draw(spriteBatch, Me, LayerDepth + layerDepthDelta)
+    End Sub
 
+    ''' <summary>
+    ''' Desenha no SpriteBatch.
+    ''' </summary>
+    ''' <param name="spriteBatch"> SpriteBatch </param>
+    ''' <param name="transformDelta"> Transformo adicional </param>
+    ''' <param name="layerDepthDelta"> LayerDepth adicional </param>
+    Public Sub Draw(ByRef spriteBatch As SpriteBatch, transformDelta As ITransform, layerDepthDelta As UShort) Implements IDrawable.Draw
+        Frame.Draw(spriteBatch, Position + transformDelta.Position, Scale + transformDelta.Scale, Angle + transformDelta.Angle, layerDepthDelta + LayerDepth)
+    End Sub
+
+    ''' <summary>
+    ''' Desenha no SpriteBatch.
+    ''' </summary>
+    ''' <param name="spriteBatch"> SpriteBatch </param>
+    ''' <param name="positionDelta"> Posição adicional </param>
+    ''' <param name="scaleDelta"> Escala adicional </param>
+    ''' <param name="angleDelta"> Ângulo adicional </param>
+    ''' <param name="layerDepthDelta"> LayerDepth adicional </param>
+    Public Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort) Implements IDrawable.Draw
+        Frame.Draw(spriteBatch, Position + positionDelta, Scale + scaleDelta, Angle + angleDelta, layerDepthDelta + LayerDepth)
     End Sub
 End Class

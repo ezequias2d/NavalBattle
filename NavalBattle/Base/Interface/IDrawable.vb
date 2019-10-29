@@ -1,4 +1,6 @@
-﻿Imports Microsoft.Xna.Framework.Graphics
+﻿Imports Microsoft.Xna.Framework
+Imports Microsoft.Xna.Framework.Graphics
+Imports NavalBattle
 
 #Region "FILE DESCRIPTION"
 ''-----------------------------------------------------------------------------
@@ -28,8 +30,40 @@ Public Interface IDrawable
     Property Layer As Long
 
     ''' <summary>
+    ''' Camada de sobreposição
+    ''' </summary>
+    ''' <returns> Camada que pertence </returns>
+    Property LayerDetph As UShort
+
+    ''' <summary>
     ''' Função de desenho
     ''' </summary>
     ''' <param name="spriteBatch"> SpriteBatch para desenhar </param>
     Sub Draw(ByRef spriteBatch As SpriteBatch)
+
+    ''' <summary>
+    ''' Função de desenho
+    ''' </summary>
+    ''' <param name="spriteBatch"> SpriteBatch para desenhar </param>
+    ''' <param name="layerDepthDelta"> Camada adicional </param>
+    Sub Draw(ByRef spriteBatch As SpriteBatch, layerDepthDelta As UShort)
+
+    ''' <summary>
+    ''' Função de desenho
+    ''' </summary>
+    ''' <param name="spriteBatch"> SpriteBatch para desenhar </param>
+    ''' <param name="layerDepthDelta"> Camada adicional </param>
+    ''' <param name="transformDelta"> Transform adicional </param>
+    Sub Draw(ByRef spriteBatch As SpriteBatch, transformDelta As ITransform, layerDepthDelta As UShort)
+
+    ''' <summary>
+    ''' Função de desenho
+    ''' </summary>
+    ''' <param name="spriteBatch"> SpriteBatch para desenhar </param>
+    ''' <param name="positionDelta"> Posição adicional </param>
+    ''' <param name="scaleDelta"> Escala adicional </param>
+    ''' <param name="angleDelta"> Ângulo adicional </param>
+    ''' <param name="layerDepthDelta"> Camada adicional </param>
+    Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort)
+
 End Interface

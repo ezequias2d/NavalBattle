@@ -13,6 +13,28 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin fonts/PressStart2P.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/PressStart2P.spritefont
+
+#begin fonts/PressStart2P.ttf
+/copy:fonts/PressStart2P.ttf
+
+#begin gui.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gui.png
+
 #begin naval.png
 /importer:TextureImporter
 /processor:TextureProcessor

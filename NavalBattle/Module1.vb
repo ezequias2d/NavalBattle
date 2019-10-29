@@ -1,9 +1,8 @@
-﻿Imports Microsoft.Xna.Framework
-
+﻿
 Module Module1
 
     Sub Main()
-        Dim game As NavalBattle = New NavalBattle(New Vector2(512, 448))
+        Dim game As Game = New Game()
         game.Run()
         game.Dispose()
     End Sub

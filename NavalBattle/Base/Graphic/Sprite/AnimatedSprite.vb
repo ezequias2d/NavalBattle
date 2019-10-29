@@ -151,7 +151,7 @@ Public Class AnimatedSprite(Of Key)
 
             Dim ani As Animation = Animations(animation)
             ani.NextFrame()
-            Frame = ani.Current()
+            Frame = ani.Current
         End If
     End Sub
 
@@ -162,7 +162,7 @@ Public Class AnimatedSprite(Of Key)
     Public Sub SetFrameIndex(ByVal index As Integer)
         Dim ani As Animation = Animations(animation)
         ani.SetFrameIndex(index)
-        Frame = ani.Current()
+        Frame = ani.Current
     End Sub
 
 End Class

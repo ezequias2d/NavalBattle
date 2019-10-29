@@ -177,7 +177,7 @@ Public Class Camera
             Matrix.CreateScale(New Vector3(Scale.X, Scale.Y, 1.0F) * scaleResolution / ZPosition) *
             Matrix.CreateTranslation(New Vector3(viewport.Width * 0.5F, viewport.Height * 0.5F, 0F))
 
-        spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, samplerState, Nothing, Nothing, Nothing, transform)
+        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, samplerState, Nothing, Nothing, Nothing, transform)
     End Sub
 
     ''' <summary>

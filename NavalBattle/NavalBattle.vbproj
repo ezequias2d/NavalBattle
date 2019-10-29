@@ -97,14 +97,38 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Graphic\DrawingGroup.vb" />
+    <Compile Include="Base\Graphic\Label\Alignment.vb" />
+    <Compile Include="Base\Graphic\Label\Label.vb" />
+    <Compile Include="Base\GUI\Components\Button.vb" />
+    <Compile Include="Base\GUI\Components\NumberSelector.vb" />
+    <Compile Include="Base\GUI\CursorMode.vb" />
+    <Compile Include="Base\GUI\GUIController.vb" />
+    <Compile Include="Base\Input\AxisEqualityComparer.vb" />
+    <Compile Include="Base\Input\AxisGamePad.vb" />
+    <Compile Include="Base\Input\AxisKeyboard.vb" />
+    <Compile Include="Base\GUI\AxisMode.vb" />
+    <Compile Include="Base\Input\AxisMouse.vb" />
+    <Compile Include="Base\Input\ButtonsEnum\GamePadButton.vb" />
+    <Compile Include="Base\Input\IAxis.vb" />
+    <Compile Include="Base\Input\Input.vb" />
+    <Compile Include="Base\Input\Axis.vb" />
+    <Compile Include="Base\GUI\GUIContext.vb" />
+    <Compile Include="Base\GameScene.vb" />
+    <Compile Include="Base\GUI\GUIObject.vb" />
+    <Compile Include="Base\Input\ButtonsEnum\MouseButton.vb" />
     <Compile Include="Base\Interface\IUpdate.vb" />
-    <Compile Include="Base\Sprite\AnimatedSprite.vb" />
+    <Compile Include="Base\Graphic\Sprite\AnimatedSprite.vb" />
     <Compile Include="Base\Camera.vb" />
-    <Compile Include="Base\Animation.vb" />
-    <Compile Include="Base\Frame.vb" />
+    <Compile Include="Base\Graphic\Animation.vb" />
+    <Compile Include="Base\Graphic\Box.vb" />
+    <Compile Include="Base\Graphic\Frame.vb" />
     <Compile Include="Base\Interface\IDrawable.vb" />
     <Compile Include="Base\Interface\ITransform.vb" />
-    <Compile Include="Base\Sprite\Sprite.vb" />
+    <Compile Include="Base\Graphic\Sprite\Sprite.vb" />
+    <Compile Include="Base\Graphic\Tilemap.vb" />
+    <Compile Include="Base\ScreenManager.vb" />
+    <Compile Include="Game.vb" />
     <Compile Include="NavalBattle.vb" />
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -122,9 +146,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="NavalBattle\Enum\ShipTilemap.vb" />
     <Compile Include="NavalBattle\Enum\StatusHouse.vb" />
+    <Compile Include="NavalBattle\GUI\NavalMap.vb" />
     <Compile Include="NavalBattle\Map.vb" />
     <Compile Include="NavalBattle\Enum\Ship.vb" />
+    <Compile Include="NavalBattle\Scenes\MenuScene.vb" />
+    <Compile Include="NavalBattle\Scenes\NavalBattleScene.vb" />
+    <Compile Include="NavalBattle\Scenes\SceneTest.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
