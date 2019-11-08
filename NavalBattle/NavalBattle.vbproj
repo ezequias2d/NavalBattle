@@ -146,10 +146,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="NavalBattle\Enum\HouseStatus.vb" />
+    <Compile Include="NavalBattle\Enum\Orientation.vb" />
+    <Compile Include="NavalBattle\Enum\PlayerID.vb" />
     <Compile Include="NavalBattle\Enum\ShipTilemap.vb" />
     <Compile Include="NavalBattle\Enum\StatusHouse.vb" />
+    <Compile Include="NavalBattle\Game\House.vb" />
+    <Compile Include="NavalBattle\Game\Map.vb" />
+    <Compile Include="NavalBattle\Game\NavalGame.vb" />
     <Compile Include="NavalBattle\GUI\NavalMap.vb" />
-    <Compile Include="NavalBattle\Map.vb" />
     <Compile Include="NavalBattle\Enum\Ship.vb" />
     <Compile Include="NavalBattle\Scenes\MenuScene.vb" />
     <Compile Include="NavalBattle\Scenes\NavalBattleScene.vb" />

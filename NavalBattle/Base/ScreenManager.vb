@@ -101,7 +101,7 @@ Public Class ScreenManager
     ''' </summary>
     ''' <param name="newScene"></param>
     Public Sub ChangeScene(ByRef newScene As GameScene)
-        If newScene Is Nothing Then
+        If newScene Is Nothing OrElse newScene Is Current Then
             Return
         End If
 

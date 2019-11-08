@@ -90,6 +90,18 @@ Public Class GUIContext
         End Set
     End Property
 
+    Public ReadOnly Property Area As Vector2
+        Get
+            Return _area
+        End Get
+    End Property
+
+    Public ReadOnly Property CursorPosition As Vector2
+        Get
+            Return _CursorPosition
+        End Get
+    End Property
+
     Public Property CursorMovementAxisMode As AxisMode
 
     ''' <summary>
@@ -107,7 +119,7 @@ Public Class GUIContext
     Private _CursorClove As Frame
     Private _CursorColor As Color
     Private _CursorMode As CursorMode
-    Private _PositionCursor As Vector2
+    Private _CursorPosition As Vector2
     Private _Current As Integer
     Private _area As Vector2
     Private changePosition As Vector2
@@ -202,13 +214,13 @@ Public Class GUIContext
             Dim scaleX As Single = _area.X / _HorizontalLine.source.Width
             Dim scaleY As Single = _area.Y / _VerticalLine.source.Height
 
-            _HorizontalLine.Draw(spriteBatch, New Vector2(posScreen.X, _PositionCursor.Y) - _HorizontalLine.origin, New Vector2(scaleX, 1), 0, LayerDetph + layerDepthDelta + 10)
-            _VerticalLine.Draw(spriteBatch, New Vector2(_PositionCursor.X, posScreen.Y) - _VerticalLine.origin, New Vector2(1, scaleY), 0, LayerDetph + layerDepthDelta + 10)
+            _HorizontalLine.Draw(spriteBatch, New Vector2(posScreen.X, _CursorPosition.Y) - _HorizontalLine.origin, New Vector2(scaleX, 1), 0, LayerDetph + layerDepthDelta + 10)
+            _VerticalLine.Draw(spriteBatch, New Vector2(_CursorPosition.X, posScreen.Y) - _VerticalLine.origin, New Vector2(1, scaleY), 0, LayerDetph + layerDepthDelta + 10)
 
             If CursorMode = CursorMode.Arrow Then
-                CursorArrow.Draw(spriteBatch, New Vector2(_PositionCursor.X, _PositionCursor.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
+                CursorArrow.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
             ElseIf CursorMode = CursorMode.Clove Then
-                CursorClove.Draw(spriteBatch, New Vector2(_PositionCursor.X, _PositionCursor.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
+                CursorClove.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
             End If
         End If
 
@@ -381,7 +393,7 @@ Public Class GUIContext
         Dim current As GUIObject = GetCurrent()
 
         ' Translada pouco a pouco a posição do cursor até o destino.
-        _PositionCursor += ((current.PositionTranslated + current.Origin * current.Scale - _PositionCursor)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
+        _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
 
 
         If CursorMovementAxisMode = AxisMode.Floating Then

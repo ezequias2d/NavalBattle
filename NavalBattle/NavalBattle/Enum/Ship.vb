@@ -1,5 +1,5 @@
 ﻿Public Enum Ship
-    None = 1
+    None = 0
     Submarine = 1
     Destroyer = 3
     Battleship = 4
