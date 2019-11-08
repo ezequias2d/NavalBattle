@@ -10,11 +10,13 @@ Public Class NavalMap
 
     Private mapEdge As Box
     Private tilemap As Tilemap(Of ShipTilemap)
+    Private water As Tilemap(Of Integer)
 
     Private sizeX As Integer
     Private sizeY As Integer
 
     Private naval As Texture2D
+
 
     Private area As Vector2
     Private insideArea As Vector2
@@ -22,8 +24,10 @@ Public Class NavalMap
 
     Private updates As IList(Of IUpdate)
     Private drawings As IList(Of IDrawable)
+    Private fire0 As GUIObject.OnAxis
+    Private calculateColor As CalculateColor
 
-    Public Sub New(context As GUIContext, naval As Texture2D, area As Vector2, sizeX As Integer, sizeY As Integer)
+    Public Sub New(context As GUIContext, naval As Texture2D, area As Vector2, sizeX As Integer, sizeY As Integer, fire0 As GUIObject.OnAxis, calculateColor As CalculateColor)
         MyBase.New(-1, -1, -1, Vector2.Zero)
         Me.DrawEnable = True
         Me.UpdateEnable = True
@@ -33,6 +37,8 @@ Public Class NavalMap
         Me.sizeX = sizeX
         Me.sizeY = sizeY
         Me.Parent = context
+        Me.fire0 = fire0
+        Me.calculateColor = calculateColor
         updates = New List(Of IUpdate)
         drawings = New List(Of IDrawable)
 
@@ -43,19 +49,23 @@ Public Class NavalMap
 
         mapEdge = New Box(insideArea + New Vector2(16, 16), New Frame(naval, New Rectangle(64, 96, 24, 24)))
         tilemap = CreateTilemap()
+        water = CreateWater()
         CreateGUIContext(context)
 
         updates.Add(tilemap)
+        updates.Add(water)
 
         drawings.Add(mapEdge)
+        drawings.Add(water)
         drawings.Add(tilemap)
 
         context.Add(Me)
 
 
         mapEdge.LayerDepth = 1
-        tilemap.LayerDepth = 2
-        context.LayerDetph = 4
+        water.LayerDepth = 2
+        tilemap.LayerDepth = 3
+        context.LayerDetph = 5
     End Sub
 
     Public Overrides Sub Update(gameTime As GameTime)
@@ -64,6 +74,41 @@ Public Class NavalMap
                 element.Update(gameTime)
             End If
         Next
+    End Sub
+
+    Public Sub SetHouse(x As Integer, y As Integer, ship As Ship, orientation As Orientation, piece As Integer)
+        Dim shipTile As ShipTilemap = ShipTilemap.None
+        If orientation = Orientation.Horizontal Then
+            Select Case ship
+                Case Ship.None
+                    shipTile = ShipTilemap.None
+                Case Ship.Submarine
+                    shipTile = ShipTilemap.Submarine
+                Case Ship.Destroyer
+                    shipTile = ShipTilemap.Destroyer0
+                Case Ship.Battleship
+                    shipTile = ShipTilemap.Battleship0
+                Case Ship.Carrier
+                    shipTile = ShipTilemap.Carrier0
+            End Select
+        ElseIf orientation = Orientation.Vertical Then
+            Select Case ship
+                Case Ship.None
+                    shipTile = ShipTilemap.None
+                Case Ship.Submarine
+                    shipTile = ShipTilemap.VSubmarine
+                Case Ship.Destroyer
+                    shipTile = ShipTilemap.VDestroyer0
+                Case Ship.Battleship
+                    shipTile = ShipTilemap.VBattleship0
+                Case Ship.Carrier
+                    shipTile = ShipTilemap.VCarrier0
+            End Select
+        End If
+        If ship <> Ship.None Then
+            shipTile = shipTile + piece
+        End If
+        tilemap.SetIndex(x, y, shipTile)
     End Sub
 
     Private Function CalculateInsideArea() As Vector2
@@ -126,7 +171,8 @@ Public Class NavalMap
                 button.Origin = Vector2.One * 8.0F
                 context.Add(button)
                 button.Parent = Me
-                button.OnFire0 = AddressOf ButtonClick
+                button.CursorColor = calculateColor
+                button.OnFire0 = Me.fire0
                 button.OnFire1 = AddressOf ButtonClick
                 button.OnFire2 = AddressOf ButtonClick
                 button.OnCancel = AddressOf ButtonClick
@@ -134,11 +180,10 @@ Public Class NavalMap
         Next
     End Sub
 
-
-    Private Function CreateTilemap()
-        Dim tilemap As Tilemap(Of ShipTilemap) = New Tilemap(Of ShipTilemap)(sizeX, sizeY)
-
+    Private Function CreateWater() As Tilemap(Of Integer)
+        Dim tilemap As Tilemap(Of Integer) = New Tilemap(Of Integer)(sizeX, sizeY)
         tilemap.Scale = New Vector2(insideArea.X / (16.0F * sizeX), insideArea.Y / (16.0F * sizeY))
+
 
         Dim water As AnimatedSprite(Of Integer) = New AnimatedSprite(Of Integer)(Vector2.Zero)
         Dim listFrames As IList(Of Frame) = New List(Of Frame)
@@ -150,7 +195,17 @@ Public Class NavalMap
         water.animation = 0
         water.SetFrameIndex(0)
 
-        tilemap.Sprites.Add(ShipTilemap.None, water)
+        tilemap.Sprites.Add(0, water)
+
+        Return tilemap
+    End Function
+
+    Private Function CreateTilemap() As Tilemap(Of ShipTilemap)
+        Dim tilemap As Tilemap(Of ShipTilemap) = New Tilemap(Of ShipTilemap)(sizeX, sizeY)
+
+        tilemap.Scale = New Vector2(insideArea.X / (16.0F * sizeX), insideArea.Y / (16.0F * sizeY))
+
+        tilemap.Sprites.Add(ShipTilemap.None, CreateTileSprite(96, 0))
 
         tilemap.Sprites.Add(ShipTilemap.Submarine, CreateTileSprite(64, 32))
 
