@@ -25,9 +25,11 @@ Public Class NavalMap
     Private updates As IList(Of IUpdate)
     Private drawings As IList(Of IDrawable)
     Private fire0 As GUIObject.OnAxis
+    Private fire1 As GUIObject.OnAxis
+    Private fire2 As GUIObject.OnAxis
     Private calculateColor As CalculateColor
 
-    Public Sub New(context As GUIContext, naval As Texture2D, area As Vector2, sizeX As Integer, sizeY As Integer, fire0 As GUIObject.OnAxis, calculateColor As CalculateColor)
+    Public Sub New(context As GUIContext, naval As Texture2D, area As Vector2, sizeX As Integer, sizeY As Integer, fire0 As GUIObject.OnAxis, fire1 As GUIObject.OnAxis, fire2 As GUIObject.OnAxis, calculateColor As CalculateColor)
         MyBase.New(-1, -1, -1, Vector2.Zero)
         Me.DrawEnable = True
         Me.UpdateEnable = True
@@ -38,6 +40,8 @@ Public Class NavalMap
         Me.sizeY = sizeY
         Me.Parent = context
         Me.fire0 = fire0
+        Me.fire1 = fire1
+        Me.fire2 = fire2
         Me.calculateColor = calculateColor
         updates = New List(Of IUpdate)
         drawings = New List(Of IDrawable)
@@ -173,8 +177,8 @@ Public Class NavalMap
                 button.Parent = Me
                 button.CursorColor = calculateColor
                 button.OnFire0 = Me.fire0
-                button.OnFire1 = AddressOf ButtonClick
-                button.OnFire2 = AddressOf ButtonClick
+                button.OnFire1 = Me.fire1
+                button.OnFire2 = Me.fire2
                 button.OnCancel = AddressOf ButtonClick
             Next
         Next
@@ -253,6 +257,11 @@ Public Class NavalMap
 
     Private Function CreateTileSpriteV(x As Integer, y As Integer) As Sprite
         Dim sprite As Sprite = CreateTileSprite(x, y)
+        Dim frame As Frame = sprite.Frame
+
+        frame.origin = New Vector2(0, 16)
+
+        sprite.Frame = frame
         sprite.Angle = 90
         Return sprite
     End Function

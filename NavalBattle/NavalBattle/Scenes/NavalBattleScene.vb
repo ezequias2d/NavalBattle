@@ -96,6 +96,20 @@ Public Class NavalBattleScene
         End If
     End Sub
 
+    Private Sub Fire1Map(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+        If toPut <> Ship.None AndAlso (battleShipNum > 0 OrElse destroyerNum > 0 OrElse submarineNum > 0 OrElse carrierNum > 0) Then
+            If orientation = Orientation.Horizontal Then
+                orientation = Orientation.Vertical
+            Else
+                orientation = Orientation.Horizontal
+            End If
+        End If
+    End Sub
+
+    Private Sub Fire2Map(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+
+    End Sub
+
     Private Function CalculateColor(ByVal obj As GUIObject) As Color
         Dim color As Color
         If toPut <> Ship.None AndAlso (battleShipNum > 0 OrElse destroyerNum > 0 OrElse submarineNum > 0 OrElse carrierNum > 0) Then
@@ -108,6 +122,7 @@ Public Class NavalBattleScene
                 For i As Integer = obj.IndexX To obj.IndexX + size.width - 1
                     For j As Integer = obj.IndexY To obj.IndexY + size.height - 1
                         navalMap.SetHouse(i, j, toPut, orientation, piece)
+                        Console.WriteLine(i.ToString() + "," + j.ToString())
                         piece += 1
                     Next
                 Next
@@ -150,7 +165,7 @@ Public Class NavalBattleScene
         naval = content.Load(Of Texture2D)("naval")
         font = content.Load(Of SpriteFont)("fonts/PressStart2P")
         Dim area As Vector2 = New Vector2(Camera.InternalDimensions.X, Camera.InternalDimensions.Y - 16)
-        navalMap = New NavalMap(GUIController.CurrentContext, naval, area, sizeX, sizeY, AddressOf Fire0Map, AddressOf CalculateColor)
+        navalMap = New NavalMap(GUIController.CurrentContext, naval, area, sizeX, sizeY, AddressOf Fire0Map, AddressOf Fire1Map, AddressOf Fire2Map, AddressOf CalculateColor)
         navalMap.Position = New Vector2(0, -8.0F)
 
         'For i As Integer = 0 To sizeX - 1
