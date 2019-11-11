@@ -84,7 +84,6 @@
     Public Function IsPuttable(x As Integer, y As Integer, ship As Ship, orientation As Orientation)
         Dim output As Boolean = True
         Dim size As (width As Integer, height As Integer) = GetSize(ship, orientation)
-        Console.WriteLine("Size: " + size.ToString())
         output = IsFreeArea(x, y, size.width, size.height)
 
         Return output

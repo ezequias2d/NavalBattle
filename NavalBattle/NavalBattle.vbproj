@@ -146,7 +146,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="NavalBattle\AI\AI1\AI1Map.vb" />
+    <Compile Include="NavalBattle\AI\AI1\CloatBacktracking.vb" />
     <Compile Include="NavalBattle\AI\AI1\Cloat.vb" />
+    <Compile Include="NavalBattle\AI\AI1\CloatJoin.vb" />
+    <Compile Include="NavalBattle\AI\AI1\CloatPool.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Resolver.vb" />
     <Compile Include="NavalBattle\AI\IAIMap.vb" />
     <Compile Include="NavalBattle\AI\IAIPlayer.vb" />
     <Compile Include="NavalBattle\Enum\HouseStatus.vb" />

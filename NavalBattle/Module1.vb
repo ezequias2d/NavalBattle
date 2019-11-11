@@ -38,24 +38,40 @@ Module Module1
         map.Attack(9, 8)
 
         Dim mapView As HouseStatus() = map.GetEnemyVisionMap()
-        'For j As Integer = 0 To height - 1
-        'For i As Integer = 0 To width - 1
-        'Select Case mapView(i + j * width)
-        'Case HouseStatus.Normal
-        'Console.Write("_ ")
-        'Case HouseStatus.Hit
-        'Console.Write("X ")
-        'Case HouseStatus.Missed
-        'Console.Write("O ")
-        'End Select
-        'Next
-        'Console.WriteLine()
-        'Next
+        For j As Integer = 0 To height - 1
+            If j = 0 Then
+                Console.Write("  ")
+                For k As Integer = 0 To width - 1
+                    Console.Write(k.ToString() + " ")
+                Next
+                Console.WriteLine()
+            End If
+            For i As Integer = 0 To width - 1
+                If i = 0 Then
+                    Console.Write(j.ToString() + " ")
+                End If
+                Select Case mapView(i + j * width)
+                    Case HouseStatus.Normal
+                        Console.Write("_ ")
+                    Case HouseStatus.Hit
+                        Console.Write("X ")
+                    Case HouseStatus.Missed
+                        Console.Write("O ")
+                End Select
+            Next
+            Console.WriteLine()
+        Next
 
-        Dim cloats As Cloat() = Cloat.bk(mapView, width, height)
+        Dim cloats As Cloat() = CloatBacktracking.bk(mapView, width, height)
 
         For Each cloat As Cloat In cloats
             Console.WriteLine("Cloat: x: " + cloat.Position.x.ToString() + ", y:" + cloat.Position.y.ToString() + ", w:" + cloat.Size.width.ToString() + ", h:" + cloat.Size.height.ToString())
+        Next
+
+        Dim cloatPools As CloatPool() = CloatJoin.Join(cloats)
+        For Each cloatPool In cloatPools
+            cloatPool.Print()
+            Console.WriteLine()
         Next
 
         Console.Read()
