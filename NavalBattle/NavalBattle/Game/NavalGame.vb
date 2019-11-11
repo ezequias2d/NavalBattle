@@ -49,12 +49,12 @@
         Dim aux2 As Boolean = False
         Select Case CurrentPlayer
             Case PlayerID.Player1
-                aux1 = mapPlayer1.IsHitted(x, y)
-                mapPlayer1.Attack(x, y)
-                aux2 = mapPlayer1.IsHitted(x, y)
+                aux1 = mapPlayer2.IsHitted(x, y)
+                mapPlayer2.Attack(x, y)
+                aux2 = mapPlayer2.IsHitted(x, y)
             Case PlayerID.Player2
                 aux1 = mapPlayer1.IsHitted(x, y)
-                mapPlayer2.Attack(x, y)
+                mapPlayer1.Attack(x, y)
                 aux2 = mapPlayer1.IsHitted(x, y)
         End Select
 
@@ -69,9 +69,9 @@
     Public Function IsAttackable(x As Integer, y As Integer) As Boolean
         Select Case CurrentPlayer
             Case PlayerID.Player1
-                Return mapPlayer1.IsAttackable(x, y)
-            Case PlayerID.Player2
                 Return mapPlayer2.IsAttackable(x, y)
+            Case PlayerID.Player2
+                Return mapPlayer1.IsAttackable(x, y)
         End Select
         Return False
     End Function
@@ -92,8 +92,8 @@
     End Property
 
     Public Sub FillMap(ByRef map As NavalMap)
-        Dim houses As House() = mapPlayer1.Houses()
 
+        Dim houses As House() = mapPlayer1.Houses()
         For i As Integer = 0 To mapPlayer1.Width - 1
             For j As Integer = 0 To mapPlayer1.Height - 1
                 Dim position As Integer = i + j * mapPlayer1.Width
@@ -101,7 +101,16 @@
             Next
         Next
 
-        mapPlayer1.PrintMap()
     End Sub
+
+    Public Function GetEnemyVisionMap() As HouseStatus()
+        Select Case CurrentPlayer
+            Case PlayerID.Player1
+                Return mapPlayer2.GetEnemyVisionMap()
+            Case PlayerID.Player2
+                Return mapPlayer1.GetEnemyVisionMap()
+        End Select
+        Return Nothing
+    End Function
 
 End Class

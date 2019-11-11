@@ -146,6 +146,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="NavalBattle\AI\AI1\Cloat.vb" />
+    <Compile Include="NavalBattle\AI\IAIMap.vb" />
+    <Compile Include="NavalBattle\AI\IAIPlayer.vb" />
     <Compile Include="NavalBattle\Enum\HouseStatus.vb" />
     <Compile Include="NavalBattle\Enum\Orientation.vb" />
     <Compile Include="NavalBattle\Enum\PlayerID.vb" />

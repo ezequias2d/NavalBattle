@@ -24,11 +24,7 @@ Public Class NavalBattleScene
     Private toPut As Ship
     Private orientation As Orientation
 
-    'Modelos
-    Private carrierModel As Sprite
-    Private battleshipModel As Sprite
-    Private destroyerModel As Sprite
-    Private submarineModel As Sprite
+    Private label As Label
 
     Public Sub New(sizeX As Integer, sizeY As Integer)
         updates = New LinkedList(Of IUpdate)
@@ -94,6 +90,7 @@ Public Class NavalBattleScene
         Else
             navalGame.Attack(obj.IndexX, obj.IndexY)
         End If
+        UpdateLabelName()
     End Sub
 
     Private Sub Fire1Map(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
@@ -104,6 +101,7 @@ Public Class NavalBattleScene
                 orientation = Orientation.Horizontal
             End If
         End If
+
     End Sub
 
     Private Sub Fire2Map(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
@@ -149,30 +147,45 @@ Public Class NavalBattleScene
 
     End Sub
 
-    Private Sub LoadModels()
-        carrierModel = New Sprite()
-        battleshipModel = New Sprite()
-        destroyerModel = New Sprite()
-        submarineModel = New Sprite()
-
-        carrierModel.Frame = New Frame(naval, New Rectangle())
+    Private Sub CreateLabel()
+        label = New Label("Label", Color.White, Label.Font)
+        Dim position As Vector2 = Vector2.Zero
+        position.Y = Camera.InternalDimensions.Y / 2.0F - 8.0F
+        label.Position = position
+        label.DrawEnable = True
+        Camera.Drawings.Add(label)
     End Sub
 
+    Private Sub UncreateLabel()
+        Camera.Drawings.Remove(label)
+    End Sub
+
+    Private Sub UpdateLabelName()
+        Select Case navalGame.CurrentPlayer
+            Case PlayerID.Player1
+                label.Text = "Player 1"
+            Case PlayerID.Player2
+                label.Text = "Player 2"
+        End Select
+    End Sub
 
     Public Overrides Sub LoadContent()
         MyBase.LoadContent()
         CreatePutShipContext()
+        CreateLabel()
         naval = content.Load(Of Texture2D)("naval")
         font = content.Load(Of SpriteFont)("fonts/PressStart2P")
         Dim area As Vector2 = New Vector2(Camera.InternalDimensions.X, Camera.InternalDimensions.Y - 16)
         navalMap = New NavalMap(GUIController.CurrentContext, naval, area, sizeX, sizeY, AddressOf Fire0Map, AddressOf Fire1Map, AddressOf Fire2Map, AddressOf CalculateColor)
         navalMap.Position = New Vector2(0, -8.0F)
 
-        'For i As Integer = 0 To sizeX - 1
-        'Next
-        'navalGame.PutShip(0, 0, Ship.Destroyer, Orientation.Horizontal)
         navalGame.FillMap(navalMap)
         GUIController.ChangeContext(putShipContext)
+    End Sub
+
+    Public Overrides Sub UnloadContent()
+        UncreateLabel()
+        MyBase.UnloadContent()
     End Sub
 
 End Class

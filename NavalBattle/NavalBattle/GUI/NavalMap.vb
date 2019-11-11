@@ -230,6 +230,7 @@ Public Class NavalMap
         tilemap.Sprites.Add(ShipTilemap.Carrier5, CreateTileSprite(64, 0))
 
 
+        tilemap.Sprites.Add(ShipTilemap.VSubmarine, CreateTileSpriteV(64, 32))
         tilemap.Sprites.Add(ShipTilemap.VDestroyer0, CreateTileSpriteV(32, 16))
         tilemap.Sprites.Add(ShipTilemap.VDestroyer1, CreateTileSpriteV(48, 16))
         tilemap.Sprites.Add(ShipTilemap.VDestroyer2, CreateTileSpriteV(64, 16))
