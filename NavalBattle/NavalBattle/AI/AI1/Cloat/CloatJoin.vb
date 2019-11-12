@@ -2,11 +2,13 @@
     Public Function Join(cloats As Cloat()) As CloatPool()
         Dim cloatPools As ICollection(Of CloatPool) = New List(Of CloatPool)
 
-        Dim pools As List(Of HashSet(Of Cloat)) = GeneratePools(cloats)
+        If cloats.Length > 0 Then
+            Dim pools As List(Of HashSet(Of Cloat)) = GeneratePools(cloats)
 
-        For Each pool As HashSet(Of Cloat) In pools
-            cloatPools.Add(CreateCloatPool(pool))
-        Next
+            For Each pool As HashSet(Of Cloat) In pools
+                cloatPools.Add(CreateCloatPool(pool))
+            Next
+        End If
 
         Return cloatPools.ToArray()
     End Function
@@ -33,7 +35,6 @@
             For j As Integer = 0 To height - 1
                 For Each cloat As Cloat In pool
                     If IsBallot(cloat, (i + minX, j + minY)) Then
-                        Console.WriteLine((i + minX, j + minY))
                         map(i, j) = True
                         Exit For
                     End If

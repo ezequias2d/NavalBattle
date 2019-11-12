@@ -1,75 +1,49 @@
-﻿Public Structure AI1Map
-    Private cloatPool As CloatPool
-    Private _ships As Dictionary(Of Ship, Integer)
-    Private _count As UInteger
+﻿Imports NavalBattle
 
-    Public Sub New(cloatPool As CloatPool)
-        Me.cloatPool = cloatPool
-        _count = cloatPool.Count
-    End Sub
+Public Class AI1Map
+    Implements IAIMap
 
-    Public ReadOnly Property Item(ship As Ship) As Integer
-        Get
-            If _ships.ContainsKey(ship) Then
-                Return _ships(ship)
-            End If
-            _ships.Add(ship, 0)
-            Return 0
-        End Get
-    End Property
+    Public Function GenereteMap(width As UInteger, height As UInteger, battleship As UInteger, carrier As UInteger, destroyer As UInteger, submarine As UInteger) As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation)() Implements IAIMap.GenereteMap
+        Dim output As ICollection(Of (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation)) = New List(Of (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation))
 
-    Public ReadOnly Property Count As UInteger
-        Get
-            Return _Count
-        End Get
-    End Property
+        Dim chanceMap As ChanceMap = New ChanceMap(New HouseStatus(width * height) {}, width, height)
 
-    Public Function TryPutShip(x As Integer, y As Integer, ship As Ship, orientation As Orientation)
-        Dim output As Boolean = True
-        Dim size As (width As Integer, height As Integer) = GetSize(ship, orientation)
+        While (battleship + carrier + destroyer + submarine > 0)
+            Dim avaliable As (UInteger, UInteger, UInteger, UInteger, UInteger) = (battleship, carrier, destroyer, submarine, 1UL)
 
-        output = IsFreeArea(x, y, size.width, size.height)
+            chanceMap.CleanMap()
+            chanceMap.AddMap(New(UInteger, UInteger, UInteger, UInteger, UInteger)() {avaliable})
 
-        If output Then
-            For i As Integer = x To x + size.width - 1
-                For j As Integer = y To y + size.height - 1
-                    cloatPool.Item(i, j) = False
-                Next
-            Next
-            _count -= ship
-        End If
+            chanceMap.Adjuster()
+            chanceMap.Invert()
+            chanceMap.AdjusterInvert()
 
-        Return output
-    End Function
+            Dim orientation As Orientation = Picker.ToRaffle(Of Orientation)(Orientation.Horizontal, Orientation.Vertical)
+            Dim position As (x As Integer, y As Integer) = Picker.ToRaffle(chanceMap)
 
-    Public Function GetSize(ship As Ship, orientation As Orientation) As (width As Integer, height As Integer)
-        Dim size As (width As Integer, height As Integer)
-
-        size.width = ship * Convert.ToInt32(orientation = Orientation.Horizontal) + Convert.ToInt32(orientation <> Orientation.Horizontal)
-        size.height = ship * Convert.ToInt32(orientation = Orientation.Vertical) + Convert.ToInt32(orientation <> Orientation.Vertical)
-
-        Return size
-    End Function
-
-    Private Function IsFreeArea(x As Integer, y As Integer, width As Integer, height As Integer) As Boolean
-        Dim output As Boolean = True
-
-        If x + width - 1 < cloatPool.Size.width AndAlso y + height - 1 < cloatPool.Size.height Then
-            For i As Integer = x To x + width - 1
-                For j As Integer = y To y + height - 1
-                    output = output AndAlso cloatPool.Item(i, j)
-                    If Not output Then
-                        Exit For
-                    End If
-                Next
-                If Not output Then
-                    Exit For
+            If battleship > 0 Then
+                If chanceMap.PutShip(position.x, position.y, Ship.Battleship, orientation) Then
+                    battleship -= 1
+                    output.Add((Ship.Battleship, position, orientation))
                 End If
-            Next
-        Else
-            output = False
-        End If
+            ElseIf carrier > 0 Then
+                If chanceMap.PutShip(position.x, position.y, Ship.Carrier, orientation) Then
+                    carrier -= 1
+                    output.Add((Ship.Carrier, position, orientation))
+                End If
+            ElseIf destroyer > 0 Then
+                If chanceMap.PutShip(position.x, position.y, Ship.Destroyer, orientation) Then
+                    destroyer -= 1
+                    output.Add((Ship.Destroyer, position, orientation))
+                End If
+            ElseIf submarine > 0 Then
+                If chanceMap.PutShip(position.x, position.y, Ship.Submarine, orientation) Then
+                    submarine -= 1
+                    output.Add((Ship.Submarine, position, orientation))
+                End If
+            End If
+        End While
 
-        Return output
+        Return output.ToArray()
     End Function
-End Structure
+End Class

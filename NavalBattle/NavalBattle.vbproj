@@ -147,18 +147,22 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="NavalBattle\AI\AI1\AI1Map.vb" />
-    <Compile Include="NavalBattle\AI\AI1\CloatBacktracking.vb" />
-    <Compile Include="NavalBattle\AI\AI1\Cloat.vb" />
-    <Compile Include="NavalBattle\AI\AI1\CloatJoin.vb" />
-    <Compile Include="NavalBattle\AI\AI1\CloatPool.vb" />
-    <Compile Include="NavalBattle\AI\AI1\Resolver.vb" />
+    <Compile Include="NavalBattle\AI\AI1\AI1Player.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\SubMap.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\CloatBacktracking.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\Cloat.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\CloatJoin.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\CloatPool.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\Resolver.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Map\ChanceMap.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Map\DeltaNumber.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Map\Picker.vb" />
     <Compile Include="NavalBattle\AI\IAIMap.vb" />
     <Compile Include="NavalBattle\AI\IAIPlayer.vb" />
     <Compile Include="NavalBattle\Enum\HouseStatus.vb" />
     <Compile Include="NavalBattle\Enum\Orientation.vb" />
     <Compile Include="NavalBattle\Enum\PlayerID.vb" />
     <Compile Include="NavalBattle\Enum\ShipTilemap.vb" />
-    <Compile Include="NavalBattle\Enum\StatusHouse.vb" />
     <Compile Include="NavalBattle\Game\House.vb" />
     <Compile Include="NavalBattle\Game\Map.vb" />
     <Compile Include="NavalBattle\Game\NavalGame.vb" />

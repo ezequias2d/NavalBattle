@@ -80,7 +80,6 @@ Public Class NavalBattleScene
                         submarineNum -= 1
                 End Select
             End If
-            Console.WriteLine(obj.IndexX.ToString() + ", " + obj.IndexY.ToString())
             If carrierNum > 0 OrElse battleShipNum > 0 OrElse destroyerNum > 0 OrElse submarineNum > 0 Then
                 GUIController.ChangeContext(putShipContext)
             Else
@@ -120,7 +119,6 @@ Public Class NavalBattleScene
                 For i As Integer = obj.IndexX To obj.IndexX + size.width - 1
                     For j As Integer = obj.IndexY To obj.IndexY + size.height - 1
                         navalMap.SetHouse(i, j, toPut, orientation, piece)
-                        Console.WriteLine(i.ToString() + "," + j.ToString())
                         piece += 1
                     Next
                 Next

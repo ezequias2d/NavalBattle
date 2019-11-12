@@ -93,11 +93,6 @@
 
         Dim output As Byte = 0
 
-        Dim previosInX As (x As Integer, y As Integer) = (x - 1, y)
-        Dim previosInY As (x As Integer, y As Integer) = (x, y - 1)
-        Dim nextInX As (x As Integer, y As Integer) = (x - 1, y)
-        Dim nextInY As (x As Integer, y As Integer) = (x, y + 1)
-
         ' left
         If x - 1 < 0 OrElse houses(x - 1 + y * width) = HouseStatus.Missed OrElse (orientation = Orientation.Vertical AndAlso houses(x - 1 + y * width) <> HouseStatus.Normal) Then
             output += 1

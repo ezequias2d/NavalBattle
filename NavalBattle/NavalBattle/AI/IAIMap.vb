@@ -1,4 +1,9 @@
 ﻿Public Interface IAIMap
 
-    Function GenereteMap(carrier As UInteger, battleship As UInteger, destroyer As UInteger, submarine As UInteger) As Map
+    Function GenereteMap(width As UInteger,
+                         height As UInteger,
+                         battleship As UInteger,
+                         carrier As UInteger,
+                         destroyer As UInteger,
+                         submarine As UInteger) As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation)()
 End Interface
