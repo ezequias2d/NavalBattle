@@ -2,11 +2,11 @@
 Module Module1
 
     Sub Main()
-        'Dim game As Game = New Game()
-        'Game.Run()
-        'Game.Dispose()
-        Dim width As Integer = 10
-        Dim height As Integer = 10
+        Dim game As Game = New Game()
+        game.Run()
+        Game.Dispose()
+        Dim width As Integer = 6
+        Dim height As Integer = 6
         Dim map As Map = New Map(width, height)
 
         Dim aiMap As IAIMap = New AI1Map()

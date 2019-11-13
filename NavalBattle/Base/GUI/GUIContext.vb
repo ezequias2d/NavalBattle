@@ -258,7 +258,7 @@ Public Class GUIContext
     ''' Pega GUIObject selecionado
     ''' </summary>
     ''' <returns></returns>
-    Private Function GetCurrent() As GUIObject
+    Public Function GetCurrent() As GUIObject
         Return Controllers(_Current)
     End Function
 
@@ -367,6 +367,28 @@ Public Class GUIContext
         current.Selected = True
         current.SelectedChange()
         UpdateCursor(current)
+    End Sub
+
+    Public Sub SelectObject(x As Integer, y As Integer)
+        Dim newCurrent As GUIObject = GetObjectOfCoordinates(x, y)
+
+        If newCurrent IsNot Nothing Then
+            Dim current As GUIObject = GetCurrent()
+
+            current.Selected = False
+            current.SelectedChange()
+
+            newCurrent.Selected = True
+            newCurrent.SelectedChange()
+
+            CursorMode = newCurrent.CursorMode
+            If newcurrent.CursorColor IsNot Nothing Then
+                CursorColorCurrent = newCurrent.CursorColor.Invoke(newCurrent)
+            Else
+                CursorColorCurrent = Color.White
+            End If
+            _Current = newCurrent.Index
+        End If
     End Sub
 
     ''' <summary>

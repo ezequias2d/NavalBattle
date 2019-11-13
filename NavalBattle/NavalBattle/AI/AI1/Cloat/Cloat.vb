@@ -1,4 +1,8 @@
-﻿Public Structure Cloat
+﻿
+''' <summary>
+''' Coagulo unidimensional
+''' </summary>
+Public Structure Cloat
 
     Private _Position As (x As Integer, y As Integer)
     Private _Size As (width As Integer, height As Integer)
@@ -19,4 +23,5 @@
             Return _Size
         End Get
     End Property
+
 End Structure

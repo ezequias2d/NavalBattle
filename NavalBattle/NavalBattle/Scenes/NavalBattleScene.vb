@@ -26,9 +26,14 @@ Public Class NavalBattleScene
 
     Private label As Label
 
+    Private player2IAMap As IAIMap
+    Private player2IA As IAIPlayer
+
     Public Sub New(sizeX As Integer, sizeY As Integer)
         updates = New LinkedList(Of IUpdate)
         navalGame = New NavalGame(sizeX, sizeY, PlayerID.Player1)
+        player2IA = New AI1Player(battleShipNum, carrierNum, destroyerNum, submarineNum)
+        player2IAMap = New AI1Map()
         Me.sizeX = sizeX
         Me.sizeY = sizeY
     End Sub
@@ -66,6 +71,9 @@ Public Class NavalBattleScene
     End Sub
 
     Private Sub Fire0Map(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+        If navalGame.CurrentPlayer <> PlayerID.Player1 Then
+            Return
+        End If
         If toPut <> Ship.None AndAlso (battleShipNum > 0 OrElse destroyerNum > 0 OrElse submarineNum > 0 OrElse carrierNum > 0) Then
             If navalGame.IsPuttable(obj.IndexX, obj.IndexY, toPut, orientation) Then
                 navalGame.PutShip(obj.IndexX, obj.IndexY, toPut, orientation)
@@ -84,6 +92,7 @@ Public Class NavalBattleScene
                 GUIController.ChangeContext(putShipContext)
             Else
                 toPut = Ship.None
+                navalGame.Start()
             End If
             navalGame.FillMap(navalMap)
         Else
@@ -93,6 +102,10 @@ Public Class NavalBattleScene
     End Sub
 
     Private Sub Fire1Map(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+        If navalGame.CurrentPlayer <> PlayerID.Player1 Then
+            Return
+        End If
+
         If toPut <> Ship.None AndAlso (battleShipNum > 0 OrElse destroyerNum > 0 OrElse submarineNum > 0 OrElse carrierNum > 0) Then
             If orientation = Orientation.Horizontal Then
                 orientation = Orientation.Vertical
@@ -104,7 +117,8 @@ Public Class NavalBattleScene
     End Sub
 
     Private Sub Fire2Map(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
-
+        navalGame.ForceViewPlayer2Map = Not navalGame.ForceViewPlayer2Map
+        navalGame.FillMap(navalMap)
     End Sub
 
     Private Function CalculateColor(ByVal obj As GUIObject) As Color
@@ -179,6 +193,56 @@ Public Class NavalBattleScene
 
         navalGame.FillMap(navalMap)
         GUIController.ChangeContext(putShipContext)
+
+        If navalGame.CurrentPlayer <> PlayerID.Player2 Then
+            'troca para player2
+            navalGame.SwapPlayer()
+        End If
+
+        'Cria novo mapa com a IA
+        Dim player2Map As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation)()
+        player2Map = player2IAMap.GenereteMap(sizeX, sizeY, battleShipNum, carrierNum, destroyerNum, submarineNum)
+
+        'Aplica mapa ao player2
+        For Each s As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation) In player2Map
+            navalGame.PutShip(s.position.x, s.position.y, s.ship, s.orientation)
+        Next
+
+        'volta para player1
+        navalGame.SwapPlayer()
+
+    End Sub
+
+    'Contador de jogo
+    Dim count As Double = 0.0
+    Dim selectedShot As Boolean = False
+
+    Public Overrides Sub Update(gameTime As GameTime)
+        MyBase.Update(gameTime)
+
+        'Executa IA e joga
+        If navalGame.CurrentPlayer = PlayerID.Player2 Then
+            If selectedShot = False Then
+                Dim map As HouseStatus() = navalGame.GetEnemyVisionMap()
+                Dim shoot As (x As Integer, y As Integer) = player2IA.GetAttack(map, sizeX, sizeY)
+                GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
+                selectedShot = True
+                navalGame.FillMap(navalMap)
+            End If
+
+            If selectedShot Then
+                count += gameTime.ElapsedGameTime.TotalSeconds
+            End If
+
+            If count > 1.0 Then
+                Dim current As GUIObject = GUIController.CurrentContext.GetCurrent()
+                navalGame.Attack(current.IndexX, current.IndexY)
+                count = 0.0
+                selectedShot = False
+                navalGame.FillMap(navalMap)
+            End If
+        End If
+        UpdateLabelName()
     End Sub
 
     Public Overrides Sub UnloadContent()

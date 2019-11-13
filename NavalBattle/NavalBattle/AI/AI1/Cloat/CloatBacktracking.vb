@@ -1,4 +1,8 @@
-﻿Module CloatBacktracking
+﻿
+''' <summary>
+''' Modulo com algoritmo que varre em busca de um coagulo
+''' </summary>
+Module CloatBacktracking
 
     ''' <summary>
     ''' Analiza por Backtracking todas as combinações de linhas e colunas presas(Hit preso em volta de Miss) na horizontal e vertical
@@ -99,17 +103,17 @@
         End If
 
         ' up
-        If y - 1 < 0 OrElse houses(x + (y - 1) * width) = HouseStatus.Missed OrElse (orientation = Orientation.Horizontal AndAlso houses(x - 1 + y * width) <> HouseStatus.Normal) Then
+        If y - 1 < 0 OrElse houses(x + (y - 1) * width) = HouseStatus.Missed OrElse (orientation = Orientation.Horizontal AndAlso houses(x + (y - 1) * width) <> HouseStatus.Normal) Then
             output += 2
         End If
 
         ' right
-        If x + 1 >= width OrElse houses(x + 1 + y * width) = HouseStatus.Missed OrElse (orientation = Orientation.Vertical AndAlso houses(x - 1 + y * width) <> HouseStatus.Normal) Then
+        If x + 1 >= width OrElse houses(x + 1 + y * width) = HouseStatus.Missed OrElse (orientation = Orientation.Vertical AndAlso houses(x + 1 + y * width) <> HouseStatus.Normal) Then
             output += 4
         End If
 
         ' down
-        If y + 1 >= height OrElse houses(x + (y + 1) * width) = HouseStatus.Missed OrElse (orientation = Orientation.Horizontal AndAlso houses(x - 1 + y * width) <> HouseStatus.Normal) Then
+        If y + 1 >= height OrElse houses(x + (y + 1) * width) = HouseStatus.Missed OrElse (orientation = Orientation.Horizontal AndAlso houses(x - 1 + (y + 1) * width) <> HouseStatus.Normal) Then
             output += 8
         End If
 

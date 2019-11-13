@@ -4,6 +4,8 @@
     Private mapPlayer1 As Map
     Private mapPlayer2 As Map
     Private _LastHitted As Boolean
+    Private _started As Boolean
+    Public ForceViewPlayer2Map As Boolean
 
     Public ReadOnly Property LastHitted As Boolean
         Get
@@ -23,6 +25,13 @@
             Case PlayerID.Player2
                 nextPlayer = PlayerID.Player1
         End Select
+        _started = False
+        ForceViewPlayer2Map = False
+    End Sub
+
+    Public Sub Start()
+        _started = True
+        Console.WriteLine("Start")
     End Sub
 
     Public Sub PutShip(x As Integer, y As Integer, ship As Ship, orientation As Orientation)
@@ -76,7 +85,7 @@
         Return False
     End Function
 
-    Private Sub SwapPlayer()
+    Public Sub SwapPlayer()
         Dim aux As PlayerID = CurrentPlayer
         CurrentPlayer = nextPlayer
         nextPlayer = aux
@@ -92,15 +101,28 @@
     End Property
 
     Public Sub FillMap(ByRef map As NavalMap)
+        If ForceViewPlayer2Map OrElse (CurrentPlayer = PlayerID.Player2 OrElse (_started = False)) Then
+            Dim houses As House() = mapPlayer1.Houses()
+            Dim enemyVisionMap As HouseStatus() = mapPlayer1.GetEnemyVisionMap()
 
-        Dim houses As House() = mapPlayer1.Houses()
-        For i As Integer = 0 To mapPlayer1.Width - 1
-            For j As Integer = 0 To mapPlayer1.Height - 1
-                Dim position As Integer = i + j * mapPlayer1.Width
-                map.SetHouse(i, j, houses(position).Ship, houses(position).Orientation, mapPlayer1.GetPiece(i, j))
+            For i As Integer = 0 To mapPlayer1.Width - 1
+                For j As Integer = 0 To mapPlayer1.Height - 1
+                    Dim position As Integer = i + j * mapPlayer1.Width
+                    map.SetHouse(i, j, houses(position).Ship, houses(position).Orientation, mapPlayer1.GetPiece(i, j))
+                    map.SetHouse(i, j, enemyVisionMap(position))
+                Next
             Next
-        Next
 
+        Else
+            Dim enemyVisionMap As HouseStatus() = mapPlayer2.GetEnemyVisionMap()
+            For i As Integer = 0 To mapPlayer2.Width - 1
+                For j As Integer = 0 To mapPlayer2.Height - 1
+                    Dim position As Integer = i + j * mapPlayer2.Width
+                    map.SetHouse(i, j, Ship.None, Orientation.Horizontal, 0)
+                    map.SetHouse(i, j, enemyVisionMap(position))
+                Next
+            Next
+        End If
     End Sub
 
     Public Function GetEnemyVisionMap() As HouseStatus()

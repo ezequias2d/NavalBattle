@@ -17,7 +17,13 @@
         Dim a As SubMap() = New SubMap(aiMaps.Length) {}
         CalculatePossibleAvailablePartsIntern(aiMaps, a, 0, avaliable, output)
 
-        Return output.ToArray()
+        If output.Count > 0 Then
+            Return output.ToArray()
+        Else
+            Dim output2 As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger)()
+            output2 = New(UInteger, UInteger, UInteger, UInteger, UInteger)() {(avaliable.Battleship, avaliable.Carrier, avaliable.Destroyer, avaliable.Submarine, 10)}
+            Return output2
+        End If
     End Function
 
     Private Function isSolution(a As SubMap(),

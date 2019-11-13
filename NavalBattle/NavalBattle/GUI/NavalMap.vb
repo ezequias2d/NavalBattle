@@ -10,6 +10,7 @@ Public Class NavalMap
 
     Private mapEdge As Box
     Private tilemap As Tilemap(Of ShipTilemap)
+    Private tilemapStatus As Tilemap(Of HouseStatus)
     Private water As Tilemap(Of Integer)
 
     Private sizeX As Integer
@@ -53,6 +54,7 @@ Public Class NavalMap
 
         mapEdge = New Box(insideArea + New Vector2(16, 16), New Frame(naval, New Rectangle(64, 96, 24, 24)))
         tilemap = CreateTilemap()
+        tilemapStatus = CreateTilemapStatus()
         water = CreateWater()
         CreateGUIContext(context)
 
@@ -62,6 +64,7 @@ Public Class NavalMap
         drawings.Add(mapEdge)
         drawings.Add(water)
         drawings.Add(tilemap)
+        drawings.Add(tilemapStatus)
 
         context.Add(Me)
 
@@ -69,7 +72,8 @@ Public Class NavalMap
         mapEdge.LayerDepth = 1
         water.LayerDepth = 2
         tilemap.LayerDepth = 3
-        context.LayerDetph = 5
+        tilemapStatus.LayerDepth = 5
+        context.LayerDetph = 6
     End Sub
 
     Public Overrides Sub Update(gameTime As GameTime)
@@ -113,6 +117,10 @@ Public Class NavalMap
             shipTile = shipTile + piece
         End If
         tilemap.SetIndex(x, y, shipTile)
+    End Sub
+
+    Public Sub SetHouse(x As Integer, y As Integer, houseStatus As HouseStatus)
+        tilemapStatus.SetIndex(x, y, houseStatus)
     End Sub
 
     Private Function CalculateInsideArea() As Vector2
@@ -204,12 +212,23 @@ Public Class NavalMap
         Return tilemap
     End Function
 
+    Private Function CreateTilemapStatus() As Tilemap(Of HouseStatus)
+        Dim tilemap As Tilemap(Of HouseStatus) = New Tilemap(Of HouseStatus)(sizeX, sizeY)
+        tilemap.Scale = New Vector2(insideArea.X / (16.0F * sizeX), insideArea.Y / (16.0F * sizeY))
+
+        tilemap.Sprites.Add(HouseStatus.Normal, CreateTileSprite(112, 0))
+        tilemap.Sprites.Add(HouseStatus.Hit, CreateTileSprite(0, 48))
+        tilemap.Sprites.Add(HouseStatus.Missed, CreateTileSprite(16, 48))
+
+        Return tilemap
+    End Function
+
     Private Function CreateTilemap() As Tilemap(Of ShipTilemap)
         Dim tilemap As Tilemap(Of ShipTilemap) = New Tilemap(Of ShipTilemap)(sizeX, sizeY)
 
         tilemap.Scale = New Vector2(insideArea.X / (16.0F * sizeX), insideArea.Y / (16.0F * sizeY))
 
-        tilemap.Sprites.Add(ShipTilemap.None, CreateTileSprite(96, 0))
+        tilemap.Sprites.Add(ShipTilemap.None, CreateTileSprite(112, 0))
 
         tilemap.Sprites.Add(ShipTilemap.Submarine, CreateTileSprite(64, 32))
 
