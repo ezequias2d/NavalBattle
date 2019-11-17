@@ -34,6 +34,20 @@
         Console.WriteLine("Start")
     End Sub
 
+    Public Function IsEnd() As Boolean
+        Return mapPlayer1.Rest <= 0 OrElse mapPlayer2.Rest <= 0
+    End Function
+
+    Public Function GetWin() As PlayerID
+        If mapPlayer1.Rest <= 0 AndAlso mapPlayer2.Rest > 0 Then
+            Return PlayerID.Player2
+        ElseIf mapPlayer1.Rest > 0 AndAlso mapPlayer2.Rest <= 0 Then
+            Return PlayerID.Player1
+        Else
+            Return PlayerID.Undefined
+        End If
+    End Function
+
     Public Sub PutShip(x As Integer, y As Integer, ship As Ship, orientation As Orientation)
         Select Case CurrentPlayer
             Case PlayerID.Player1

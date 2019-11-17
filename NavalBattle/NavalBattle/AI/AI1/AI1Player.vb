@@ -18,10 +18,6 @@ Public Class AI1Player
         Dim possibleAvaliables As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger)()
         possibleAvaliables = Resolver.CalculatePossibleAvailableParts(map, width, height, pieces)
 
-        For Each possible In possibleAvaliables
-            Console.WriteLine(possible)
-        Next
-
         Dim chanceMap As ChanceMap = New ChanceMap(map, width, height)
 
         chanceMap.CleanMap()

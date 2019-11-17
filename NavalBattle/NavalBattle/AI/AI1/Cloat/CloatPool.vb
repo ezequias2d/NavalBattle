@@ -55,20 +55,23 @@
 
     Public Property Item(x As Integer, y As Integer) As Boolean
         Get
-            If x < Size.width AndAlso y < Size.height Then
+            If x < Size.width AndAlso y < Size.height AndAlso x >= 0 AndAlso y >= 0 Then
                 Return _Map(x, y)
             End If
             Return False
         End Get
         Set(value As Boolean)
-            If x < Size.width AndAlso y < Size.height Then
+            If x < Size.width AndAlso y < Size.height AndAlso x >= 0 AndAlso y >= 0 Then
+                If value = False AndAlso _Map(x, y) = True Then
+                    _count -= 1
+                End If
                 _Map(x, y) = value
             End If
+
         End Set
     End Property
 
     Public Sub Print()
-
         For j As Integer = 0 To Size.height - 1
             For i As Integer = 0 To Size.width - 1
                 If Item(i, j) Then
@@ -82,20 +85,27 @@
     End Sub
 
     Public Sub PutShip(x As Integer, y As Integer, ship As Ship, orientation As Orientation)
-        If IsPuttable(x, y, ship, orientation) Then
+        If IsCollision(x, y, ship, orientation) Then
+            x = x - Position.x
+            y = y - Position.y
             Dim size As (width As Integer, height As Integer) = GetSize(ship, orientation)
 
             For i As Integer = x To x + size.width - 1
                 For j As Integer = y To y + size.height - 1
-                    Item(i, j) = False
+                    If Item(i, j) Then
+                        Item(i, j) = False
+
+                    End If
                 Next
             Next
-            _count -= ship
 
         End If
     End Sub
 
-    Public Function IsPuttable(x As Integer, y As Integer, ship As Ship, orientation As Orientation)
+    Public Function IsCollision(x As Integer, y As Integer, ship As Ship, orientation As Orientation) As Boolean
+        x = x - Position.x
+        y = y - Position.y
+
         Dim output As Boolean = True
         Dim size As (width As Integer, height As Integer) = GetSize(ship, orientation)
 
@@ -114,23 +124,21 @@
     End Function
 
     Private Function IsFreeArea(x As Integer, y As Integer, width As Integer, height As Integer) As Boolean
-        Dim output As Boolean = True
+        Dim output As Boolean = False
 
-        If x + width - 1 < Size.width AndAlso y + height - 1 < Size.height Then
-            For i As Integer = x To x + width - 1
-                For j As Integer = y To y + height - 1
-                    output = output AndAlso Item(i, j)
-                    If Not output Then
-                        Exit For
-                    End If
-                Next
-                If Not output Then
+
+        For i As Integer = x To x + width - 1
+            For j As Integer = y To y + height - 1
+                output = output OrElse Item(i, j)
+                If output Then
                     Exit For
                 End If
             Next
-        Else
-            output = False
-        End If
+            If output Then
+                Exit For
+            End If
+        Next
+
 
         Return output
     End Function

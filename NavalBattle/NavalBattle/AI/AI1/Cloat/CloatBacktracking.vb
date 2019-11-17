@@ -70,20 +70,29 @@ Module CloatBacktracking
     End Sub
 
     Private Function isSolution(houses As HouseStatus(), width As Integer, height As Integer, a As (x As Integer, y As Integer)(), k As Integer, orientation As Orientation) As Boolean
-        Dim output As Boolean = False
-        Dim barrier As Byte
+        Dim output As Boolean = k <> 0
+        Dim position As (x As Integer, y As Integer)
+
         For i As Integer = 0 To k - 1
-            barrier = GetBarrier(houses, width, height, a(i).x, a(i).y, orientation)
-            If k = 1 Then
-                ' tamanho é 1, só precisa verificar se a posição esta trancada
-                output = (barrier = 15)
-            ElseIf i = 0 Then
-                ' inicio
-                output = ((orientation = Orientation.Horizontal AndAlso (barrier = 11)) OrElse (orientation = Orientation.Vertical AndAlso (barrier = 7)))
-            ElseIf i = k - 1 Then
-                output = output AndAlso ((orientation = Orientation.Horizontal AndAlso (barrier = 14)) OrElse (orientation = Orientation.Vertical AndAlso (barrier = 13)))
-            Else
-                output = output AndAlso ((orientation = Orientation.Horizontal AndAlso (barrier = 10)) OrElse (orientation = Orientation.Vertical AndAlso (barrier = 5)))
+            position = a(i)
+            If i = 0 Then
+                output = output AndAlso houses(position.x + position.y * width) = HouseStatus.Hit AndAlso
+                    ((orientation = Orientation.Horizontal AndAlso (position.x - 1 < 0 OrElse houses(position.x - 1 + position.y * width) <> HouseStatus.Hit)) OrElse
+                    (orientation = Orientation.Vertical AndAlso (position.y - 1 < 0 OrElse houses(position.x + (position.y - 1) * width) <> HouseStatus.Hit)))
+            End If
+            If i = k - 1 Then
+                output = output AndAlso houses(position.x + position.y * width) = HouseStatus.Hit AndAlso
+                    ((orientation = Orientation.Horizontal AndAlso (position.x + 1 >= width OrElse houses(position.x + 1 + position.y * width) <> HouseStatus.Hit)) OrElse
+                    (orientation = Orientation.Vertical AndAlso (position.y + 1 >= height OrElse houses(position.x + (position.y + 1) * width) <> HouseStatus.Hit)))
+            End If
+
+            If Not ((i = 0) AndAlso (i = k - 1)) Then
+                output = output AndAlso houses(position.x + position.y * width) = HouseStatus.Hit
+            End If
+
+
+            If Not output Then
+                Exit For
             End If
         Next
 

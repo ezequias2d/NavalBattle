@@ -64,13 +64,13 @@ Module CloatJoin
 
             Dim cloat1 As Cloat = cloatsQueue.Dequeue()
             Dim isAdd As Boolean = False
-            Dim poolsToAdd As LinkedList(Of HashSet(Of Cloat)) = New LinkedList(Of HashSet(Of Cloat))
+            Dim poolsToAdd As List(Of HashSet(Of Cloat)) = New List(Of HashSet(Of Cloat))
 
             For Each pool As HashSet(Of Cloat) In pools
                 For Each cloat2 As Cloat In pool
                     If IsValidJoin(cloat1, cloat2) Then
                         isAdd = True
-                        poolsToAdd.Append(pool)
+                        poolsToAdd.Add(pool)
                         Exit For
                     End If
                 Next
@@ -78,7 +78,7 @@ Module CloatJoin
 
             If poolsToAdd.Count = 1 Then
                 ' So pertence a uma pool
-                poolsToAdd.First().Value.Add(cloat1)
+                poolsToAdd(0).Add(cloat1)
             ElseIf poolsToAdd.Count > 1 Then
                 ' Pertence a mais de uma pool (uní as pools)
                 Dim superPool As HashSet(Of Cloat) = New HashSet(Of Cloat)()

@@ -2,6 +2,7 @@
     Private _Houses As House()
     Private _Width As Integer
     Private _Height As Integer
+    Private _rest As Integer
     Private mask As Integer()
     Private maskCounter As Integer
 
@@ -14,6 +15,7 @@
         _Width = Width
         _Height = Height
         _Houses = New House(Width * Height) {}
+        _rest = 0
         mask = New Integer(Width * Height) {}
         Clear()
     End Sub
@@ -53,6 +55,7 @@
             For j As Integer = y To y + size.height - 1
                 _Houses(i + j * Me.Width) = house
                 mask(i + j * Me.Width) = maskCounter
+                _rest += 1
             Next
         Next
     End Sub
@@ -133,6 +136,7 @@
         Dim position As Integer = x + y * Me.Width
         If _Houses(position).Ship <> Ship.None Then
             _Houses(position).Status = HouseStatus.Hit
+            _rest -= 1
         Else
             _Houses(position).Status = HouseStatus.Missed
         End If
@@ -188,6 +192,12 @@
     Public ReadOnly Property Height As Integer
         Get
             Return _Height
+        End Get
+    End Property
+
+    Public ReadOnly Property Rest As Integer
+        Get
+            Return _rest
         End Get
     End Property
 

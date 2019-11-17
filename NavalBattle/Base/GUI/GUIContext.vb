@@ -192,6 +192,10 @@ Public Class GUIContext
         lastFocused = Me
 
         AxisModeSetting(Axis.Fire0) = AxisMode.Click
+        AxisModeSetting(Axis.Fire1) = AxisMode.Click
+        AxisModeSetting(Axis.Fire2) = AxisMode.Click
+        AxisModeSetting(Axis.Horizontal) = AxisMode.Click
+        AxisModeSetting(Axis.Vertical) = AxisMode.Click
         AxisModeSetting(Axis.Cancel) = AxisMode.Click
         AxisModeSetting(Axis.Submit) = AxisMode.Click
         OnFire0 = AddressOf SubmitFire0Function

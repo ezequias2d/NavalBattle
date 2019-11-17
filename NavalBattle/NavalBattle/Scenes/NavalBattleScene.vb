@@ -97,6 +97,7 @@ Public Class NavalBattleScene
             navalGame.FillMap(navalMap)
         Else
             navalGame.Attack(obj.IndexX, obj.IndexY)
+            navalGame.FillMap(navalMap)
         End If
         UpdateLabelName()
     End Sub
@@ -216,6 +217,7 @@ Public Class NavalBattleScene
     'Contador de jogo
     Dim count As Double = 0.0
     Dim selectedShot As Boolean = False
+    Dim endGame As Boolean = False
 
     Public Overrides Sub Update(gameTime As GameTime)
         MyBase.Update(gameTime)
@@ -237,12 +239,24 @@ Public Class NavalBattleScene
             If count > 1.0 Then
                 Dim current As GUIObject = GUIController.CurrentContext.GetCurrent()
                 navalGame.Attack(current.IndexX, current.IndexY)
+                navalGame.FillMap(navalMap)
                 count = 0.0
                 selectedShot = False
-                navalGame.FillMap(navalMap)
             End If
         End If
+
         UpdateLabelName()
+
+        If Not endGame AndAlso navalGame.IsEnd() AndAlso navalGame.GetWin() <> PlayerID.Undefined Then
+            Dim win As PlayerID = navalGame.GetWin()
+            endGame = True
+            Select Case win
+                Case PlayerID.Player1
+                    Console.WriteLine("Player 1 - Win")
+                Case PlayerID.Player2
+                    Console.WriteLine("IA - Win")
+            End Select
+        End If
     End Sub
 
     Public Overrides Sub UnloadContent()

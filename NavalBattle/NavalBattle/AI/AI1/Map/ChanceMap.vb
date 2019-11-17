@@ -12,11 +12,24 @@
         _houseStatus = map
     End Sub
 
+    Private Function Min() As ULong
+        Dim output As ULong = ULong.MaxValue
+        For i As Integer = 0 To _width - 1
+            For j As Integer = 0 To _height - 1
+                If _map(i, j) <> 0 Then
+                    output = Math.Min(_map(i, j), output)
+                End If
+            Next
+        Next
+        Return output
+    End Function
+
     Public Sub Adjuster()
+        Dim mini As ULong = Min()
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
                 Dim mult As Single = GetHouseMutiplier(i, j)
-                _map(i, j) = mult * _map(i, j)
+                _map(i, j) = mult * _map(i, j) / mini
             Next
         Next
     End Sub
@@ -179,25 +192,24 @@
                 (status.diagonal And 12) > 0 OrElse
                 (status.diagonal And 48) > 0 OrElse
                 (status.diagonal And 192) > 0 Then
-            output *= 4.0F
+            'output *= 4.0F
         End If
 
         Dim horizontal As Single = GetHorizontal(status.miss)
         Dim vertical As Single = GetVertical(status.miss)
 
-
         If (status.vertical = 0 OrElse status.horizontal = 0) AndAlso Not (status.vertical = 0 And status.horizontal = 0) Then
-            output *= (status.vertical + status.horizontal) * 8
+            output *= (status.vertical + status.horizontal) * 2
         ElseIf status.vertical + status.horizontal > 2 Then
             output *= 1.0F / (status.vertical + status.horizontal)
         ElseIf status.vertical + status.horizontal = 1 Then
-            output *= Math.Pow(2, -(status.vertical + status.horizontal) * 4)
+            output *= Math.Pow(2, -(status.vertical + status.horizontal) * 2)
         Else
 
         End If
 
         If DetectLine(x, y) Then
-            output *= 8
+            output *= 4
         End If
 
         Return output
