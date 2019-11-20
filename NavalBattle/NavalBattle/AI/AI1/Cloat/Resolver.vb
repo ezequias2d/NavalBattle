@@ -62,10 +62,11 @@
         Dim cNum As UInteger
         Dim c As SubMap()
 
-        If isSolution(a, k, aiMaps, avaliable) = True Then
+        If isSolution(a, k, aiMaps, avaliable) Then
             Dim total As SubMap = SubMap.Unify(a, k)
             Dim solution As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger) = (avaliable.Battleship, avaliable.Carrier, avaliable.Destroyer, avaliable.Submarine, total.Weight)
             For Each detail As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean) In total.Details
+
                 If detail.complete Then
                     Select Case detail.ship
                         Case Ship.Battleship
@@ -79,8 +80,6 @@
                     End Select
                 End If
             Next
-            Console.WriteLine(total.ToString())
-            Console.WriteLine()
 
             If Not ContainsSolution(output, solution) Then
                 output.Add(solution)

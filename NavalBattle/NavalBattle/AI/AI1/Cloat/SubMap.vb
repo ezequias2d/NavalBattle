@@ -8,7 +8,7 @@ Public Structure SubMap
     Private _Weight As UInteger
     Private _shipsDetails As (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean)()
 
-    Public Sub New(details As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean)(), num As Integer)
+    Public Sub New(details As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean)(), num As UInteger)
         _shipsDetails = New(Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean)(num) {}
         For i As Integer = 0 To num
             _shipsDetails(i) = details(i)
@@ -28,8 +28,9 @@ Public Structure SubMap
     End Sub
 
     Private Sub New(details As ICollection(Of (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean)), weight As UInteger)
-        _shipsDetails = details.ToArray()
-        For Each detail As (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean) In _shipsDetails
+        _shipsDetails = New(ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean)(details.Count) {}
+        Dim count As UInteger = 0
+        For Each detail As (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean) In details
             Select Case detail.Ship
                 Case Ship.Battleship
                     Battleship += 1
@@ -40,13 +41,15 @@ Public Structure SubMap
                 Case Ship.Submarine
                     Submarine += 1
             End Select
+            _shipsDetails(count) = detail
+            count += 1
         Next
         _Weight = weight
     End Sub
 
     Public Shared Function Unify(submaps As SubMap(), num As UInteger) As SubMap
-        Dim details As LinkedList(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean))
-        details = New LinkedList(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean))
+        Dim details As List(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean))
+        details = New List(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean))
 
         Dim weigth As UInteger = 0
 
@@ -54,20 +57,23 @@ Public Structure SubMap
             Dim submap As SubMap = submaps(i)
 
             For Each ship1 As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean) In submap._shipsDetails
-                Dim flag As Boolean = True
+                Dim flag As Boolean = ship1.ship <> Ship.None
+
                 For Each ship2 As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean) In details
-                    If ship1.ship = ship2.ship AndAlso
-                        ship1.position.x = ship2.position.x AndAlso
-                        ship1.position.y = ship2.position.y AndAlso
-                        ship1.orientation = ship2.orientation Then
+                    If (ship1.ship = ship2.ship) AndAlso
+                        (ship1.position.x = ship2.position.x) AndAlso
+                        (ship1.position.y = ship2.position.y) AndAlso
+                        (ship1.orientation = ship2.orientation) Then
 
                         flag = False
+                    End If
+                    If Not flag Then
                         Exit For
                     End If
                 Next
 
                 If flag Then
-                    details.Append(ship1)
+                    details.Add(ship1)
                 End If
             Next
             weigth += submap.Weight
@@ -202,7 +208,6 @@ Public Structure SubMap
         Return copy
     End Function
 
-
     Private Shared Function IsPuttable(x As Integer, y As Integer, ship As Ship, orientation As Orientation, map As HouseStatus(), mapWidth As Integer, mapHeight As Integer)
         Dim output As Boolean = True
         Dim size As (width As Integer, height As Integer) = GetSize(ship, orientation)
@@ -231,7 +236,6 @@ Public Structure SubMap
         Else
             output = False
         End If
-
         Return output
     End Function
 
