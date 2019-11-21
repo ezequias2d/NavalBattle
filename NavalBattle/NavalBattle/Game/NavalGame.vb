@@ -35,7 +35,7 @@
     End Sub
 
     Public Function IsEnd() As Boolean
-        Return mapPlayer1.Rest <= 0 OrElse mapPlayer2.Rest <= 0
+        Return (mapPlayer1.Rest <= 0 OrElse mapPlayer2.Rest <= 0) And _started
     End Function
 
     Public Function GetWin() As PlayerID
