@@ -98,6 +98,9 @@ Public Class NavalBattleScene
         Else
             navalGame.Attack(obj.IndexX, obj.IndexY)
             navalGame.FillMap(navalMap)
+            If navalGame.CurrentPlayer <> PlayerID.Player1 Then
+                GUIController.CurrentContext.MovableCursor = False
+            End If
         End If
         UpdateLabelName()
     End Sub
@@ -222,28 +225,28 @@ Public Class NavalBattleScene
     Public Overrides Sub Update(gameTime As GameTime)
         MyBase.Update(gameTime)
 
-        'Executa IA e joga
-        If navalGame.CurrentPlayer = PlayerID.Player2 Then
-            If selectedShot = False Then
-                Dim map As HouseStatus() = navalGame.GetEnemyVisionMap()
-                Dim shoot As (x As Integer, y As Integer) = player2IA.GetAttack(map, sizeX, sizeY)
-                GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
-                selectedShot = True
-                navalGame.FillMap(navalMap)
-            End If
+        If Not player2IA.IsInProcessing And Not player2IA.IsProcessingComplete() And Not selectedShot Then
+            player2IA.StartAttackProcessing(navalGame.GetEnemyVisionMap(PlayerID.Player1), sizeX, sizeY)
+        ElseIf navalGame.CurrentPlayer = PlayerID.Player2 And player2IA.IsProcessingComplete() Then
+            Dim shoot As (x As Integer, y As Integer) = player2IA.NextResult()
+            GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
+            selectedShot = True
+            navalGame.FillMap(navalMap)
+        End If
 
-            If selectedShot Then
-                count += gameTime.ElapsedGameTime.TotalSeconds
-            End If
-
+        If selectedShot Then
+            count += gameTime.ElapsedGameTime.TotalSeconds
             If count > 1.0 Then
                 Dim current As GUIObject = GUIController.CurrentContext.GetCurrent()
                 navalGame.Attack(current.IndexX, current.IndexY)
                 navalGame.FillMap(navalMap)
                 count = 0.0
                 selectedShot = False
+                GUIController.CurrentContext.MovableCursor = True
             End If
         End If
+
+
 
         UpdateLabelName()
 

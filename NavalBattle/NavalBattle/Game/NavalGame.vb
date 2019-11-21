@@ -139,12 +139,12 @@
         End If
     End Sub
 
-    Public Function GetEnemyVisionMap() As HouseStatus()
-        Select Case CurrentPlayer
+    Public Function GetEnemyVisionMap(player As PlayerID) As HouseStatus()
+        Select Case player
             Case PlayerID.Player1
-                Return mapPlayer2.GetEnemyVisionMap()
-            Case PlayerID.Player2
                 Return mapPlayer1.GetEnemyVisionMap()
+            Case PlayerID.Player2
+                Return mapPlayer2.GetEnemyVisionMap()
         End Select
         Return Nothing
     End Function

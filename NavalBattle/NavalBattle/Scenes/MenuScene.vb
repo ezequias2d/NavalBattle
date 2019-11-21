@@ -88,8 +88,6 @@ Public Class MenuScene
         CreateMenu()
 
         contextSizeMap = CreateContextSizeMap()
-
-        updates.Add(GUIController)
     End Sub
 
 End Class

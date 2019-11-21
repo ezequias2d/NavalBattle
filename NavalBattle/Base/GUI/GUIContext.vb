@@ -37,6 +37,12 @@ Public Class GUIContext
     Public Property CursorEnable As Boolean
 
     ''' <summary>
+    ''' Flag de cursor movivel
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property MovableCursor As Boolean
+
+    ''' <summary>
     ''' Velocidade de troca de GUIObject selecionados
     ''' </summary>
     ''' <returns> Velocidade de troca de GUIObject </returns>
@@ -172,6 +178,7 @@ Public Class GUIContext
         _VerticalLine.infinity = True
         _area = area
         Me.CursorEnable = True
+        Me.MovableCursor = True
         Me.Scale = Vector2.One
         Me.GUIObjectEnable = True
         Me.CursorColorCurrent = Color.White
@@ -181,6 +188,7 @@ Public Class GUIContext
         Me.SpeedChange = 4
         Me.SpeedCursor = 16
         Me.UpdateEnable = False
+        Me.CursorMovementAxisMode = AxisMode.Click
 
         If selectFrame.texture IsNot Nothing Then
             SelectBox = New Box(area, selectFrame)
@@ -421,30 +429,32 @@ Public Class GUIContext
         ' Translada pouco a pouco a posição do cursor até o destino.
         _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
 
+        If MovableCursor Then
+            If CursorMovementAxisMode = AxisMode.Floating Then
+                changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
+            Else
+                changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
+            End If
 
-        If CursorMovementAxisMode = AxisMode.Floating Then
-            changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
-        Else
-            changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
+            If changePosition.X >= 1 Then
+                'Right
+                Move(False, False, False, True)
+                changePosition.X = 0
+            ElseIf changePosition.X <= -1 Then
+                'Left
+                Move(False, False, True, False)
+                changePosition.X = 0
+            ElseIf changePosition.Y >= 1 Then
+                'Up
+                Move(True, False, False, False)
+                changePosition.Y = 0
+            ElseIf changePosition.Y <= -1 Then
+                'Down
+                Move(False, True, False, False)
+                changePosition.Y = 0
+            End If
         End If
 
-        If changePosition.X >= 1 Then
-            'Right
-            Move(False, False, False, True)
-            changePosition.X = 0
-        ElseIf changePosition.X <= -1 Then
-            'Left
-            Move(False, False, True, False)
-            changePosition.X = 0
-        ElseIf changePosition.Y >= 1 Then
-            'Up
-            Move(True, False, False, False)
-            changePosition.Y = 0
-        ElseIf changePosition.Y <= -1 Then
-            'Down
-            Move(False, True, False, False)
-            changePosition.Y = 0
-        End If
 
         Dim updatesCursor As Boolean = False
 
