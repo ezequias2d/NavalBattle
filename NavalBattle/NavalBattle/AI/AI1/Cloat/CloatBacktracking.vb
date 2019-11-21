@@ -16,7 +16,7 @@ Module CloatBacktracking
         Dim a As (x As Integer, y As Integer)() = New(x As Integer, y As Integer)(width * height) {}
 
         bk_internal(houses, width, height, 0, Orientation.Horizontal, a, cloats)
-        bk_internal(houses, width, height, 0, Orientation.Vertical, a, cloats)
+        'bk_internal(houses, width, height, 0, Orientation.Vertical, a, cloats)
 
         Return cloats.ToArray()
     End Function
@@ -56,12 +56,12 @@ Module CloatBacktracking
         Else
             Dim position As (x As Integer, y As Integer) = a(k - 1)
             If orientation = Orientation.Horizontal Then
-                If position.x + 1 < width Then
+                If position.x + 1 < width AndAlso houses(position.x + 1 + position.y * width) = HouseStatus.Hit Then
                     c(0) = (position.x + 1, position.y)
                     cNum = 1
                 End If
             ElseIf orientation = Orientation.Vertical Then
-                If position.y + 1 < height Then
+                If position.y + 1 < height AndAlso houses(position.x + (position.y + 1) * width) = HouseStatus.Hit Then
                     c(0) = (position.x, position.y + 1)
                     cNum = 1
                 End If

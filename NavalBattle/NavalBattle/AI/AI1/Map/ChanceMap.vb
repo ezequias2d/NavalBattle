@@ -12,6 +12,20 @@
         _houseStatus = map
     End Sub
 
+    Public Function GetMaxHouse() As (x As Integer, y As Integer)
+        Dim maxValue As ULong = ULong.MinValue
+        Dim output As (x As Integer, y As Integer) = (0, 0)
+        For i As Integer = 0 To _width - 1
+            For j As Integer = 0 To _height - 1
+                If maxValue < _map(i, j) Then
+                    maxValue = _map(i, j)
+                    output = (i, j)
+                End If
+            Next
+        Next
+        Return output
+    End Function
+
     Private Function Min() As ULong
         Dim output As ULong = ULong.MaxValue
         For i As Integer = 0 To _width - 1
@@ -29,7 +43,12 @@
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
                 Dim mult As Single = GetHouseMutiplier(i, j)
-                _map(i, j) = mult * _map(i, j) / mini
+                If mult = 0 Then
+                    _map(i, j) = mult * _map(i, j) / mini
+                Else
+                    _map(i, j) = _map(i, j) / mini
+                End If
+
             Next
         Next
     End Sub
@@ -43,6 +62,23 @@
                 End If
             Next
         Next
+    End Sub
+
+    Private Sub ScaleDown(minimum As Single)
+        Dim mini As ULong = Min()
+        If mini > minimum Then
+            For i As Integer = 0 To _width - 1
+                For j As Integer = 0 To _height - 1
+                    _map(i, j) /= mini
+                Next
+            Next
+        Else
+            For i As Integer = 0 To _width - 1
+                For j As Integer = 0 To _height - 1
+                    _map(i, j) = (_map(i, j) + 0.0F) / minimum
+                Next
+            Next
+        End If
     End Sub
 
     Public Sub Invert()
@@ -215,31 +251,34 @@
         Return output
     End Function
 
-    Public Sub AddMap(avaliables As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger)())
+    Public Sub ExplicitlyAdd(explicitlyShip As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger), toAdd As Integer)
+        PutShip(explicitlyShip.position.x, explicitlyShip.position.y, explicitlyShip.ship, explicitlyShip.orientation, toAdd * explicitlyShip.weight)
+    End Sub
+
+    Public Sub AddMap(avaliable As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger))
         Dim orientations As Orientation() = New Orientation() {Orientation.Horizontal, Orientation.Vertical}
-        For Each avaliable As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger) In avaliables
-            For Each orientation As Orientation In orientations
-                For i As UInteger = 0 To _width - 1
-                    For j As UInteger = 0 To _height - 1
 
-                        If avaliable.Battleship > 0 Then
-                            PutShip(i, j, Ship.Battleship, orientation, avaliable.Weight)
-                        End If
+        For Each orientation As Orientation In orientations
+            For i As UInteger = 0 To _width - 1
+                For j As UInteger = 0 To _height - 1
 
-                        If avaliable.Carrier > 0 Then
-                            PutShip(i, j, Ship.Carrier, orientation, avaliable.Weight)
-                        End If
+                    If avaliable.Battleship > 0 Then
+                        PutShip(i, j, Ship.Battleship, orientation, avaliable.Weight)
+                    End If
 
-                        If avaliable.Destroyer > 0 Then
-                            PutShip(i, j, Ship.Destroyer, orientation, avaliable.Weight)
-                        End If
+                    If avaliable.Carrier > 0 Then
+                        PutShip(i, j, Ship.Carrier, orientation, avaliable.Weight)
+                    End If
 
-                        If avaliable.Submarine > 0 Then
-                            PutShip(i, j, Ship.Submarine, orientation, avaliable.Weight)
-                        End If
-                    Next
+                    If avaliable.Destroyer > 0 Then
+                        PutShip(i, j, Ship.Destroyer, orientation, avaliable.Weight)
+                    End If
 
+                    If avaliable.Submarine > 0 Then
+                        PutShip(i, j, Ship.Submarine, orientation, avaliable.Weight)
+                    End If
                 Next
+
             Next
         Next
     End Sub
@@ -278,6 +317,23 @@
             For i As Integer = x To x + size.width - 1
                 For j As Integer = y To y + size.height - 1
                     _map(i, j) = _map(i, j) + weight + weightExtra
+                Next
+            Next
+        End If
+    End Sub
+
+    Private Sub MultiplyShip(x As Integer, y As Integer, ship As Ship, orientation As Orientation, multiply As Single)
+        If IsPuttable(x, y, ship, orientation, HouseStatus.Missed) Then
+            Dim size As (width As Integer, height As Integer) = GetSize(ship, orientation)
+
+            For i As Integer = x To x + size.width - 1
+                For j As Integer = y To y + size.height - 1
+                    Try
+                        _map(i, j) = _map(i, j) * multiply
+                    Catch ex As Exception
+                        ScaleDown(multiply)
+                        _map(i, j) = _map(i, j) * multiply
+                    End Try
                 Next
             Next
         End If

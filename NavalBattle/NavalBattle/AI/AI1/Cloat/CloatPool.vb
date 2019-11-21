@@ -124,22 +124,13 @@
     End Function
 
     Private Function IsFreeArea(x As Integer, y As Integer, width As Integer, height As Integer) As Boolean
-        Dim output As Boolean = False
-
-
         For i As Integer = x To x + width - 1
             For j As Integer = y To y + height - 1
-                output = output OrElse Item(i, j)
-                If output Then
-                    Exit For
+                If Item(i, j) Then
+                    Return True
                 End If
             Next
-            If output Then
-                Exit For
-            End If
         Next
-
-
-        Return output
+        Return False
     End Function
 End Structure

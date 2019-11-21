@@ -141,4 +141,26 @@ Public Class ScreenManager
             Current.Draw(spriteBatch)
         End If
     End Sub
+
+    Public Function CreateTexture(width As Integer, height As Integer) As Texture2D
+        Dim texture As Texture2D = New Texture2D(Game.GraphicsDevice, width, height)
+
+        Dim data As Color() = New Color(width * height) {}
+        For pixel As Integer = 0 To data.Count - 1
+            data(pixel) = Color.Black
+        Next
+        texture.SetData(data)
+
+        Return texture
+    End Function
+
+    Public Sub UpdateTexture(ByRef texture As Texture2D, paint As Func(Of (Integer, Integer), Color))
+        Dim data As Color() = New Color(texture.Width * texture.Height) {}
+        For xPixel As Integer = 0 To texture.Width - 1
+            For yPixel As Integer = 0 To texture.Height - 1
+                data(xPixel + yPixel * texture.Width) = paint((xPixel, yPixel))
+            Next
+        Next
+        texture.SetData(data)
+    End Sub
 End Class

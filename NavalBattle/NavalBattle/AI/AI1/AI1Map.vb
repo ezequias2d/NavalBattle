@@ -12,7 +12,7 @@ Public Class AI1Map
             Dim avaliable As (UInteger, UInteger, UInteger, UInteger, UInteger) = (battleship, carrier, destroyer, submarine, 1UL)
 
             chanceMap.CleanMap()
-            chanceMap.AddMap(New(UInteger, UInteger, UInteger, UInteger, UInteger)() {avaliable})
+            chanceMap.AddMap(avaliable)
 
             chanceMap.Adjuster()
             chanceMap.Invert()
