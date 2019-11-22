@@ -114,15 +114,6 @@
         Return output
     End Function
 
-    Private Function GetSize(ship As Ship, orientation As Orientation) As (width As Integer, height As Integer)
-        Dim size As (width As Integer, height As Integer)
-
-        size.width = ship * Convert.ToInt32(orientation = Orientation.Horizontal) + Convert.ToInt32(orientation <> Orientation.Horizontal)
-        size.height = ship * Convert.ToInt32(orientation = Orientation.Vertical) + Convert.ToInt32(orientation <> Orientation.Vertical)
-
-        Return size
-    End Function
-
     Private Function IsFreeArea(x As Integer, y As Integer, width As Integer, height As Integer) As Boolean
         For i As Integer = x To x + width - 1
             For j As Integer = y To y + height - 1

@@ -6,12 +6,11 @@ Public Structure SubMap
 
     ' Peso
     Private _Weight As UInteger
-    Private _shipsDetails As (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)()
+    Private _shipsDetails As HashSet(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))
 
     Public Sub New(details As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)(), num As UInteger)
-        _shipsDetails = New(Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)(num) {}
+        _shipsDetails = New HashSet(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))(details)
         For i As Integer = 0 To num
-            _shipsDetails(i) = details(i)
             Select Case details(i).ship
                 Case Ship.Battleship
                     Battleship += 1
@@ -26,8 +25,8 @@ Public Structure SubMap
         Next
     End Sub
 
-    Private Sub New(details As ICollection(Of (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)), weight As UInteger)
-        _shipsDetails = New(ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)(details.Count) {}
+    Private Sub New(details As ISet(Of (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)), weight As UInteger)
+        _shipsDetails = details
         Dim count As UInteger = 0
         For Each detail As (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger) In details
             Select Case detail.Ship
@@ -40,7 +39,6 @@ Public Structure SubMap
                 Case Ship.Submarine
                     Submarine += 1
             End Select
-            _shipsDetails(count) = detail
             count += 1
         Next
         _Weight = weight
@@ -73,34 +71,13 @@ Public Structure SubMap
     End Function
 
     Public Shared Function Unify(submaps As SubMap(), num As UInteger) As SubMap
-        Dim details As List(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))
-        details = New List(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))
+        Dim details As ISet(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))
+        details = New HashSet(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))(submaps(0)._shipsDetails)
 
-        Dim weigth As UInteger = 0
-
-        For i As UInteger = 0 To num - 1
+        Dim weigth As UInteger = submaps(0).Weight
+        For i As UInteger = 1 To num - 1
             Dim submap As SubMap = submaps(i)
-
-            For Each ship1 As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger) In submap._shipsDetails
-                Dim flag As Boolean = ship1.ship <> Ship.None
-
-                For Each ship2 As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger) In details
-                    If (ship1.ship = ship2.ship) AndAlso
-                        (ship1.position.x = ship2.position.x) AndAlso
-                        (ship1.position.y = ship2.position.y) AndAlso
-                        (ship1.orientation = ship2.orientation) Then
-
-                        flag = False
-                    End If
-                    If Not flag Then
-                        Exit For
-                    End If
-                Next
-
-                If flag Then
-                    details.Add(ship1)
-                End If
-            Next
+            details.UnionWith(submap._shipsDetails)
             weigth += submap.Weight
         Next
 
@@ -132,30 +109,8 @@ Public Structure SubMap
         Return False
     End Function
 
-    Private Function DetailsEquals(other As SubMap) As Boolean
-        If _shipsDetails.Length <> other._shipsDetails.Length Then
-            Return False
-        End If
-
-        For Each detail1 As (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger) In _shipsDetails
-            For Each detail2 As (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger) In other._shipsDetails
-                If Not (detail1.Ship = detail2.Ship AndAlso
-                    detail1.position.x = detail2.position.x AndAlso
-                    detail1.position.y = detail2.position.y AndAlso
-                    detail1.orientation = detail2.orientation) Then
-                    Return False
-                End If
-            Next
-        Next
-        Return True
-    End Function
-
     Public Overloads Function Equals(other As SubMap) As Boolean Implements IEquatable(Of SubMap).Equals
-        Return (Battleship = other.Battleship AndAlso
-                Carrier = other.Carrier AndAlso
-                Destroyer = other.Destroyer AndAlso
-                Submarine = other.Submarine) AndAlso
-                DetailsEquals(other)
+        Return other._shipsDetails.SetEquals(_shipsDetails)
     End Function
 
     Public Shared Function GenereteSubMap(map As HouseStatus(), width As Integer, height As Integer, cloatPool As CloatPool, maxBattlleship As UInteger, maxCarrier As UInteger, maxDestroyer As UInteger, maxSubmarine As UInteger) As SubMap()
@@ -272,15 +227,6 @@ Public Structure SubMap
             Next
         End If
         Return output
-    End Function
-
-    Private Shared Function GetSize(ship As Ship, orientation As Orientation) As (width As Integer, height As Integer)
-        Dim size As (width As Integer, height As Integer)
-
-        size.width = ship * Convert.ToInt32(orientation = Orientation.Horizontal) + Convert.ToInt32(orientation <> Orientation.Horizontal)
-        size.height = ship * Convert.ToInt32(orientation = Orientation.Vertical) + Convert.ToInt32(orientation <> Orientation.Vertical)
-
-        Return size
     End Function
 
     Private Shared Function IsFreeArea(x As Integer, y As Integer, width As Integer, height As Integer, map As HouseStatus(), mapWidth As Integer, mapHeight As Integer) As Boolean

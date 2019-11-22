@@ -163,6 +163,16 @@ Public Class NavalBattleScene
 
     End Sub
 
+    Private Sub CreateAIStatusView()
+        Dim position As Vector2 = Vector2.Zero
+        position.X = Camera.InternalDimensions.X / 2.0F - 20.0F
+        position.Y = Camera.InternalDimensions.Y / 2.0F - 16.0F
+
+        Dim statusView As AIStatusViewer = New AIStatusViewer(sizeX + 1 + (sizeY - 1) * sizeY, sizeX, sizeY - 1, position, naval, player2IA)
+
+        GUIController.CurrentContext.Add(statusView)
+    End Sub
+
     Private Sub CreateLabel()
         label = New Label("Label", Color.White, Label.Font)
         Dim position As Vector2 = Vector2.Zero
@@ -191,11 +201,13 @@ Public Class NavalBattleScene
         CreateLabel()
         naval = content.Load(Of Texture2D)("naval")
         font = content.Load(Of SpriteFont)("fonts/PressStart2P")
-        Dim area As Vector2 = New Vector2(Camera.InternalDimensions.X, Camera.InternalDimensions.Y - 16)
+        CreateAIStatusView()
+        Dim area As Vector2 = New Vector2(Camera.InternalDimensions.X, Camera.InternalDimensions.Y - 32)
         navalMap = New NavalMap(GUIController.CurrentContext, naval, area, sizeX, sizeY, AddressOf Fire0Map, AddressOf Fire1Map, AddressOf Fire2Map, AddressOf CalculateColor)
-        navalMap.Position = New Vector2(0, -8.0F)
+        navalMap.Position = New Vector2(0, -16.0F)
 
         navalGame.FillMap(navalMap)
+
         GUIController.ChangeContext(putShipContext)
 
         If navalGame.CurrentPlayer <> PlayerID.Player2 Then
@@ -214,6 +226,8 @@ Public Class NavalBattleScene
 
         'volta para player1
         navalGame.SwapPlayer()
+
+
 
     End Sub
 

@@ -18,7 +18,6 @@ Public Class NavalMap
 
     Private naval As Texture2D
 
-
     Private area As Vector2
     Private insideArea As Vector2
     Private scaleMap As Single

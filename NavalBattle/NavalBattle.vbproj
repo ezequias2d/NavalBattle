@@ -157,6 +157,7 @@
     <Compile Include="NavalBattle\AI\AI1\Map\ChanceMap.vb" />
     <Compile Include="NavalBattle\AI\AI1\Map\DeltaNumber.vb" />
     <Compile Include="NavalBattle\AI\AI1\Map\Picker.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Tools.vb" />
     <Compile Include="NavalBattle\AI\IAIMap.vb" />
     <Compile Include="NavalBattle\AI\IAIPlayer.vb" />
     <Compile Include="NavalBattle\Enum\HouseStatus.vb" />
@@ -166,6 +167,7 @@
     <Compile Include="NavalBattle\Game\House.vb" />
     <Compile Include="NavalBattle\Game\Map.vb" />
     <Compile Include="NavalBattle\Game\NavalGame.vb" />
+    <Compile Include="NavalBattle\GUI\AIStatusViewer.vb" />
     <Compile Include="NavalBattle\GUI\NavalMap.vb" />
     <Compile Include="NavalBattle\Enum\Ship.vb" />
     <Compile Include="NavalBattle\Scenes\MenuScene.vb" />

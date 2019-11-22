@@ -42,13 +42,11 @@
         Dim mini As ULong = Min()
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
-                Dim mult As Single = GetHouseMutiplier(i, j)
-                If mult = 0 Then
-                    _map(i, j) = mult * _map(i, j) / mini
+                If _houseStatus(i + j * Width) = HouseStatus.Hit Then
+                    _map(i, j) = 0
                 Else
                     _map(i, j) = _map(i, j) / mini
                 End If
-
             Next
         Next
     End Sub
@@ -215,42 +213,6 @@
         Return False
     End Function
 
-    Private Function GetHouseMutiplier(x As Integer, y As Integer) As Single
-        If _houseStatus(x + y * Width) = HouseStatus.Hit Then
-            Return 0
-        End If
-
-        Dim output As Single = 1
-
-        Dim status As (horizontal As Byte, vertical As Byte, diagonal As Byte, miss As Byte) = GetStatus(x, y)
-
-        If (status.diagonal And 3) > 0 OrElse
-                (status.diagonal And 12) > 0 OrElse
-                (status.diagonal And 48) > 0 OrElse
-                (status.diagonal And 192) > 0 Then
-            'output *= 4.0F
-        End If
-
-        Dim horizontal As Single = GetHorizontal(status.miss)
-        Dim vertical As Single = GetVertical(status.miss)
-
-        If (status.vertical = 0 OrElse status.horizontal = 0) AndAlso Not (status.vertical = 0 And status.horizontal = 0) Then
-            output *= (status.vertical + status.horizontal) * 2
-        ElseIf status.vertical + status.horizontal > 2 Then
-            output *= 1.0F / (status.vertical + status.horizontal)
-        ElseIf status.vertical + status.horizontal = 1 Then
-            output *= Math.Pow(2, -(status.vertical + status.horizontal) * 2)
-        Else
-
-        End If
-
-        If DetectLine(x, y) Then
-            output *= 4
-        End If
-
-        Return output
-    End Function
-
     Public Sub ExplicitlyAdd(explicitlyShip As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger), toAdd As Integer)
         PutShip(explicitlyShip.position.x, explicitlyShip.position.y, explicitlyShip.ship, explicitlyShip.orientation, toAdd * explicitlyShip.weight)
     End Sub
@@ -377,35 +339,19 @@
         Return output
     End Function
 
-    Private Function GetSize(ship As Ship, orientation As Orientation) As (width As Integer, height As Integer)
-        Dim size As (width As Integer, height As Integer)
-
-        size.width = ship * Convert.ToInt32(orientation = Orientation.Horizontal) + Convert.ToInt32(orientation <> Orientation.Horizontal)
-        size.height = ship * Convert.ToInt32(orientation = Orientation.Vertical) + Convert.ToInt32(orientation <> Orientation.Vertical)
-
-        Return size
-    End Function
-
     Private Function IsFreeArea(x As Integer, y As Integer, width As Integer, height As Integer, houseStatus As HouseStatus) As Boolean
-        Dim output As Boolean = True
-
         If x + width - 1 < Me.Width AndAlso y + height - 1 < Me.Height Then
             For i As Integer = x To x + width - 1
                 For j As Integer = y To y + height - 1
-                    output = output AndAlso (_houseStatus(i + j * Me.Width) <> houseStatus)
-                    If Not output Then
-                        Exit For
+                    If _houseStatus(i + j * Me.Width) = houseStatus Then
+                        Return False
                     End If
                 Next
-                If Not output Then
-                    Exit For
-                End If
             Next
         Else
-            output = False
+            Return False
         End If
-
-        Return output
+        Return True
     End Function
 
 

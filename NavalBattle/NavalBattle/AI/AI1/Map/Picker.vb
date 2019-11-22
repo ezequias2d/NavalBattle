@@ -14,6 +14,7 @@
     End Function
 
     Public Function ToRaffle(chanceMap As ChanceMap) As (x As Integer, y As Integer)
+        VBMath.Randomize(Timer)
         Dim value As Single = VBMath.Rnd()
         Dim dic As Dictionary(Of (x As Integer, y As Integer), DeltaNumber) = New Dictionary(Of (x As Integer, y As Integer), DeltaNumber)
 
@@ -49,7 +50,6 @@
         For i As Integer = 0 To chanceMap.Width - 1
             For j As Integer = 0 To chanceMap.Height - 1
                 If chanceMap.Item(i, j) > 0 Then
-
                     Dim deltaNumber As DeltaNumber = New DeltaNumber(position, GetChanceShip(i, j, ship, chanceMap))
                     dic.Add((i, j), deltaNumber)
                     position = deltaNumber.Final
