@@ -101,6 +101,7 @@
     <Compile Include="Base\Graphic\Label\Alignment.vb" />
     <Compile Include="Base\Graphic\Label\Label.vb" />
     <Compile Include="Base\GUI\Components\Button.vb" />
+    <Compile Include="Base\GUI\Components\GUILabel.vb" />
     <Compile Include="Base\GUI\Components\NumberSelector.vb" />
     <Compile Include="Base\GUI\CursorMode.vb" />
     <Compile Include="Base\GUI\GUIController.vb" />

@@ -41,12 +41,24 @@ Public Class MenuScene
     Private Function CreateContextSizeMap() As GUIContext
         Dim context As GUIContext = New GUIContext(Camera.InternalDimensions)
 
-        numberSelectorX = New NumberSelector(0, 0, 0, Vector2.Zero, 6, 100)
-        numberSelectorY = New NumberSelector(1, 0, 1, Vector2.Zero, 6, 100)
-        Dim button As Button = New Button(2, 0, 2, Vector2.Zero, "Ok", Vector2.One * 0.6)
+        numberSelectorX = New NumberSelector(0, 0, 0, Vector2.Zero, 6, 20)
+        numberSelectorY = New NumberSelector(1, 0, 1, Vector2.Zero, 6, 20)
+        Dim button As Button = New Button(2, 0, 2, Vector2.Zero, "Ok!", Vector2.One)
 
-        numberSelectorX.Position = New Vector2(0, -numberSelectorX.GetSize().Y * 4.0F / 3.0F)
-        numberSelectorY.Position = New Vector2(0, +numberSelectorY.GetSize().Y * 4.0F / 3.0F)
+        Dim gLabelTitle As GUILabel = New GUILabel(3, 0, 3, New Vector2(0, -48.0F), New Label("Map size", Color.White, Label.Font))
+
+        Dim gLabelW As GUILabel = New GUILabel(4, 0, 4, New Vector2(0, -20.0F), New Label("Width", Color.White, Label.Font))
+        Dim gLabelH As GUILabel = New GUILabel(5, 0, 5, New Vector2(0, 28.0F), New Label("Height", Color.White, Label.Font))
+
+        gLabelTitle.Scale = Vector2.One * 2.0F
+        gLabelW.Scale = Vector2.One * 0.5F
+        gLabelH.Scale = Vector2.One * 0.5F
+
+        numberSelectorX.Position = New Vector2(0, 0)
+        numberSelectorY.Position = New Vector2(0, 48)
+
+        numberSelectorX.Value = 10
+        numberSelectorY.Value = 10
         button.Position = New Vector2(0, numberSelectorY.Position.Y + numberSelectorY.GetSize().Y * 3.0F / 2.0F)
 
         button.OnFire0 = AddressOf OkButton
@@ -54,6 +66,9 @@ Public Class MenuScene
         context.Add(numberSelectorX)
         context.Add(numberSelectorY)
         context.Add(button)
+        context.Add(gLabelH)
+        context.Add(gLabelW)
+        context.Add(gLabelTitle)
 
         Return context
     End Function
@@ -65,7 +80,7 @@ Public Class MenuScene
 
         Dim i As Integer = 0
         For Each text As String In texts
-            Dim button As Button = New Button(i, 0, i, New Vector2(0, (i + 2 - texts.Count) * 24.0F), text, Vector2.One * 0.5)
+            Dim button As Button = New Button(i, 0, i, New Vector2(0, (i + 3 - texts.Count) * 32.0F), text, Vector2.One)
             GUIController.MainContext.Add(button)
             Select Case i
                 Case 0

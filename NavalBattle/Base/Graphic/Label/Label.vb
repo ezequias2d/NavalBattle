@@ -18,7 +18,7 @@ Public Class Label
     Implements IDrawable
     Implements ITransform
 
-    Public Shared ReadOnly FontName As String = "fonts/PressStart2P"
+    Public Shared ReadOnly FontName As String = "fonts/GrrMono0.1"
     Private Shared _Font As SpriteFont
 
     Public Shared ReadOnly Property Font As SpriteFont

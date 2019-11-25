@@ -41,9 +41,10 @@ Public Class AI1Player
 
         If ExistNotComplete(possibleMaps) Then
             For Each submap As SubMap In possibleMaps
+                chanceMap.AddMap(submap.GetAvaliable(pieces))
                 For Each detail In submap.Details
                     If Not detail.complete Then
-                        chanceMap.ExplicitlyAdd(detail, submap.Weight)
+                        chanceMap.ExplicitlyAdd(detail, submap.Weight * 2)
                     End If
                 Next
             Next
@@ -57,8 +58,13 @@ Public Class AI1Player
             Else
                 chanceMap.AddMap((pieces.Battleship, pieces.Carrier, pieces.Destroyer, pieces.Submarine, 1))
             End If
+
             chanceMap.Adjuster()
-            result = Picker.ToRaffle(chanceMap)
+            If possibleMaps.Count > 1 Then
+                result = chanceMap.GetMaxHouse()
+            Else
+                result = Picker.ToRaffle(chanceMap)
+            End If
         End If
         complete = True
     End Sub

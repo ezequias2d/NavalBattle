@@ -156,7 +156,7 @@ Public Class NavalBattleScene
     Private Sub CreatePutShipContext()
         putShipContext = New GUIContext(GUIController.MainContext.Area)
         For i As Integer = 0 To 3
-            Dim button As Button = New Button(i, 0, i, New Vector2(0, (i - 1) * 24), labelTexts(i), Vector2.One * 0.5F)
+            Dim button As Button = New Button(i, 0, i, New Vector2(0, (i - 1) * 32), labelTexts(i), Vector2.One)
             putShipContext.Add(button)
             button.OnFire0 = AddressOf Fire0PutShip
         Next

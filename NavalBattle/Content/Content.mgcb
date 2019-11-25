@@ -13,6 +13,16 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin fonts/GrrMono0.1.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/GrrMono0.1.spritefont
+
+#begin fonts/GrrMono0.1.ttf
+/copy:fonts/GrrMono0.1.ttf
+
 #begin fonts/PressStart2P.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
