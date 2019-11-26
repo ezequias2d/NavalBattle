@@ -114,7 +114,7 @@ Public Structure SubMap
     End Function
 
     Public Shared Function GenereteSubMap(map As HouseStatus(), width As Integer, height As Integer, cloatPool As CloatPool, maxBattlleship As UInteger, maxCarrier As UInteger, maxDestroyer As UInteger, maxSubmarine As UInteger) As SubMap()
-        Dim aiMaps As ICollection(Of SubMap) = New List(Of SubMap)()
+        Dim aiMaps As ICollection(Of SubMap) = New LinkedList(Of SubMap)()
         Dim a As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)()
         a = New(ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)(maxBattlleship + maxCarrier + maxDestroyer + maxSubmarine) {}
         GenereteAIMapInternal(map, width, height, a, 0, cloatPool, maxBattlleship, maxCarrier, maxDestroyer, maxSubmarine, aiMaps)

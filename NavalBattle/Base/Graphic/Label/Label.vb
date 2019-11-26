@@ -121,16 +121,16 @@ Public Class Label
 
         Select Case AlignmentX
             Case Alignment.Center
-                origin.X += size.X * Scale.X / 2.0F
+                origin.X += size.X / 2.0F
             Case Alignment.Ending
-                origin.X += size.X * Scale.X
+                origin.X += size.X
         End Select
 
         Select Case AlignmentY
             Case Alignment.Center
-                origin.Y += size.Y * Scale.Y / 2.0F
+                origin.Y += size.Y / 2.0F
             Case Alignment.Ending
-                origin.Y += size.Y * Scale.Y
+                origin.Y += size.Y
         End Select
 
         Return origin
@@ -178,5 +178,9 @@ Public Class Label
 
     Public Function Measure(scaleDelta As Vector2) As Vector2
         Return SpriteFont.MeasureString(Text) * scaleDelta * Scale
+    End Function
+
+    Public Function Measure() As Vector2
+        Return SpriteFont.MeasureString(Text) * Scale
     End Function
 End Class

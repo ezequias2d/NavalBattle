@@ -15,6 +15,7 @@ Public Class NavalBattleScene
     Private navalGame As NavalGame
 
     Private putShipContext As GUIContext
+    Private winAndLoseGameContext As GUIContext
 
     Private carrierNum As Integer = 1
     Private battleShipNum As Integer = 1
@@ -163,6 +164,23 @@ Public Class NavalBattleScene
 
     End Sub
 
+    Private Function CreateWinAndLoseLabel() As GUILabel
+
+        Dim n As Integer = GUIController.CurrentContext.NextNegative()
+        Dim finalText As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label("Label", Color.White, Label.Font))
+        finalText.Scale = 2 * Vector2.One
+        If navalGame.GetWin() = PlayerID.Player1 Then
+            'Win
+            finalText.Label.Text = "Win Game"
+            finalText.Label.Color = Color.DarkGreen
+        Else
+            'Lose
+            finalText.Label.Text = "Lose Game"
+            finalText.Label.Color = Color.DarkRed
+        End If
+        Return finalText
+    End Function
+
     Private Sub CreateAIStatusView()
         Dim position As Vector2 = Vector2.Zero
         position.X = Camera.InternalDimensions.X / 2.0F - 20.0F
@@ -202,6 +220,7 @@ Public Class NavalBattleScene
         naval = content.Load(Of Texture2D)("naval")
         font = content.Load(Of SpriteFont)("fonts/PressStart2P")
         CreateAIStatusView()
+
         Dim area As Vector2 = New Vector2(Camera.InternalDimensions.X, Camera.InternalDimensions.Y - 32)
         navalMap = New NavalMap(GUIController.CurrentContext, naval, area, sizeX, sizeY, AddressOf Fire0Map, AddressOf Fire1Map, AddressOf Fire2Map, AddressOf CalculateColor)
         navalMap.Position = New Vector2(0, -16.0F)
@@ -239,42 +258,46 @@ Public Class NavalBattleScene
     Public Overrides Sub Update(gameTime As GameTime)
         MyBase.Update(gameTime)
 
-        If Not player2IA.IsInProcessing And Not player2IA.IsProcessingComplete() And Not selectedShot Then
-            player2IA.StartAttackProcessing(navalGame.GetEnemyVisionMap(PlayerID.Player1), sizeX, sizeY)
-        ElseIf navalGame.CurrentPlayer = PlayerID.Player2 And player2IA.IsProcessingComplete() Then
-            Dim shoot As (x As Integer, y As Integer) = player2IA.NextResult()
-            GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
-            selectedShot = True
-            navalGame.FillMap(navalMap)
-        End If
-
-        If selectedShot Then
-            count += gameTime.ElapsedGameTime.TotalSeconds
-            If count > 1.0 Then
-                Dim current As GUIObject = GUIController.CurrentContext.GetCurrent()
-                navalGame.Attack(current.IndexX, current.IndexY)
+        If Not endGame Then
+            If Not player2IA.IsInProcessing And Not player2IA.IsProcessingComplete() And Not selectedShot Then
+                player2IA.StartAttackProcessing(navalGame.GetEnemyVisionMap(PlayerID.Player1), sizeX, sizeY)
+            ElseIf navalGame.CurrentPlayer = PlayerID.Player2 And player2IA.IsProcessingComplete() Then
+                Dim shoot As (x As Integer, y As Integer) = player2IA.NextResult()
+                GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
+                selectedShot = True
                 navalGame.FillMap(navalMap)
-                count = 0.0
-                selectedShot = False
-                GUIController.CurrentContext.MovableCursor = True
+            End If
+
+            If selectedShot Then
+                count += gameTime.ElapsedGameTime.TotalSeconds
+                If count > 1.0 Then
+                    Dim current As GUIObject = GUIController.CurrentContext.GetCurrent()
+                    navalGame.Attack(current.IndexX, current.IndexY)
+                    navalGame.FillMap(navalMap)
+                    count = 0.0
+                    selectedShot = False
+                    GUIController.CurrentContext.MovableCursor = True
+                End If
+            End If
+            UpdateLabelName()
+            If navalGame.IsEnd() AndAlso navalGame.GetWin() <> PlayerID.Undefined Then
+
+                Dim winAndLoseLabel As GUILabel = CreateWinAndLoseLabel()
+                winAndLoseLabel.LayerDetph = 16
+                Dim painelSize As Vector2 = winAndLoseLabel.Label.Measure(winAndLoseLabel.Scale) + 2 * Vector2.One
+                Dim colorPainel As ColorPainel = New ColorPainel(GUIController.CurrentContext.NextNegative(), 0, 0, -painelSize / 2.0F, painelSize, Color.GhostWhite)
+                colorPainel.LayerDetph = 15
+
+                GUIController.CurrentContext.Add(winAndLoseLabel)
+                GUIController.CurrentContext.Add(colorPainel)
+
+                endGame = True
+                GUIController.CurrentContext.CursorEnable = False
+                navalMap.RemoveButtons()
             End If
         End If
-
-
-
-        UpdateLabelName()
-
-        If Not endGame AndAlso navalGame.IsEnd() AndAlso navalGame.GetWin() <> PlayerID.Undefined Then
-            Dim win As PlayerID = navalGame.GetWin()
-            endGame = True
-            Select Case win
-                Case PlayerID.Player1
-                    Console.WriteLine("Player 1 - Win")
-                Case PlayerID.Player2
-                    Console.WriteLine("IA - Win")
-            End Select
-        End If
     End Sub
+
 
     Public Overrides Sub UnloadContent()
         UncreateLabel()

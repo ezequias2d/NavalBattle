@@ -22,7 +22,7 @@ Public Class AI1Player
         complete = False
     End Sub
 
-    Private Function ExistNotComplete(submaps As SubMap()) As Boolean
+    Private Function ExistNotComplete(submaps As IList(Of SubMap)) As Boolean
         For Each submap In submaps
             For Each detail In submap.Details
                 If detail.ship <> Ship.None AndAlso Not detail.complete Then
@@ -34,7 +34,7 @@ Public Class AI1Player
     End Function
 
     Private Sub ThreadTask()
-        Dim possibleMaps As SubMap()
+        Dim possibleMaps As IList(Of SubMap)
         possibleMaps = Resolver.CalculatePossibleAvailableParts(map, width, height, pieces)
 
         Dim chanceMap As ChanceMap = New ChanceMap(map, width, height)
@@ -60,11 +60,7 @@ Public Class AI1Player
             End If
 
             chanceMap.Adjuster()
-            If possibleMaps.Count > 1 Then
-                result = chanceMap.GetMaxHouse()
-            Else
-                result = Picker.ToRaffle(chanceMap)
-            End If
+            result = Picker.ToRaffle(chanceMap)
         End If
         complete = True
     End Sub

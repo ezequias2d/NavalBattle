@@ -30,7 +30,7 @@ Public Class NavalMap
     Private calculateColor As CalculateColor
 
     Public Sub New(context As GUIContext, naval As Texture2D, area As Vector2, sizeX As Integer, sizeY As Integer, fire0 As GUIObject.OnAxis, fire1 As GUIObject.OnAxis, fire2 As GUIObject.OnAxis, calculateColor As CalculateColor)
-        MyBase.New(-1, -1, -1, Vector2.Zero)
+        MyBase.New(context.NextNegative(), context.NextNegative(), context.NextNegative(), Vector2.Zero)
         Me.DrawEnable = True
         Me.UpdateEnable = True
         Me.GUIObjectEnable = False
@@ -66,7 +66,6 @@ Public Class NavalMap
         drawings.Add(tilemapStatus)
 
         context.Add(Me)
-
 
         mapEdge.LayerDepth = 1
         water.LayerDepth = 2
@@ -128,7 +127,7 @@ Public Class NavalMap
         If (area.X / sizeX > area.Y / sizeY) Then
             insideArea = New Vector2(sizeX * scaleMap * 16.0F, area.Y - 16.0F)
         Else
-            insideArea = New Vector2(area.X - 16.0F, sizeY * scaleMap * 16.0F)
+            insideArea = New Vector2(area.X - 16.0F, sizeY * scaleMap * 16.0F - 16.0F)
         End If
 
         Return insideArea
@@ -136,10 +135,10 @@ Public Class NavalMap
 
     Private Function CalculateScale() As Single
         Dim scale As Single
-        If sizeX >= sizeY Then
-            scale = (area.X - 16.0F) / (sizeX * 16.0F)
-        Else
+        If (area.X / sizeX > area.Y / sizeY) Then
             scale = (area.Y - 16.0F) / (sizeY * 16.0F)
+        Else
+            scale = (area.X - 16.0F) / (sizeX * 16.0F)
         End If
         Return scale
     End Function
@@ -189,6 +188,20 @@ Public Class NavalMap
                 button.OnCancel = AddressOf ButtonClick
             Next
         Next
+    End Sub
+
+    Public Sub RemoveButtons()
+        If TypeOf Parent Is GUIContext Then
+            Dim context As GUIContext = Parent
+
+            For Each control In New List(Of GUIObject)(context.Controllers.Values)
+                If TypeOf control Is Button Then
+                    If control.LayerDetph = 3 Then
+                        context.Remove(control)
+                    End If
+                End If
+            Next
+        End If
     End Sub
 
     Private Function CreateWater() As Tilemap(Of Integer)

@@ -115,8 +115,14 @@ Public MustInherit Class GUIObject
             _Focus = Value
             If Value Then
                 Me.Focused()
+                If OnFocus IsNot Nothing Then
+                    OnFocus.Invoke(Me)
+                End If
             Else
                 Me.Unfocused()
+                If OnUnfocus IsNot Nothing Then
+                    OnUnfocus.Invoke(Me)
+                End If
             End If
         End Set
     End Property
@@ -129,6 +135,8 @@ Public MustInherit Class GUIObject
     ''' <param name="axisValue"> Valor do Axis </param>
     ''' <param name="axis"> Axis correspondente </param>
     Public Delegate Sub OnAxis(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+
+    Public Delegate Sub OnAction(obj As GUIObject)
 
     ''' <summary>
     ''' Tipo de função para determinar a cor do cursor.
@@ -239,6 +247,10 @@ Public MustInherit Class GUIObject
     ''' </summary>
     ''' <returns> Função </returns>
     Public Property OnOptions As OnAxis
+
+    Public Property OnFocus As OnAction
+
+    Public Property OnUnfocus As OnAction
 
     ''' <summary>
     ''' Pai do objeto

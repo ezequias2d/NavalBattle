@@ -102,7 +102,9 @@
     <Compile Include="Base\Graphic\Label\Label.vb" />
     <Compile Include="Base\GUI\Components\Button.vb" />
     <Compile Include="Base\GUI\Components\GUILabel.vb" />
+    <Compile Include="Base\GUI\Components\GUISprite.vb" />
     <Compile Include="Base\GUI\Components\NumberSelector.vb" />
+    <Compile Include="Base\GUI\Components\ColorPainel.vb" />
     <Compile Include="Base\GUI\CursorMode.vb" />
     <Compile Include="Base\GUI\GUIController.vb" />
     <Compile Include="Base\Input\AxisEqualityComparer.vb" />
@@ -169,6 +171,7 @@
     <Compile Include="NavalBattle\Game\Map.vb" />
     <Compile Include="NavalBattle\Game\NavalGame.vb" />
     <Compile Include="NavalBattle\GUI\AIStatusViewer.vb" />
+    <Compile Include="NavalBattle\GUI\ControlsViewer.vb" />
     <Compile Include="NavalBattle\GUI\NavalMap.vb" />
     <Compile Include="NavalBattle\Enum\Ship.vb" />
     <Compile Include="NavalBattle\Scenes\MenuScene.vb" />

@@ -5,7 +5,7 @@
                                                     avaliable As (Battleship As UInteger,
                                                                     Carrier As UInteger,
                                                                     Destroyer As UInteger,
-                                                                    Submarine As UInteger)) As SubMap()
+                                                                    Submarine As UInteger)) As IList(Of SubMap)
         Dim cloats As Cloat() = CloatBacktracking.bk(map, width, height)
 
         Dim cloatPools As CloatPool() = CloatJoin.Join(cloats)
@@ -21,7 +21,7 @@
         Dim a As SubMap() = New SubMap(aiMaps.Length) {}
         CalculatePossibleAvailablePartsIntern(map, width, height, aiMaps, a, 0, avaliable, output)
 
-        Return output.ToArray()
+        Return output
     End Function
 
     Private Function isSolution(a As SubMap(),

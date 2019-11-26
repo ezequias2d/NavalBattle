@@ -18,6 +18,8 @@ Imports NavalBattle
 Public Class GUIContext
     Inherits GUIObject
 
+    Private negativeCounter As Integer = 0
+
     ''' <summary>
     ''' Caixa que envolve o GUIContext para representar a seleção quando um GUIContext é um componente de um GUIContext pai.
     ''' </summary>
@@ -208,6 +210,7 @@ Public Class GUIContext
         AxisModeSetting(Axis.Submit) = AxisMode.Click
         OnFire0 = AddressOf SubmitFire0Function
         OnSubmit = AddressOf SubmitFire0Function
+        OnCancel = AddressOf CancelFunction
     End Sub
 
     ''' <summary>
@@ -241,7 +244,7 @@ Public Class GUIContext
         End If
 
         For Each guiObj As GUIObject In Controllers.Values
-            If guiObj.DrawEnable Then
+            If guiObj IsNot Nothing AndAlso guiObj.DrawEnable Then
                 guiObj.Draw(spriteBatch, PositionTranslated + positionDelta, Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta)
             End If
         Next
@@ -409,62 +412,62 @@ Public Class GUIContext
     ''' </summary>
     ''' <param name="gameTime"> Tempo de jogo </param>
     Public Overrides Sub Update(gameTime As GameTime)
-        For Each element As GUIObject In Controllers.Values
-            If element.UpdateEnable Then
+        If Focus AndAlso CursorEnable Then
+            ' Se focado atualiza.
+            ' Evita que comandos de Input que o destino é o controle focado seja espalhado para o GUIContext atual.
+            Dim elapse As Single = gameTime.ElapsedGameTime.TotalSeconds
+
+            ' Componente selecionado atual
+            Dim current As GUIObject = GetCurrent()
+
+            ' Translada pouco a pouco a posição do cursor até o destino.
+            _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
+
+            If MovableCursor Then
+                If CursorMovementAxisMode = AxisMode.Floating Then
+                    changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
+                Else
+                    changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
+                End If
+
+                If changePosition.X >= 1 Then
+                    'Right
+                    Move(False, False, False, True)
+                    changePosition.X = 0
+                ElseIf changePosition.X <= -1 Then
+                    'Left
+                    Move(False, False, True, False)
+                    changePosition.X = 0
+                ElseIf changePosition.Y >= 1 Then
+                    'Up
+                    Move(True, False, False, False)
+                    changePosition.Y = 0
+                ElseIf changePosition.Y <= -1 Then
+                    'Down
+                    Move(False, True, False, False)
+                    changePosition.Y = 0
+                End If
+            End If
+
+
+            Dim updatesCursor As Boolean = False
+
+            updatesCursor = InvokeAxisFulled(gameTime) OrElse updatesCursor
+
+            updatesCursor = current.InvokeAxisFulled(gameTime) OrElse updatesCursor
+
+            If updatesCursor Then
+                UpdateCursor(current)
+            End If
+        End If
+
+        ' Pecorre uma nova lista com os controles (evita erro de alteração)
+        For Each element As GUIObject In New List(Of GUIObject)(Controllers.Values)
+            If element IsNot Nothing AndAlso element.UpdateEnable Then
                 element.Update(gameTime)
             End If
         Next
 
-        If Not Focus Then
-            ' Se não focado, não atualiza.
-            ' Evita que comandos de Input que o destino é o controle focado seja espalhado para o GUIContext atual.
-            Return
-        End If
-
-        Dim elapse As Single = gameTime.ElapsedGameTime.TotalSeconds
-
-        ' Componente selecionado atual
-        Dim current As GUIObject = GetCurrent()
-
-        ' Translada pouco a pouco a posição do cursor até o destino.
-        _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
-
-        If MovableCursor Then
-            If CursorMovementAxisMode = AxisMode.Floating Then
-                changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
-            Else
-                changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
-            End If
-
-            If changePosition.X >= 1 Then
-                'Right
-                Move(False, False, False, True)
-                changePosition.X = 0
-            ElseIf changePosition.X <= -1 Then
-                'Left
-                Move(False, False, True, False)
-                changePosition.X = 0
-            ElseIf changePosition.Y >= 1 Then
-                'Up
-                Move(True, False, False, False)
-                changePosition.Y = 0
-            ElseIf changePosition.Y <= -1 Then
-                'Down
-                Move(False, True, False, False)
-                changePosition.Y = 0
-            End If
-        End If
-
-
-        Dim updatesCursor As Boolean = False
-
-        updatesCursor = InvokeAxisFulled(gameTime) OrElse updatesCursor
-
-        updatesCursor = current.InvokeAxisFulled(gameTime) OrElse updatesCursor
-
-        If updatesCursor Then
-            UpdateCursor(current)
-        End If
     End Sub
 
     ''' <summary>
@@ -514,11 +517,11 @@ Public Class GUIContext
     ''' Desfoca do objeto atualmente focado e volta a focar o objeto anteriormente focado.
     ''' </summary>
     Public Sub Refocus()
-        If focusStack.Count > 0 Then
-            If TypeOf lastFocused Is GUIContext Then
-                Dim lastFocusedContext As GUIContext = TryCast(lastFocused, GUIContext)
-                ScreenManager.Instance.Current.GUIController.GoBack()
-            End If
+        If TypeOf lastFocused Is GUIContext Then
+            Dim lastFocusedContext As GUIContext = TryCast(lastFocused, GUIContext)
+            lastFocused.Focus = False
+            ScreenManager.Instance.Current.GUIController.GoBack()
+        ElseIf focusStack.Count > 0 Then
             lastFocused.Focus = False
             lastFocused = focusStack.Pop()
             lastFocused.Focus = True
@@ -547,4 +550,9 @@ Public Class GUIContext
     Public Overrides Sub SelectedChange()
 
     End Sub
+
+    Public Function NextNegative() As Integer
+        negativeCounter -= 1
+        Return negativeCounter
+    End Function
 End Class

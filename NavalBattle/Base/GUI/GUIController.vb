@@ -170,4 +170,56 @@ Public Class GUIController
             CurrentContext.Draw(spriteBatch, positionDelta, scaleDelta, angleDelta, layerDepthDelta)
         End If
     End Sub
+
+    Private Function CreateSprite8x8(x As Integer, y As Integer, color As Color) As Sprite
+        Dim sprite As Sprite = New Sprite()
+        sprite.Frame = New Frame(Texture, Vector2.One * 4, New Rectangle(x, y, 8, 8), color, SpriteEffects.None)
+        Return sprite
+    End Function
+
+    Private Function CreateSprite16x16(x As Integer, y As Integer, color As Color) As Sprite
+        Dim sprite As Sprite = New Sprite()
+        sprite.Frame = New Frame(Texture, Vector2.One * 4, New Rectangle(x, y, 16, 16), color, SpriteEffects.None)
+        Return sprite
+    End Function
+
+    Public Function CreateFireSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 40, color)
+    End Function
+
+    Public Function CreateHorizontalSprite(color As Color) As Sprite
+        Return CreateSprite8x8(40, 32, color)
+    End Function
+
+    Public Function CreateVerticalSprite(color As Color) As Sprite
+        Return CreateSprite8x8(32, 40, color)
+    End Function
+
+    Public Function CreateOrbSprite(color As Color) As Sprite
+        Return CreateSprite8x8(40, 24, color)
+    End Function
+
+    Public Function CreateUpSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 24, color)
+    End Function
+
+    Public Function CreateDownSprite(color As Color) As Sprite
+        Return CreateSprite8x8(32, 24, color)
+    End Function
+
+    Public Function CreateLeftSprite(color As Color) As Sprite
+        Return CreateSprite8x8(32, 32, color)
+    End Function
+
+    Public Function CreateRightSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 32, color)
+    End Function
+
+    Public Function CreateLittleOrbSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 48, color)
+    End Function
+
+    Public Function CreateAnalogicSprite(color As Color) As Sprite
+        Return CreateSprite16x16(48, 24, color)
+    End Function
 End Class

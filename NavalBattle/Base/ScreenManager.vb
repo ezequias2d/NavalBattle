@@ -85,7 +85,7 @@ Public Class ScreenManager
     ''' Cria novo ScreenManager de relolução 448x512
     ''' </summary>
     Private Sub New()
-        Dimensions = New Vector2(448, 512)
+        Dimensions = New Vector2(1024, 576)
     End Sub
 
     ''' <summary>
@@ -145,9 +145,9 @@ Public Class ScreenManager
     Public Function CreateTexture(width As Integer, height As Integer) As Texture2D
         Dim texture As Texture2D = New Texture2D(Game.GraphicsDevice, width, height)
 
-        Dim data As Color() = New Color(width * height) {}
+        Dim data As Color() = New Color(width * height - 1) {}
         For pixel As Integer = 0 To data.Count - 1
-            data(pixel) = Color.Black
+            data(pixel) = Color.White
         Next
         texture.SetData(data)
 

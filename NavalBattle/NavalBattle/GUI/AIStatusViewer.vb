@@ -23,8 +23,10 @@ Public Class AIStatusViewer
         background = New Sprite()
         background.Frame = New Frame(naval, New Vector2(8, 8), New Rectangle(32, 48, 16, 16), Color.White, SpriteEffects.None)
         background.LayerDepth = 0
+        background.Scale = 2 * Vector2.One
 
         animationStatus = New AnimatedSprite(Of AIStatus)()
+        animationStatus.Scale = 2 * Vector2.One
         animationStatus.LayerDepth = 1
 
         animationRunning = New Animation(New List(Of Frame))
