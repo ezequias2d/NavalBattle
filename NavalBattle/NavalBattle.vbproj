@@ -176,7 +176,6 @@
     <Compile Include="NavalBattle\Enum\Ship.vb" />
     <Compile Include="NavalBattle\Scenes\MenuScene.vb" />
     <Compile Include="NavalBattle\Scenes\NavalBattleScene.vb" />
-    <Compile Include="NavalBattle\Scenes\SceneTest.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

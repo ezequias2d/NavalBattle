@@ -412,7 +412,7 @@ Public Class GUIContext
     ''' </summary>
     ''' <param name="gameTime"> Tempo de jogo </param>
     Public Overrides Sub Update(gameTime As GameTime)
-        If Focus AndAlso CursorEnable Then
+        If Focus Then
             ' Se focado atualiza.
             ' Evita que comandos de Input que o destino é o controle focado seja espalhado para o GUIContext atual.
             Dim elapse As Single = gameTime.ElapsedGameTime.TotalSeconds
@@ -420,45 +420,46 @@ Public Class GUIContext
             ' Componente selecionado atual
             Dim current As GUIObject = GetCurrent()
 
-            ' Translada pouco a pouco a posição do cursor até o destino.
-            _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
-
-            If MovableCursor Then
-                If CursorMovementAxisMode = AxisMode.Floating Then
-                    changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
-                Else
-                    changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
-                End If
-
-                If changePosition.X >= 1 Then
-                    'Right
-                    Move(False, False, False, True)
-                    changePosition.X = 0
-                ElseIf changePosition.X <= -1 Then
-                    'Left
-                    Move(False, False, True, False)
-                    changePosition.X = 0
-                ElseIf changePosition.Y >= 1 Then
-                    'Up
-                    Move(True, False, False, False)
-                    changePosition.Y = 0
-                ElseIf changePosition.Y <= -1 Then
-                    'Down
-                    Move(False, True, False, False)
-                    changePosition.Y = 0
-                End If
-            End If
-
-
             Dim updatesCursor As Boolean = False
-
             updatesCursor = InvokeAxisFulled(gameTime) OrElse updatesCursor
 
-            updatesCursor = current.InvokeAxisFulled(gameTime) OrElse updatesCursor
+            If CursorEnable Then
+                ' Translada pouco a pouco a posição do cursor até o destino.
+                _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
 
-            If updatesCursor Then
-                UpdateCursor(current)
+                If MovableCursor Then
+                    If CursorMovementAxisMode = AxisMode.Floating Then
+                        changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
+                    Else
+                        changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
+                    End If
+
+                    If changePosition.X >= 1 Then
+                        'Right
+                        Move(False, False, False, True)
+                        changePosition.X = 0
+                    ElseIf changePosition.X <= -1 Then
+                        'Left
+                        Move(False, False, True, False)
+                        changePosition.X = 0
+                    ElseIf changePosition.Y >= 1 Then
+                        'Up
+                        Move(True, False, False, False)
+                        changePosition.Y = 0
+                    ElseIf changePosition.Y <= -1 Then
+                        'Down
+                        Move(False, True, False, False)
+                        changePosition.Y = 0
+                    End If
+                End If
+
+                updatesCursor = current.InvokeAxisFulled(gameTime) OrElse updatesCursor
+
+                If updatesCursor Then
+                    UpdateCursor(current)
+                End If
             End If
+
         End If
 
         ' Pecorre uma nova lista com os controles (evita erro de alteração)
@@ -500,10 +501,9 @@ Public Class GUIContext
     ''' </summary>
     ''' <param name="obj"> Objeto para focar </param>
     Public Sub FocusOn(ByRef obj As GUIObject)
-        If obj IsNot lastFocused Then
+        If obj IsNot lastFocused AndAlso obj IsNot Nothing Then
             focusStack.Push(lastFocused)
             lastFocused.Focus = False
-
             lastFocused = obj
             If TypeOf lastFocused Is GUIContext Then
                 Dim lastFocusedContext As GUIContext = TryCast(lastFocused, GUIContext)
@@ -519,7 +519,6 @@ Public Class GUIContext
     Public Sub Refocus()
         If TypeOf lastFocused Is GUIContext Then
             Dim lastFocusedContext As GUIContext = TryCast(lastFocused, GUIContext)
-            lastFocused.Focus = False
             ScreenManager.Instance.Current.GUIController.GoBack()
         ElseIf focusStack.Count > 0 Then
             lastFocused.Focus = False

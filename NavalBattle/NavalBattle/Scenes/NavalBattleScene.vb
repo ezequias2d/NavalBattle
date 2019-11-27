@@ -29,14 +29,16 @@ Public Class NavalBattleScene
 
     Private player2IAMap As IAIMap
     Private player2IA As IAIPlayer
+    Private menu As MenuScene
 
-    Public Sub New(sizeX As Integer, sizeY As Integer)
+    Public Sub New(menu As MenuScene, sizeX As Integer, sizeY As Integer)
         updates = New LinkedList(Of IUpdate)
         navalGame = New NavalGame(sizeX, sizeY, PlayerID.Player1)
         player2IA = New AI1Player(battleShipNum, carrierNum, destroyerNum, submarineNum)
         player2IAMap = New AI1Map()
         Me.sizeX = sizeX
         Me.sizeY = sizeY
+        Me.menu = menu
     End Sub
 
     Private Sub Fire0PutShip(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
@@ -96,7 +98,7 @@ Public Class NavalBattleScene
                 navalGame.Start()
             End If
             navalGame.FillMap(navalMap)
-        Else
+        ElseIf Not endGame Then
             navalGame.Attack(obj.IndexX, obj.IndexY)
             navalGame.FillMap(navalMap)
             If navalGame.CurrentPlayer <> PlayerID.Player1 Then
@@ -294,7 +296,14 @@ Public Class NavalBattleScene
                 endGame = True
                 GUIController.CurrentContext.CursorEnable = False
                 navalMap.RemoveButtons()
+                GUIController.CurrentContext.OnFire0 = AddressOf Back
             End If
+        End If
+    End Sub
+
+    Private Sub Back(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+        If endGame Then
+            ScreenManager.Instance.ChangeScene(Me.menu)
         End If
     End Sub
 

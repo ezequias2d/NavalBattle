@@ -36,11 +36,15 @@ Public Class MenuScene
     End Sub
 
     Private Sub OkButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
-        ScreenManager.Instance.ChangeScene(New NavalBattleScene(numberSelectorX.Value, numberSelectorY.Value))
+        ScreenManager.Instance.ChangeScene(New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value))
     End Sub
 
     Private Sub OnFocusNumberSelector(obj As GUIObject)
         ControlsViewSizeMapSelect()
+    End Sub
+
+    Private Sub OnFocusMainContext(obj As GUIObject)
+        ControlsViewMainMenuMode()
     End Sub
 
     Private Sub OnUnfocusNumberSelector(obj As GUIObject)
@@ -99,6 +103,7 @@ Public Class MenuScene
         Dim n As Integer = GUIController.MainContext.NextNegative()
         Dim colorPainel As ColorPainel = New ColorPainel(n, 0, n, New Vector2(-sizePainel.X / 2, 16.0F), sizePainel, color)
         GUIController.MainContext.Add(colorPainel)
+        GUIController.MainContext.OnFocus = AddressOf OnFocusMainContext
 
         n = GUIController.MainContext.NextNegative()
         Dim labelTitle As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label("NavalBattle", Color.Purple, Label.Font))

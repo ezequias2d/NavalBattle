@@ -313,6 +313,10 @@
             Next
         Next
 
+        If count = 1 Then
+            count = 2
+        End If
+
         Return count
     End Function
 
