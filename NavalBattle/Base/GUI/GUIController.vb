@@ -20,6 +20,17 @@ Public Class GUIController
     Private ReadOnly _MainContext As GUIContext
     Private Shared _Texture As Texture2D
     Private _CurrentContext As GUIContext
+    Private _LockContext As Boolean
+
+    ''' <summary>
+    ''' Flag de bloqueio
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property LockContext As Boolean
+        Get
+            Return _LockContext
+        End Get
+    End Property
 
     ''' <summary>
     ''' Contexto principal
@@ -78,6 +89,7 @@ Public Class GUIController
         MainContext.Focus = True
         Me.DrawEnable = True
         Me.UpdateEnable = True
+        Me._LockContext = False
     End Sub
 
     ''' <summary>
@@ -96,19 +108,21 @@ Public Class GUIController
     ''' </summary>
     ''' <param name="context"></param>
     Public Sub ChangeContext(ByRef context As GUIContext)
-        stackContext.Push(CurrentContext)
-        CurrentContext.Focus = False
-        CurrentContext.UpdateEnable = False
-        _CurrentContext = context
-        CurrentContext.Focus = True
-        Input.Instance.Update(Nothing)
+        If Not LockContext Then
+            stackContext.Push(CurrentContext)
+            CurrentContext.Focus = False
+            CurrentContext.UpdateEnable = False
+            _CurrentContext = context
+            CurrentContext.Focus = True
+            Input.Instance.Update(Nothing)
+        End If
     End Sub
 
     ''' <summary>
     ''' Retorna ao ultimo GUIContext inserido na pilha
     ''' </summary>
     Public Sub GoBack()
-        If stackContext.Count > 0 Then
+        If stackContext.Count > 0 AndAlso Not LockContext Then
             CurrentContext.Focus = False
             CurrentContext.UpdateEnable = False
             CurrentContext.ResetFocus()
@@ -169,6 +183,14 @@ Public Class GUIController
         If CurrentContext.DrawEnable Then
             CurrentContext.Draw(spriteBatch, positionDelta, scaleDelta, angleDelta, layerDepthDelta)
         End If
+    End Sub
+
+    Public Sub LockChangeContext()
+        _LockContext = True
+    End Sub
+
+    Public Sub UnlockChangeContext()
+        _LockContext = False
     End Sub
 
     Private Function CreateSprite8x8(x As Integer, y As Integer, color As Color) As Sprite

@@ -407,7 +407,7 @@ Public MustInherit Class GUIObject
     ''' <param name="axisValue"> Valor do Axis quando disparado </param>
     ''' <param name="axis"> Axis </param>
     Protected Sub CancelFunction(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
-        context.GetContext().Refocus()
+        context.Refocus()
     End Sub
 
     ''' <summary>

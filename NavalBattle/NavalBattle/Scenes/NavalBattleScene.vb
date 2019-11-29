@@ -63,6 +63,7 @@ Public Class NavalBattleScene
 
     Private Sub Fire0PutShip(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
         toPut = Ship.None
+
         Select Case obj.IndexY
             Case 0
                 'Porta avioes
@@ -88,10 +89,12 @@ Public Class NavalBattleScene
                 toPut = Ship.None
         End Select
         If toPut <> Ship.None Then
+            GUIController.UnlockChangeContext()
             GUIController.GoBack()
+            GUIController.LockChangeContext()
             ControlsViewPutShipMode()
         Else
-
+            GUIController.UnlockChangeContext()
         End If
     End Sub
 
@@ -124,7 +127,9 @@ Public Class NavalBattleScene
                 current.Label.Text = num.ToString() + current.Label.Text.Substring(1)
             End If
             If carrierNum > 0 OrElse battleShipNum > 0 OrElse destroyerNum > 0 OrElse submarineNum > 0 Then
+                GUIController.UnlockChangeContext()
                 GUIController.ChangeContext(putShipContext)
+                GUIController.LockChangeContext()
                 ControlsViewPutShipMenuMode()
             Else
                 toPut = Ship.None
@@ -277,6 +282,7 @@ Public Class NavalBattleScene
         navalGame.FillMap(navalMap)
 
         GUIController.ChangeContext(putShipContext)
+        GUIController.LockChangeContext()
         ControlsViewPutShipMenuMode()
 
         If navalGame.CurrentPlayer <> PlayerID.Player2 Then
@@ -295,7 +301,6 @@ Public Class NavalBattleScene
 
         'volta para player1
         navalGame.SwapPlayer()
-
 
 
     End Sub
