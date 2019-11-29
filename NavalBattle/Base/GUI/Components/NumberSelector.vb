@@ -69,9 +69,6 @@ Public Class NumberSelector
         boxSelect = New Box(Vector2.One, New Frame(GUIController.Texture, New Rectangle(72, 0, 24, 24)))
         Value = minValue
         OnHorizontal = AddressOf NumberSelector.HorizontalAxis
-
-        'AxisModeSetting(Axis.Fire0) = AxisMode.Click
-        'OnFire0 = AddressOf NumberSelector.Fire0Axis
     End Sub
 
     Private Shared Sub HorizontalAxis(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
@@ -79,17 +76,6 @@ Public Class NumberSelector
             Dim numberSelector As NumberSelector = TryCast(obj, NumberSelector)
             numberSelector.Value = numberSelector.Value + Math.Sign(axisValue)
         End If
-    End Sub
-
-    ''' <summary>
-    ''' Chama o desfoco quando precionado o Axis.Fire0
-    ''' </summary>
-    ''' <param name="context"> Contexto do componente </param>
-    ''' <param name="obj"> Componente de GUI </param>
-    ''' <param name="axisValue"> Valor do Axis </param>
-    ''' <param name="axis"> Axis associado </param>
-    Private Shared Sub Fire0Axis(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
-        context.Refocus()
     End Sub
 
     ''' <summary>

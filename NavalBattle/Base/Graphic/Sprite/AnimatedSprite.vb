@@ -137,6 +137,13 @@ Public Class AnimatedSprite(Of Key)
     End Sub
 
     ''' <summary>
+    ''' Cira novo AnimatedSprite
+    ''' </summary>
+    Public Sub New()
+        Me.New(Vector2.Zero, 5.0F, New Dictionary(Of Key, Animation))
+    End Sub
+
+    ''' <summary>
     ''' Update.
     ''' </summary>
     ''' <param name="gameTime"> GameTime </param>

@@ -23,7 +23,7 @@ Public MustInherit Class GameScene
     ''' Camera padrão
     ''' </summary>
     ''' <returns> Camera </returns>
-    Protected Property Camera As Camera
+    Public Property Camera As Camera
 
     ''' <summary>
     ''' GUIController que controla da cena(Apenas leitura)
@@ -67,6 +67,8 @@ Public MustInherit Class GameScene
     Public Overridable Sub UnloadContent()
         content.Unload()
         Camera.Drawings.Clear()
+        GUIController.MainContext.Clear()
+        GUIController.ChangeContext(GUIController.MainContext)
     End Sub
 
     ''' <summary>

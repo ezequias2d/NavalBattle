@@ -175,6 +175,6 @@ Public Class Sprite
     ''' <param name="angleDelta"> Ângulo adicional </param>
     ''' <param name="layerDepthDelta"> LayerDepth adicional </param>
     Public Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort) Implements IDrawable.Draw
-        Frame.Draw(spriteBatch, Position + positionDelta, Scale + scaleDelta, Angle + angleDelta, layerDepthDelta + LayerDepth)
+        Frame.Draw(spriteBatch, Position + positionDelta, Scale * scaleDelta, Angle + angleDelta, layerDepthDelta + LayerDepth)
     End Sub
 End Class

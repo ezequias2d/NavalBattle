@@ -85,7 +85,7 @@ Public Class ScreenManager
     ''' Cria novo ScreenManager de relolução 448x512
     ''' </summary>
     Private Sub New()
-        Dimensions = New Vector2(448, 512)
+        Dimensions = New Vector2(1024, 576)
     End Sub
 
     ''' <summary>
@@ -101,7 +101,7 @@ Public Class ScreenManager
     ''' </summary>
     ''' <param name="newScene"></param>
     Public Sub ChangeScene(ByRef newScene As GameScene)
-        If newScene Is Nothing Then
+        If newScene Is Nothing OrElse newScene Is Current Then
             Return
         End If
 
@@ -140,5 +140,27 @@ Public Class ScreenManager
         If Not Current Is Nothing Then
             Current.Draw(spriteBatch)
         End If
+    End Sub
+
+    Public Function CreateTexture(width As Integer, height As Integer) As Texture2D
+        Dim texture As Texture2D = New Texture2D(Game.GraphicsDevice, width, height)
+
+        Dim data As Color() = New Color(width * height - 1) {}
+        For pixel As Integer = 0 To data.Count - 1
+            data(pixel) = Color.White
+        Next
+        texture.SetData(data)
+
+        Return texture
+    End Function
+
+    Public Sub UpdateTexture(ByRef texture As Texture2D, paint As Func(Of (Integer, Integer), Color))
+        Dim data As Color() = New Color(texture.Width * texture.Height) {}
+        For xPixel As Integer = 0 To texture.Width - 1
+            For yPixel As Integer = 0 To texture.Height - 1
+                data(xPixel + yPixel * texture.Width) = paint((xPixel, yPixel))
+            Next
+        Next
+        texture.SetData(data)
     End Sub
 End Class

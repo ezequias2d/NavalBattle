@@ -20,6 +20,17 @@ Public Class GUIController
     Private ReadOnly _MainContext As GUIContext
     Private Shared _Texture As Texture2D
     Private _CurrentContext As GUIContext
+    Private _LockContext As Boolean
+
+    ''' <summary>
+    ''' Flag de bloqueio
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property LockContext As Boolean
+        Get
+            Return _LockContext
+        End Get
+    End Property
 
     ''' <summary>
     ''' Contexto principal
@@ -78,6 +89,7 @@ Public Class GUIController
         MainContext.Focus = True
         Me.DrawEnable = True
         Me.UpdateEnable = True
+        Me._LockContext = False
     End Sub
 
     ''' <summary>
@@ -96,19 +108,21 @@ Public Class GUIController
     ''' </summary>
     ''' <param name="context"></param>
     Public Sub ChangeContext(ByRef context As GUIContext)
-        stackContext.Push(CurrentContext)
-        CurrentContext.Focus = False
-        CurrentContext.UpdateEnable = False
-        _CurrentContext = context
-        CurrentContext.Focus = True
-        Input.Instance.Update(Nothing)
+        If Not LockContext Then
+            stackContext.Push(CurrentContext)
+            CurrentContext.Focus = False
+            CurrentContext.UpdateEnable = False
+            _CurrentContext = context
+            CurrentContext.Focus = True
+            Input.Instance.Update(Nothing)
+        End If
     End Sub
 
     ''' <summary>
     ''' Retorna ao ultimo GUIContext inserido na pilha
     ''' </summary>
     Public Sub GoBack()
-        If stackContext.Count > 0 Then
+        If stackContext.Count > 0 AndAlso Not LockContext Then
             CurrentContext.Focus = False
             CurrentContext.UpdateEnable = False
             CurrentContext.ResetFocus()
@@ -170,4 +184,64 @@ Public Class GUIController
             CurrentContext.Draw(spriteBatch, positionDelta, scaleDelta, angleDelta, layerDepthDelta)
         End If
     End Sub
+
+    Public Sub LockChangeContext()
+        _LockContext = True
+    End Sub
+
+    Public Sub UnlockChangeContext()
+        _LockContext = False
+    End Sub
+
+    Private Function CreateSprite8x8(x As Integer, y As Integer, color As Color) As Sprite
+        Dim sprite As Sprite = New Sprite()
+        sprite.Frame = New Frame(Texture, Vector2.One * 4, New Rectangle(x, y, 8, 8), color, SpriteEffects.None)
+        Return sprite
+    End Function
+
+    Private Function CreateSprite16x16(x As Integer, y As Integer, color As Color) As Sprite
+        Dim sprite As Sprite = New Sprite()
+        sprite.Frame = New Frame(Texture, Vector2.One * 4, New Rectangle(x, y, 16, 16), color, SpriteEffects.None)
+        Return sprite
+    End Function
+
+    Public Function CreateFireSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 40, color)
+    End Function
+
+    Public Function CreateHorizontalSprite(color As Color) As Sprite
+        Return CreateSprite8x8(40, 32, color)
+    End Function
+
+    Public Function CreateVerticalSprite(color As Color) As Sprite
+        Return CreateSprite8x8(32, 40, color)
+    End Function
+
+    Public Function CreateOrbSprite(color As Color) As Sprite
+        Return CreateSprite8x8(40, 24, color)
+    End Function
+
+    Public Function CreateUpSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 24, color)
+    End Function
+
+    Public Function CreateDownSprite(color As Color) As Sprite
+        Return CreateSprite8x8(32, 24, color)
+    End Function
+
+    Public Function CreateLeftSprite(color As Color) As Sprite
+        Return CreateSprite8x8(32, 32, color)
+    End Function
+
+    Public Function CreateRightSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 32, color)
+    End Function
+
+    Public Function CreateLittleOrbSprite(color As Color) As Sprite
+        Return CreateSprite8x8(24, 48, color)
+    End Function
+
+    Public Function CreateAnalogicSprite(color As Color) As Sprite
+        Return CreateSprite16x16(48, 24, color)
+    End Function
 End Class
