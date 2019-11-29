@@ -11,7 +11,7 @@
     <AssemblyName>NavalBattle</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -80,9 +80,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -167,7 +164,6 @@
     <Compile Include="NavalBattle\AI\AI1\Tools.vb" />
     <Compile Include="NavalBattle\AI\IAIMap.vb" />
     <Compile Include="NavalBattle\AI\IAIPlayer.vb" />
-    <Compile Include="NavalBattle\MultiSounds.vb" />
     <Compile Include="NavalBattle\Enum\HouseStatus.vb" />
     <Compile Include="NavalBattle\Enum\Orientation.vb" />
     <Compile Include="NavalBattle\Enum\PlayerID.vb" />

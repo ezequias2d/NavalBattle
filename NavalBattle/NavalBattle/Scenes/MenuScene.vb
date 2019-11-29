@@ -1,4 +1,5 @@
 ﻿Imports Microsoft.Xna.Framework
+Imports Microsoft.Xna.Framework.Audio
 Imports Microsoft.Xna.Framework.Graphics
 
 Public Class MenuScene
@@ -19,6 +20,9 @@ Public Class MenuScene
     Private labelFire0 As Label
     Private labelCancel As Label
     Private labelChangeValue As Label
+
+    Private sound As SoundEffect
+    Private soundEffectInstance As SoundEffectInstance
 
     Public Sub New(ByRef game As Game)
         updates = New LinkedList(Of IUpdate)
@@ -226,6 +230,13 @@ Public Class MenuScene
 
     Public Overrides Sub LoadContent()
         MyBase.LoadContent()
+
+        sound = ScreenManager.Instance.Content.Load(Of SoundEffect)("somdefundo")
+
+        soundEffectInstance = sound.CreateInstance()
+        soundEffectInstance.IsLooped = True
+        soundEffectInstance.Play()
+
         naval = content.Load(Of Texture2D)("naval")
 
         texts = CreateTexts()

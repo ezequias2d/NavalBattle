@@ -44,14 +44,17 @@ Public Class AI1Player
         If ExistNotComplete(possibleMaps) Then
             For Each submap As SubMap In possibleMaps
                 Dim avaliable As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger) = submap.GetAvaliable(pieces)
-                avaliable.Weight /= 2
                 If avaliable.Weight > 0 Then
                     chanceMap.AddMap(avaliable)
                 End If
+            Next
 
+            chanceMap.ScaleDown(2)
+
+            For Each submap As SubMap In possibleMaps
                 For Each detail In submap.Details
                     If Not detail.complete Then
-                        chanceMap.ExplicitlyAdd(detail, submap.Weight * 8)
+                        chanceMap.ExplicitlyAdd(detail, submap.Weight)
                     End If
                 Next
             Next
@@ -77,7 +80,11 @@ Public Class AI1Player
             chanceMap.Adjuster()
             chanceMap.IsolateLargerHouses()
 
-            result = Picker.ToRaffle(chanceMap)
+            If chanceMap.ExistPercentageDiscrepancyValue(0.333F) Then
+                result = chanceMap.GetMaxHouse()
+            Else
+                result = Picker.ToRaffle(chanceMap)
+            End If
         End If
         chanceMapViewer.FillMap(chanceMap)
         complete = True

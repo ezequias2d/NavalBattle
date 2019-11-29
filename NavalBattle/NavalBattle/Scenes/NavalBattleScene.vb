@@ -1,4 +1,5 @@
 ﻿Imports Microsoft.Xna.Framework
+Imports Microsoft.Xna.Framework.Audio
 Imports Microsoft.Xna.Framework.Graphics
 
 Public Class NavalBattleScene
@@ -42,6 +43,8 @@ Public Class NavalBattleScene
     Private labelFire2 As Label
 
     Private chanceMapViewer As ChanceMapViewer
+
+    Private shoot As SoundEffect
 
     Public Sub New(menu As MenuScene, sizeX As Integer, sizeY As Integer)
         updates = New LinkedList(Of IUpdate)
@@ -139,6 +142,7 @@ Public Class NavalBattleScene
             navalGame.FillMap(navalMap)
         ElseIf Not endGame Then
             navalGame.Attack(obj.IndexX, obj.IndexY)
+            shoot.Play()
             navalGame.FillMap(navalMap)
             If navalGame.CurrentPlayer <> PlayerID.Player1 Then
                 GUIController.CurrentContext.MovableCursor = False
@@ -272,7 +276,7 @@ Public Class NavalBattleScene
         CreateLabel()
         naval = content.Load(Of Texture2D)("naval")
         naval2 = content.Load(Of Texture2D)("naval2")
-        font = content.Load(Of SpriteFont)("fonts/PressStart2P")
+        shoot = content.Load(Of SoundEffect)("tiro")
         CreateAIStatusView()
 
         Dim area As Vector2 = New Vector2(Camera.InternalDimensions.X, Camera.InternalDimensions.Y - 32)
@@ -327,6 +331,7 @@ Public Class NavalBattleScene
                 count += gameTime.ElapsedGameTime.TotalSeconds
                 If count > 1.0 Then
                     Dim current As GUIObject = GUIController.CurrentContext.GetCurrent()
+                    shoot.Play()
                     navalGame.Attack(current.IndexX, current.IndexY)
                     navalGame.FillMap(navalMap)
                     count = 0.0
