@@ -13,12 +13,14 @@ Public Class AI1Player
     Private height As Integer
     Private result As (Integer, Integer)
     Private complete As Boolean
+    Private chanceMapViewer As ChanceMapViewer
 
-    Public Sub New(battleship As UInteger, carrier As UInteger, destroyer As UInteger, submarine As UInteger)
+    Public Sub New(chanceMapViewer As ChanceMapViewer, battleship As UInteger, carrier As UInteger, destroyer As UInteger, submarine As UInteger)
         pieces.Battleship = battleship
         pieces.Carrier = carrier
         pieces.Destroyer = destroyer
         pieces.Submarine = submarine
+        Me.chanceMapViewer = chanceMapViewer
         complete = False
     End Sub
 
@@ -41,10 +43,15 @@ Public Class AI1Player
 
         If ExistNotComplete(possibleMaps) Then
             For Each submap As SubMap In possibleMaps
-                chanceMap.AddMap(submap.GetAvaliable(pieces))
+                Dim avaliable As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger) = submap.GetAvaliable(pieces)
+                avaliable.Weight /= 2
+                If avaliable.Weight > 0 Then
+                    chanceMap.AddMap(avaliable)
+                End If
+
                 For Each detail In submap.Details
                     If Not detail.complete Then
-                        chanceMap.ExplicitlyAdd(detail, submap.Weight * 2)
+                        chanceMap.ExplicitlyAdd(detail, submap.Weight * 8)
                     End If
                 Next
             Next
@@ -53,6 +60,14 @@ Public Class AI1Player
         Else
             If possibleMaps.Count > 0 Then
                 For Each submap As SubMap In possibleMaps
+                    For Each detail In submap.Details
+                        If Not detail.complete Then
+                            chanceMap.ExplicitlyBlock(detail)
+                        End If
+                    Next
+                Next
+
+                For Each submap As SubMap In possibleMaps
                     chanceMap.AddMap(submap.GetAvaliable(pieces))
                 Next
             Else
@@ -60,8 +75,11 @@ Public Class AI1Player
             End If
 
             chanceMap.Adjuster()
+            chanceMap.IsolateLargerHouses()
+
             result = Picker.ToRaffle(chanceMap)
         End If
+        chanceMapViewer.FillMap(chanceMap)
         complete = True
     End Sub
 

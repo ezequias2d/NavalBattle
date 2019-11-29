@@ -11,12 +11,12 @@ Public Class NavalMap
     Private mapEdge As Box
     Private tilemap As Tilemap(Of ShipTilemap)
     Private tilemapStatus As Tilemap(Of HouseStatus)
-    Private water As Tilemap(Of Integer)
-
+    Private water As AnimatedSprite(Of Integer)
     Private sizeX As Integer
     Private sizeY As Integer
 
     Private naval As Texture2D
+    Private naval2 As Texture2D
 
     Private area As Vector2
     Private insideArea As Vector2
@@ -28,14 +28,17 @@ Public Class NavalMap
     Private fire1 As GUIObject.OnAxis
     Private fire2 As GUIObject.OnAxis
     Private calculateColor As CalculateColor
+    Private context As GUIContext
 
-    Public Sub New(context As GUIContext, naval As Texture2D, area As Vector2, sizeX As Integer, sizeY As Integer, fire0 As GUIObject.OnAxis, fire1 As GUIObject.OnAxis, fire2 As GUIObject.OnAxis, calculateColor As CalculateColor)
+    Public Sub New(context As GUIContext, naval As Texture2D, naval2 As Texture2D, area As Vector2, sizeX As Integer, sizeY As Integer, fire0 As GUIObject.OnAxis, fire1 As GUIObject.OnAxis, fire2 As GUIObject.OnAxis, calculateColor As CalculateColor)
         MyBase.New(context.NextNegative(), context.NextNegative(), context.NextNegative(), Vector2.Zero)
+        Me.context = context
         Me.DrawEnable = True
         Me.UpdateEnable = True
         Me.GUIObjectEnable = False
         Me.Scale = Vector2.One
         Me.naval = naval
+        Me.naval2 = naval2
         Me.sizeX = sizeX
         Me.sizeY = sizeY
         Me.Parent = context
@@ -51,7 +54,7 @@ Public Class NavalMap
         scaleMap = CalculateScale()
         insideArea = CalculateInsideArea()
 
-        mapEdge = New Box(insideArea + New Vector2(16, 16), New Frame(naval, New Rectangle(64, 96, 24, 24)))
+        mapEdge = New Box(insideArea + New Vector2(16, 16), New Frame(naval2, New Rectangle(0, 32, 48, 48)))
         tilemap = CreateTilemap()
         tilemapStatus = CreateTilemapStatus()
         water = CreateWater()
@@ -204,24 +207,22 @@ Public Class NavalMap
         End If
     End Sub
 
-    Private Function CreateWater() As Tilemap(Of Integer)
-        Dim tilemap As Tilemap(Of Integer) = New Tilemap(Of Integer)(sizeX, sizeY)
-        tilemap.Scale = New Vector2(insideArea.X / (16.0F * sizeX), insideArea.Y / (16.0F * sizeY))
-
-
+    Private Function CreateWater() As AnimatedSprite(Of Integer)
         Dim water As AnimatedSprite(Of Integer) = New AnimatedSprite(Of Integer)(Vector2.Zero)
+        water.Scale = insideArea / (Vector2.One * 32.0F)
+        water.Position = -insideArea / 2.0F
         Dim listFrames As IList(Of Frame) = New List(Of Frame)
-        listFrames.Add(New Frame(naval, New Rectangle(0, 0, 16, 16)))
-        listFrames.Add(New Frame(naval, New Rectangle(128, 0, 16, 16)))
+        listFrames.Add(New Frame(naval2, New Rectangle(0, 0, 32, 32), True))
+        listFrames.Add(New Frame(naval2, New Rectangle(32, 0, 32, 32), True))
+        listFrames.Add(New Frame(naval2, New Rectangle(64, 0, 32, 32), True))
+
         Dim animationWater As Animation = New Animation(listFrames)
         water.UpdatesPerSecond = 1
         water.Animations.Add(0, animationWater)
         water.animation = 0
         water.SetFrameIndex(0)
 
-        tilemap.Sprites.Add(0, water)
-
-        Return tilemap
+        Return water
     End Function
 
     Private Function CreateTilemapStatus() As Tilemap(Of HouseStatus)

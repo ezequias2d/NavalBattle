@@ -176,11 +176,46 @@ Public Class Label
         spriteBatch.DrawString(SpriteFont, Text, Position + positionDelta, Color, MathHelper.ToRadians(Angle + angleDelta), origin, Scale * scaleDelta, SpriteEffects.None, (LayerDetph + layerDepthDelta) / 65536.0F)
     End Sub
 
+    ''' <summary>
+    ''' Mede o tamanho do texto rederizado na tela
+    ''' </summary>
+    ''' <param name="scaleDelta"> Escala adicional </param>
+    ''' <returns> Tamanho do texto desenhado </returns>
     Public Function Measure(scaleDelta As Vector2) As Vector2
         Return SpriteFont.MeasureString(Text) * scaleDelta * Scale
     End Function
 
+    ''' <summary>
+    ''' Mede o tamanho do texto rederizado na tela
+    ''' </summary>
+    ''' <returns> Tamanho do texto desenhado </returns>
     Public Function Measure() As Vector2
         Return SpriteFont.MeasureString(Text) * Scale
+    End Function
+
+    ''' <summary>
+    '''  Mede o tamanho do texto rederizado na tela a parti de um determinado caractere e com distancia determinada.
+    ''' </summary>
+    ''' <param name="startIndex"> Caractere inicial </param>
+    ''' <param name="size"> Quantidade de caracteres </param>
+    ''' <returns> Tamanho da substring desenhado </returns>
+    Public Function MeasureIndex(startIndex As UInteger, size As Single) As Vector2
+        Return MeasureIndex(startIndex, size, Vector2.One)
+    End Function
+
+    ''' <summary>
+    ''' Mede o tamanho do texto rederizado na tela a parti de um determinado caractere e com distancia determinada.
+    ''' </summary>
+    ''' <param name="startIndex"> Caractere inicial </param>
+    ''' <param name="size"> Quantidade de caracteres </param>
+    ''' <param name="scaleDelta"> Escala adicional </param>
+    ''' <returns> Tamanho da substring desenhado </returns>
+    Public Function MeasureIndex(startIndex As UInteger, size As Single, scaleDelta As Vector2) As Vector2
+        Dim sizeInt As Integer = size - (size Mod 1)
+        Dim output As Vector2 = SpriteFont.MeasureString(Text.Substring(startIndex, sizeInt)) * Scale * scaleDelta
+
+        output += Vector2.UnitX * SpriteFont.MeasureString(Text.Substring(startIndex + sizeInt, 1)).X * Scale * scaleDelta * (size Mod 1)
+
+        Return output
     End Function
 End Class

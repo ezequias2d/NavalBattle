@@ -71,6 +71,10 @@ Public Structure SubMap
     End Function
 
     Public Shared Function Unify(submaps As SubMap(), num As UInteger) As SubMap
+        If num = 0 Then
+            Return Nothing
+        End If
+
         Dim details As ISet(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))
         details = New HashSet(Of (Ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))(submaps(0)._shipsDetails)
 
@@ -113,6 +117,10 @@ Public Structure SubMap
         Return other._shipsDetails.SetEquals(_shipsDetails)
     End Function
 
+    Public Shared Sub GenereteSubMap(ByRef output As SubMap(), map As HouseStatus(), width As Integer, height As Integer, cloatPool As CloatPool, maxBattlleship As UInteger, maxCarrier As UInteger, maxDestroyer As UInteger, maxSubmarine As UInteger)
+        output = GenereteSubMap(map, width, height, cloatPool, maxBattlleship, maxCarrier, maxDestroyer, maxSubmarine)
+    End Sub
+
     Public Shared Function GenereteSubMap(map As HouseStatus(), width As Integer, height As Integer, cloatPool As CloatPool, maxBattlleship As UInteger, maxCarrier As UInteger, maxDestroyer As UInteger, maxSubmarine As UInteger) As SubMap()
         Dim aiMaps As ICollection(Of SubMap) = New LinkedList(Of SubMap)()
         Dim a As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger)()
@@ -130,7 +138,7 @@ Public Structure SubMap
         If cloatPool.Count = 0 Then
             Dim subMap As SubMap = New SubMap(a, k)
             If Not aiMaps.Contains(subMap) Then
-                aiMaps.Add(New SubMap(a, k))
+                aiMaps.Add(subMap)
             Else
                 For Each mapAux In aiMaps
                     If subMap.Equals(mapAux) Then
@@ -262,13 +270,13 @@ Public Structure SubMap
                 Dim flag As Boolean = False
                 Select Case ship
                     Case Ship.Battleship
-                        flag = maxBattlleship
+                        flag = (maxBattlleship > 0)
                     Case Ship.Carrier
-                        flag = maxCarrier
+                        flag = (maxCarrier > 0)
                     Case Ship.Destroyer
-                        flag = maxDestroyer
+                        flag = (maxDestroyer > 0)
                     Case Ship.Submarine
-                        flag = maxSubmarine
+                        flag = (maxSubmarine > 0)
                 End Select
 
                 If flag Then

@@ -16,17 +16,17 @@ Public Class AIStatusViewer
     Private animationStopped As Animation
 
     Public Sub New(index As Integer, indexX As Integer, indexY As Integer, position As Vector2, naval As Texture2D, ai As IAIPlayer)
-        MyBase.New(-2, -2, -2, position)
+        MyBase.New(index, indexX, indexY, position)
         Me.naval = naval
         Me.ai = ai
 
         background = New Sprite()
         background.Frame = New Frame(naval, New Vector2(8, 8), New Rectangle(32, 48, 16, 16), Color.White, SpriteEffects.None)
         background.LayerDepth = 0
-        background.Scale = 2 * Vector2.One
+        background.Scale = Vector2.One
 
         animationStatus = New AnimatedSprite(Of AIStatus)()
-        animationStatus.Scale = 2 * Vector2.One
+        animationStatus.Scale = Vector2.One
         animationStatus.LayerDepth = 1
 
         animationRunning = New Animation(New List(Of Frame))
@@ -82,8 +82,8 @@ Public Class AIStatusViewer
     End Sub
 
     Public Overrides Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort)
-        background.Draw(spriteBatch, positionDelta + Position, scaleDelta, angleDelta, layerDepthDelta)
-        animationStatus.Draw(spriteBatch, positionDelta + Position, scaleDelta, angleDelta, layerDepthDelta + 1)
+        background.Draw(spriteBatch, positionDelta + Position, scaleDelta * Scale, angleDelta, layerDepthDelta)
+        animationStatus.Draw(spriteBatch, positionDelta + Position, scaleDelta * Scale, angleDelta, layerDepthDelta + 1)
     End Sub
 
     Private Enum AIStatus

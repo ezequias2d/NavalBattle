@@ -274,7 +274,17 @@ Public Class GUIContext
     ''' </summary>
     ''' <returns></returns>
     Public Function GetCurrent() As GUIObject
-        Return Controllers(_Current)
+        Try
+            Return Controllers(_Current)
+        Catch ex As Exception
+            For Each c In Controllers
+                If c.Value IsNot Nothing Then
+                    _Current = c.Key
+                    Return Controllers(_Current)
+                End If
+            Next
+            Return Nothing
+        End Try
     End Function
 
     ''' <summary>
@@ -338,16 +348,37 @@ Public Class GUIContext
         current.SelectedChange()
 
         current = Nothing
-        While current Is Nothing OrElse Not current.GUIObjectEnable
-            If right AndAlso x > maxX Then
-                x = 0
-            ElseIf left AndAlso x < 0 Then
-                x = maxX
-            ElseIf down AndAlso y < 0 Then
-                y = maxY
-            ElseIf up AndAlso y > maxY Then
-                y = 0
+        Dim countSearchX As UInteger = 0
+        Dim countSearchY As UInteger = 0
+        While (current Is Nothing OrElse Not current.GUIObjectEnable)
+            If countSearchX > 1 Then
+                countSearchX = 0
+                countSearchY += 1
+                y += 1
             End If
+
+            If countSearchY > 1 Then
+                countSearchY = 0
+                countSearchX += 1
+                x += 1
+            End If
+
+            If x > maxX Then
+                x = 0
+                countSearchX += 1
+            ElseIf x < 0 Then
+                x = maxX
+                countSearchX += 1
+            End If
+
+            If y < 0 Then
+                y = maxY
+                countSearchY += 1
+            ElseIf y > maxY Then
+                y = 0
+                countSearchY += 1
+            End If
+
             current = GetObjectOfCoordinates(x, y)
             If right Then
                 x += 1
@@ -359,6 +390,7 @@ Public Class GUIContext
                 y += 1
             End If
         End While
+
         current.Selected = True
         current.SelectedChange()
 
@@ -379,9 +411,11 @@ Public Class GUIContext
     Public Sub Load()
         UpdateEnable = True
         Dim current As GUIObject = GetCurrent()
-        current.Selected = True
-        current.SelectedChange()
-        UpdateCursor(current)
+        If current IsNot Nothing Then
+            current.Selected = True
+            current.SelectedChange()
+            UpdateCursor(current)
+        End If
     End Sub
 
     Public Sub SelectObject(x As Integer, y As Integer)
@@ -423,7 +457,7 @@ Public Class GUIContext
             Dim updatesCursor As Boolean = False
             updatesCursor = InvokeAxisFulled(gameTime) OrElse updatesCursor
 
-            If CursorEnable Then
+            If CursorEnable AndAlso current IsNot Nothing Then
                 ' Translada pouco a pouco a posição do cursor até o destino.
                 _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
 
@@ -550,8 +584,21 @@ Public Class GUIContext
 
     End Sub
 
+    ''' <summary>
+    ''' Retorna um valor negativo diferente sempre que chamado.
+    ''' (Contador reseta quando é limpo com Clear())
+    ''' </summary>
+    ''' <returns></returns>
     Public Function NextNegative() As Integer
         negativeCounter -= 1
         Return negativeCounter
     End Function
+
+    ''' <summary>
+    ''' Limpa todos os controles e reseta contador negativo.
+    ''' </summary>
+    Public Sub Clear()
+        Controllers.Clear()
+        negativeCounter = 0
+    End Sub
 End Class

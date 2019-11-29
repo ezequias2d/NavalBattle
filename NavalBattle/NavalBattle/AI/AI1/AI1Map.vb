@@ -8,6 +8,7 @@ Public Class AI1Map
 
         Dim chanceMap As ChanceMap = New ChanceMap(New HouseStatus(width * height) {}, width, height)
 
+
         While (battleship + carrier + destroyer + submarine > 0)
             Dim avaliable As (UInteger, UInteger, UInteger, UInteger, UInteger) = (battleship, carrier, destroyer, submarine, 1UL)
 
@@ -20,17 +21,18 @@ Public Class AI1Map
 
             Dim orientation As Orientation = Picker.ToRaffle(Of Orientation)(Orientation.Horizontal, Orientation.Vertical)
             Dim position As (x As Integer, y As Integer)
-            If battleship > 0 Then
-                position = Picker.ToRaffle(chanceMap, Ship.Battleship)
-                If chanceMap.PutShip(position.x, position.y, Ship.Battleship, orientation) Then
-                    battleship -= 1
-                    output.Add((Ship.Battleship, position, orientation))
-                End If
-            ElseIf carrier > 0 Then
+
+            If carrier > 0 Then
                 position = Picker.ToRaffle(chanceMap, Ship.Carrier)
                 If chanceMap.PutShip(position.x, position.y, Ship.Carrier, orientation) Then
                     carrier -= 1
                     output.Add((Ship.Carrier, position, orientation))
+                End If
+            ElseIf battleship > 0 Then
+                position = Picker.ToRaffle(chanceMap, Ship.Battleship)
+                If chanceMap.PutShip(position.x, position.y, Ship.Battleship, orientation) Then
+                    battleship -= 1
+                    output.Add((Ship.Battleship, position, orientation))
                 End If
             ElseIf destroyer > 0 Then
                 position = Picker.ToRaffle(chanceMap, Ship.Destroyer)

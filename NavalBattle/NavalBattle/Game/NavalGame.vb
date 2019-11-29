@@ -31,7 +31,6 @@
 
     Public Sub Start()
         _started = True
-        Console.WriteLine("Start")
     End Sub
 
     Public Function IsEnd() As Boolean
@@ -115,7 +114,11 @@
     End Property
 
     Public Sub FillMap(ByRef map As NavalMap)
-        If ForceViewPlayer2Map OrElse (CurrentPlayer = PlayerID.Player2 OrElse (_started = False)) Then
+        FillMap(map, CurrentPlayer, False)
+    End Sub
+
+    Public Sub FillMap(ByRef map As NavalMap, playerIDVision As PlayerID, forceViewShips As Boolean)
+        If ForceViewPlayer2Map OrElse (playerIDVision = PlayerID.Player2 OrElse (_started = False)) Then
             Dim houses As House() = mapPlayer1.Houses()
             Dim enemyVisionMap As HouseStatus() = mapPlayer1.GetEnemyVisionMap()
 
@@ -128,11 +131,16 @@
             Next
 
         Else
+            Dim houses As House() = mapPlayer2.Houses()
             Dim enemyVisionMap As HouseStatus() = mapPlayer2.GetEnemyVisionMap()
             For i As Integer = 0 To mapPlayer2.Width - 1
                 For j As Integer = 0 To mapPlayer2.Height - 1
                     Dim position As Integer = i + j * mapPlayer2.Width
-                    map.SetHouse(i, j, Ship.None, Orientation.Horizontal, 0)
+                    If forceViewShips Then
+                        map.SetHouse(i, j, houses(position).Ship, houses(position).Orientation, mapPlayer2.GetPiece(i, j))
+                    Else
+                        map.SetHouse(i, j, Ship.None, Orientation.Horizontal, 0)
+                    End If
                     map.SetHouse(i, j, enemyVisionMap(position))
                 Next
             Next

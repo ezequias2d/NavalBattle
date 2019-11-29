@@ -1,4 +1,6 @@
-﻿Module Resolver
+﻿Imports System.Threading
+
+Module Resolver
 
 
     Public Function CalculatePossibleAvailableParts(map As HouseStatus(), width As UInteger, height As UInteger,
@@ -6,15 +8,28 @@
                                                                     Carrier As UInteger,
                                                                     Destroyer As UInteger,
                                                                     Submarine As UInteger)) As IList(Of SubMap)
+
         Dim cloats As Cloat() = CloatBacktracking.bk(map, width, height)
 
         Dim cloatPools As CloatPool() = CloatJoin.Join(cloats)
 
         Dim aiMaps As SubMap()() = New SubMap(cloatPools.Length - 1)() {}
 
-        For i = 0 To cloatPools.Length - 1
-            aiMaps(i) = SubMap.GenereteSubMap(map, width, height, cloatPools(i), avaliable.Battleship, avaliable.Carrier, avaliable.Destroyer, avaliable.Submarine)
-        Next
+        If cloatPools.Length > 0 Then
+            Dim queue As Queue(Of ThreadStart) = New Queue(Of ThreadStart)
+
+            For i = 0 To (cloatPools.Length - 1)
+                Dim index As Integer = i
+                queue.Enqueue(Sub() SubMap.GenereteSubMap(aiMaps(index), map, width, height, cloatPools(index), avaliable.Battleship, avaliable.Carrier, avaliable.Destroyer, avaliable.Submarine))
+            Next
+
+            Dim th As Thread = New Thread(Sub() threadSubmap(queue))
+            th.Name = "ThreadSubmap"
+            th.Start()
+
+            threadSubmap(queue)
+            th.Join()
+        End If
 
         Dim output As List(Of SubMap) = New List(Of SubMap)
 
@@ -24,13 +39,28 @@
         Return output
     End Function
 
+    Private Sub threadSubmap(queue As Queue(Of ThreadStart))
+        While queue.Count > 0
+            Dim t As ThreadStart = Nothing
+            SyncLock queue
+                If queue.Count > 0 Then
+                    t = queue.Dequeue()
+                End If
+            End SyncLock
+
+            If t IsNot Nothing Then
+                t.Invoke()
+            End If
+        End While
+    End Sub
+
     Private Function isSolution(a As SubMap(),
                                 k As UInteger,
                                 aiMaps As SubMap()(),
-                                avaliable As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger)) As Boolean
+                                avaliable As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger),
+                                superSubMap As SubMap) As Boolean
 
         If k = aiMaps.Length AndAlso k <> 0 Then
-            Dim superSubMap As SubMap = SubMap.Unify(a, k)
 
             Dim output As Boolean = (superSubMap.Battleship <= avaliable.Battleship) AndAlso
                 (superSubMap.Carrier <= avaliable.Carrier) AndAlso
@@ -59,10 +89,9 @@
 
         Dim cNum As UInteger
         Dim c As SubMap()
-
-        If isSolution(a, k, aiMaps, avaliable) Then
-            Dim total As SubMap = SubMap.Unify(a, k)
-            output.Add(total)
+        Dim superSubMap As SubMap = SubMap.Unify(a, k)
+        If isSolution(a, k, aiMaps, avaliable, superSubMap) Then
+            output.Add(superSubMap)
         Else
             k += 1
 

@@ -183,7 +183,7 @@ Public Class MenuScene
 
         Dim Fire0 As Sprite = GUIController.CreateFireSprite(Color.GreenYellow)
         Dim orbFire0 As Sprite = GUIController.CreateOrbSprite(Color.GreenYellow)
-        Dim orbFire0Label As Label = New Label("B", Color.White, Label.Font)
+        Dim orbFire0Label As Label = New Label("b", Color.White, Label.Font)
 
 
         Dim fire0List As IList(Of (Sprite, Label)) = New List(Of (Sprite, Label))

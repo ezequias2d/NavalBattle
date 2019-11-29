@@ -171,6 +171,7 @@
     <Compile Include="NavalBattle\Game\Map.vb" />
     <Compile Include="NavalBattle\Game\NavalGame.vb" />
     <Compile Include="NavalBattle\GUI\AIStatusViewer.vb" />
+    <Compile Include="NavalBattle\GUI\ChanceMapViewer.vb" />
     <Compile Include="NavalBattle\GUI\ControlsViewer.vb" />
     <Compile Include="NavalBattle\GUI\NavalMap.vb" />
     <Compile Include="NavalBattle\Enum\Ship.vb" />

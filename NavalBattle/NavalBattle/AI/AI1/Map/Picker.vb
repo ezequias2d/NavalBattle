@@ -5,7 +5,8 @@
         VBMath.Randomize()
     End Sub
 
-    Public Function ToRaffle(Of T)(value1 As T, value2 As T)
+    Public Function ToRaffle(Of T)(value1 As T, value2 As T) As T
+        VBMath.Randomize(Timer)
         If VBMath.Rnd > 0.5F Then
             Return value1
         Else

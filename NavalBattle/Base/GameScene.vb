@@ -67,6 +67,8 @@ Public MustInherit Class GameScene
     Public Overridable Sub UnloadContent()
         content.Unload()
         Camera.Drawings.Clear()
+        GUIController.MainContext.Clear()
+        GUIController.ChangeContext(GUIController.MainContext)
     End Sub
 
     ''' <summary>

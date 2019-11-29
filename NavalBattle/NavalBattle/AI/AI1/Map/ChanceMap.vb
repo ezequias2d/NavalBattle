@@ -26,12 +26,24 @@
         Return output
     End Function
 
-    Private Function Min() As ULong
+    Public Function Min() As ULong
         Dim output As ULong = ULong.MaxValue
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
                 If _map(i, j) <> 0 Then
                     output = Math.Min(_map(i, j), output)
+                End If
+            Next
+        Next
+        Return output
+    End Function
+
+    Public Function Max() As ULong
+        Dim output As ULong = ULong.MinValue
+        For i As Integer = 0 To _width - 1
+            For j As Integer = 0 To _height - 1
+                If _map(i, j) <> 0 Then
+                    output = Math.Max(_map(i, j), output)
                 End If
             Next
         Next
@@ -51,12 +63,35 @@
         Next
     End Sub
 
+    Public Sub IsolateLargerHouses()
+        Dim med As ULong = 0
+        Dim div As ULong = 0
+        For i As Integer = 0 To _width - 1
+            For j As Integer = 0 To _height - 1
+                med += _map(i, j)
+                div += 1
+            Next
+        Next
+        med = med / div
+
+        For i As Integer = 0 To _width - 1
+            For j As Integer = 0 To _height - 1
+                If _map(i, j) < med Then
+                    _map(i, j) = 0
+                End If
+            Next
+        Next
+    End Sub
+
     Public Sub AdjusterInvert()
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
                 Dim mult As Single = GetHouseMutiplierInvert(i, j)
                 If Not (_map(i, j) = 1 AndAlso (_map(i, j) * mult < 1)) Then
                     _map(i, j) = mult * _map(i, j)
+                End If
+                If mult = 0 AndAlso _map(i, j) <> 0 Then
+                    _map(i, j) = 1
                 End If
             Next
         Next
@@ -191,7 +226,6 @@
             output = (status.horizontal + status.vertical) / 2.0F
         End If
 
-
         Return output
     End Function
 
@@ -215,6 +249,16 @@
 
     Public Sub ExplicitlyAdd(explicitlyShip As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger), toAdd As Integer)
         PutShip(explicitlyShip.position.x, explicitlyShip.position.y, explicitlyShip.ship, explicitlyShip.orientation, toAdd * explicitlyShip.weight)
+    End Sub
+
+    Public Sub ExplicitlyBlock(explicitlyShip As (ship As Ship, position As (x As Integer, y As Integer), orientation As Orientation, complete As Boolean, weight As UInteger))
+        Dim size As (width As Integer, height As Integer) = GetSize(explicitlyShip.ship, explicitlyShip.orientation)
+
+        For i As Integer = explicitlyShip.position.x To explicitlyShip.position.x + size.width - 1
+            For j As Integer = explicitlyShip.position.y To explicitlyShip.position.y + size.height - 1
+                _houseStatus(i + j * Width) = HouseStatus.Missed
+            Next
+        Next
     End Sub
 
     Public Sub AddMap(avaliable As (Battleship As UInteger, Carrier As UInteger, Destroyer As UInteger, Submarine As UInteger, Weight As UInteger))
@@ -358,5 +402,17 @@
         Return True
     End Function
 
-
+    Public Function IsAllAtSame() As Boolean
+        Dim primary As ULong = 0
+        For i = 0 To Width - 1
+            For j = 0 To Height - 1
+                If primary = 0 AndAlso _map(i, j) <> 0 Then
+                    primary = _map(i, j)
+                ElseIf primary <> _map(i, j) AndAlso _map(i, j) <> 0 Then
+                    Return False
+                End If
+            Next
+        Next
+        Return True
+    End Function
 End Structure
