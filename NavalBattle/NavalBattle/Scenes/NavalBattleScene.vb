@@ -135,6 +135,7 @@ Public Class NavalBattleScene
                 GUIController.LockChangeContext()
                 ControlsViewPutShipMenuMode()
             Else
+                GUIController.UnlockChangeContext()
                 toPut = Ship.None
                 ControlsViewGameMode()
                 navalGame.Start()

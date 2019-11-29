@@ -80,7 +80,7 @@ Public Class AI1Player
             chanceMap.Adjuster()
             chanceMap.IsolateLargerHouses()
 
-            If chanceMap.ExistPercentageDiscrepancyValue(0.333F) Then
+            If chanceMap.ExistPercentageDiscrepancyValue(0.5F) Then
                 result = chanceMap.GetMaxHouse()
             Else
                 result = Picker.ToRaffle(chanceMap)

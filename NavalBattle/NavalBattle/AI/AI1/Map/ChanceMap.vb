@@ -68,8 +68,10 @@
         Dim div As ULong = 0
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
-                med += _map(i, j)
-                div += 1
+                If _map(i, j) > 0 Then
+                    med += _map(i, j)
+                    div += 1
+                End If
             Next
         Next
         Return med / div
