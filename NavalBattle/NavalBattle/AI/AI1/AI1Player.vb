@@ -35,6 +35,18 @@ Public Class AI1Player
         Return False
     End Function
 
+    Private Function CountNotComplete(submaps As IList(Of SubMap)) As ULong
+        Dim count As ULong = 0
+        For Each submap In submaps
+            For Each detail In submap.Details
+                If detail.ship <> Ship.None AndAlso Not detail.complete Then
+                    count += 1
+                End If
+            Next
+        Next
+        Return count
+    End Function
+
     Private Sub ThreadTask()
         Dim possibleMaps As IList(Of SubMap)
         possibleMaps = Resolver.CalculatePossibleAvailableParts(map, width, height, pieces)
