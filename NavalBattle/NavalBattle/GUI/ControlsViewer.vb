@@ -34,7 +34,7 @@ Public Class ControlsViewer
     End Sub
 
     Public Overrides Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort)
-        Dim newPosition As Vector2 = Vector2.Zero
+        Dim newPosition As Vector2 = New Vector2(0, -GetLength(scaleDelta))
         For Each element In list
             If element.labelName.DrawEnable Then
                 element.labelName.Draw(spriteBatch, (Position + newPosition) * scaleDelta + positionDelta, scaleDelta * Scale, angleDelta + Angle, LayerDetph + layerDepthDelta)
@@ -55,4 +55,18 @@ Public Class ControlsViewer
             End If
         Next
     End Sub
+
+    Public Function GetLength() As Single
+        Return GetLength(Vector2.One)
+    End Function
+
+    Public Function GetLength(scaleDelta As Vector2) As Single
+        Dim output As Single
+        For Each element In list
+            If element.labelName.DrawEnable Then
+                output += element.labelName.Measure(Scale * scaleDelta).Y + 1
+            End If
+        Next
+        Return output
+    End Function
 End Class

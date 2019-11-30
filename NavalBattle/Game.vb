@@ -5,7 +5,7 @@ Imports Microsoft.Xna.Framework.Input
 Public Class Game
     Inherits Microsoft.Xna.Framework.Game
 
-    Private graphics As GraphicsDeviceManager
+    Public ReadOnly Property Graphics As GraphicsDeviceManager
     Private spriteBatch As SpriteBatch
 
     ''' <summary>
@@ -23,9 +23,7 @@ Public Class Game
 	''' And initialize them as well.
     ''' </summary>
     Protected Overrides Sub Initialize()
-        graphics.PreferredBackBufferWidth = ScreenManager.Instance.Dimensions.X
-        graphics.PreferredBackBufferHeight = ScreenManager.Instance.Dimensions.Y
-        graphics.ApplyChanges()
+
         MyBase.Initialize()
     End Sub
 
@@ -37,10 +35,9 @@ Public Class Game
         spriteBatch = New SpriteBatch(GraphicsDevice)
         ScreenManager.Instance.SpriteBatch = spriteBatch
         ScreenManager.Instance.Game = Me
+        ScreenManager.Instance.Dimensions = New Vector2(1024, 576)
         ScreenManager.Instance.LoadContent(Content)
-        'ScreenManager.Instance.ChangeScene(New NavalBattleScene(5, 14))
         ScreenManager.Instance.ChangeScene(New MenuScene(Me))
-        'ScreenManager.Instance.ChangeScene(New SceneTest(Me))
     End Sub
 
     Protected Overrides Sub UnloadContent()

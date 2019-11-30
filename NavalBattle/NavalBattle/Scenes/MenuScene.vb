@@ -11,9 +11,14 @@ Public Class MenuScene
     Private game As Game
 
     Private contextSizeMap As GUIContext
+    Private contextSettings As GUIContext
 
     Private numberSelectorX As NumberSelector
     Private numberSelectorY As NumberSelector
+
+    Private check As Check
+    Private resolutionAlternator As SimpleAlternator(Of (x As UInteger, y As UInteger))
+    Private numberSelectorVolume As NumberSelector
 
     Private controlsView As ControlsViewer
     Private labelMove As Label
@@ -24,13 +29,21 @@ Public Class MenuScene
     Private sound As SoundEffect
     Private soundEffectInstance As SoundEffectInstance
 
+    Dim bk As BackgroundMenu
+
+    Public ReadOnly Property Volume As Single
+        Get
+            Return numberSelectorVolume.Value * 0.05F
+        End Get
+    End Property
+
     Public Sub New(ByRef game As Game)
-        updates = New LinkedList(Of IUpdate)
+        _updates = New LinkedList(Of IUpdate)
         Me.game = game
     End Sub
 
     Private Function CreateTexts() As String()
-        Dim texts As String() = New String() {"Play", "Exit"}
+        Dim texts As String() = New String() {"Play", "Settings", "Exit"}
         Return texts
     End Function
 
@@ -39,8 +52,15 @@ Public Class MenuScene
         ControlsViewSizeMap()
     End Sub
 
+    Private Sub SettingsButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+        GUIController.ChangeContext(contextSettings)
+    End Sub
+
     Private Sub OkButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
         ScreenManager.Instance.ChangeScene(New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value))
+        ScreenManager.Instance.Current.updates.Add(bk)
+        Camera.Drawings.Add(bk)
+        bk.EnableLogo = False
     End Sub
 
     Private Sub OnFocusNumberSelector(obj As GUIObject)
@@ -57,6 +77,74 @@ Public Class MenuScene
 
     Private Sub ExitButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
         game.Exit()
+    End Sub
+
+    Private Function CreateContextSettings() As GUIContext
+        Dim context As GUIContext = New GUIContext(Camera.InternalDimensions)
+
+        Dim n As Integer = context.NextNegative()
+
+        Dim resolutionLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, -20), New Label("Resolution", Color.White, Label.Font))
+
+        Dim resolutions As IDictionary(Of String, (x As UInteger, y As UInteger)) = New Dictionary(Of String, (x As UInteger, y As UInteger))
+
+        resolutions.Add("640x360", (640, 360))
+        resolutions.Add("1024x576", (1024, 576))
+        resolutions.Add("1280x720", (1280, 720))
+        resolutions.Add("1366x768", (1366, 768))
+        resolutions.Add("1600x900", (1600, 900))
+        resolutions.Add("1920x1080", (1920, 1080))
+        resolutions.Add("2560x1600", (2560, 1600))
+        resolutions.Add("3840x2160", (3840, 2160))
+
+
+        resolutionAlternator = New SimpleAlternator(Of (x As UInteger, y As UInteger))(0, 0, 0, Vector2.Zero, resolutions)
+
+        n = context.NextNegative()
+        Dim fullscreenLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, 32), New Label("FullScreen", Color.White, Label.Font))
+
+        Check = New Check(1, 0, 1, New Vector2(0, 52))
+
+        n = context.NextNegative()
+        Dim volumeLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, 84), New Label("Volume", Color.White, Label.Font))
+        numberSelectorVolume = New NumberSelector(2, 0, 2, New Vector2(0, 104), 0, 20)
+
+        numberSelectorVolume.Value = 10
+
+        context.Add(resolutionLabel)
+        context.Add(resolutionAlternator)
+        context.Add(fullscreenLabel)
+        context.Add(check)
+        context.Add(volumeLabel)
+        context.Add(numberSelectorVolume)
+
+        resolutionLabel.LayerDetph = 10
+        resolutionAlternator.LayerDetph = 10
+        fullscreenLabel.LayerDetph = 10
+        check.LayerDetph = 10
+        volumeLabel.LayerDetph = 10
+        numberSelectorVolume.LayerDetph = 10
+
+        resolutionAlternator.OnUnfocus = AddressOf OnUnfocusResolutionAlternator
+        numberSelectorVolume.OnUnfocus = AddressOf OnUnfocusNumberSelectorVolume
+        check.OnFire0 = AddressOf OnFire0FullScreen
+        Return context
+    End Function
+
+    Private Sub OnFire0FullScreen(context As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
+        Dim check As Check = obj
+        check.Value = Not check.Value
+        ScreenManager.Instance.FullScreen = check.Value
+    End Sub
+
+    Private Sub OnUnfocusResolutionAlternator(obj As GUIObject)
+        Dim resolutionAlternator As SimpleAlternator(Of (x As UInteger, y As UInteger)) = obj
+        Dim resolution As (x As UInteger, y As UInteger) = resolutionAlternator.Value
+        ScreenManager.Instance.Dimensions = New Vector2(resolution.x, resolution.y)
+    End Sub
+
+    Private Sub OnUnfocusNumberSelectorVolume(obj As GUIObject)
+        soundEffectInstance.Volume = numberSelectorVolume.Value * 0.05F
     End Sub
 
     Private Function CreateContextSizeMap() As GUIContext
@@ -105,25 +193,27 @@ Public Class MenuScene
 
         Dim color As Color = Color.RoyalBlue
         Dim n As Integer = GUIController.MainContext.NextNegative()
-        Dim colorPainel As ColorPainel = New ColorPainel(n, 0, n, New Vector2(-sizePainel.X / 2, 16.0F), sizePainel, color)
-        GUIController.MainContext.Add(colorPainel)
+
         GUIController.MainContext.OnFocus = AddressOf OnFocusMainContext
 
-        n = GUIController.MainContext.NextNegative()
-        Dim labelTitle As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label("NavalBattle", Color.Purple, Label.Font))
+        Dim labelTitle As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label("NavalBattle", Color.GhostWhite, Label.Font))
+        labelTitle.LayerDetph = 5
         labelTitle.Scale = Vector2.One * 1.5F
         GUIController.MainContext.Add(labelTitle)
 
         Dim i As Integer = 0
         For Each text As String In texts
-            Dim button As Button = New Button(i, 0, i, New Vector2(0, (i + 3 - texts.Count) * 32.0F), text, Vector2.One)
+            Dim button As Button = New Button(i, 0, i, New Vector2(0, (i + 4 - texts.Count) * 32.0F), text, Vector2.One)
             GUIController.MainContext.Add(button)
             Select Case i
                 Case 0
                     button.OnFire0 = AddressOf StartButton
                 Case 1
+                    button.OnFire0 = AddressOf SettingsButton
+                Case 2
                     button.OnFire0 = AddressOf ExitButton
             End Select
+            button.LayerDetph = 5
             i += 1
         Next
     End Sub
@@ -165,8 +255,10 @@ Public Class MenuScene
 
     Private Sub CreateControlsViewer()
         Dim n As Integer = GUIController.MainContext.NextNegative()
-        controlsView = New ControlsViewer(n, 0, n, New Vector2(Camera.InternalDimensions.X / 3, Camera.InternalDimensions.Y * 0.4))
+        controlsView = New ControlsViewer(n, 0, n, Vector2.Zero)
+        controlsView.LayerDetph = 5
         controlsView.Scale = Vector2.One * 0.5F
+        controlsView.Position = Camera.InternalDimensions / 2 - Vector2.UnitX * 64
 
         ''Move
         labelMove = New Label("Move", Color.White, Label.Font)
@@ -227,24 +319,44 @@ Public Class MenuScene
         GUIController.MainContext.Add(controlsView)
     End Sub
 
+    Public Overrides Sub Update(gameTime As GameTime)
+        MyBase.Update(gameTime)
+        bk.EnableLogo = (GUIController.CurrentContext.GetHashCode() = GUIController.MainContext.GetHashCode())
+    End Sub
 
     Public Overrides Sub LoadContent()
         MyBase.LoadContent()
-
-        sound = ScreenManager.Instance.Content.Load(Of SoundEffect)("somdefundo")
-
-        soundEffectInstance = sound.CreateInstance()
-        soundEffectInstance.IsLooped = True
-        soundEffectInstance.Play()
 
         naval = content.Load(Of Texture2D)("naval")
 
         texts = CreateTexts()
 
         CreateMenu()
+
         CreateControlsViewer()
 
         contextSizeMap = CreateContextSizeMap()
+
+        contextSettings = CreateContextSettings()
+
+        Dim n As Integer = GUIController.CurrentContext.NextNegative()
+        bk = New BackgroundMenu(n, 0, n, Vector2.Zero, ScreenManager.Instance.Content.Load(Of Texture2D)("naval2"), Camera.InternalDimensions)
+
+        bk.EnableLogo = True
+        updates.Add(bk)
+        Camera.Drawings.Add(bk)
+
+        If sound Is Nothing Then
+            sound = ScreenManager.Instance.Content.Load(Of SoundEffect)("somdefundo")
+            soundEffectInstance = sound.CreateInstance()
+            soundEffectInstance.IsLooped = True
+            soundEffectInstance.Play()
+            soundEffectInstance.Volume = 0.5F
+        End If
+        numberSelectorVolume.Value = soundEffectInstance.Volume * 20.0F
+
+        resolutionAlternator.Value = (ScreenManager.Instance.Dimensions.X, ScreenManager.Instance.Dimensions.Y)
+        check.Value = ScreenManager.Instance.FullScreen
     End Sub
 
 End Class

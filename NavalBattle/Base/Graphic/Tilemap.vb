@@ -55,7 +55,7 @@ Public Class Tilemap(Of Key)
         DrawEnable = True
         Interval = New Vector2(16.0F, 16.0F)
 
-        _Map = New Key(x, y) {}
+        _Map = New Key(x - 1, y - 1) {}
         width = x
         height = y
         If sprites Is Nothing Then

@@ -47,7 +47,7 @@ Public Class NavalBattleScene
     Private shoot As SoundEffect
 
     Public Sub New(menu As MenuScene, sizeX As Integer, sizeY As Integer)
-        updates = New LinkedList(Of IUpdate)
+        _updates = New LinkedList(Of IUpdate)
         navalGame = New NavalGame(sizeX, sizeY, PlayerID.Player1)
         Dim n As Integer = GUIController.CurrentContext.NextNegative()
         Dim chanceMapViewerPosition As Vector2 = New Vector2(-Camera.InternalDimensions.X / 2, Camera.InternalDimensions.Y / 2 - 32)
@@ -143,7 +143,7 @@ Public Class NavalBattleScene
             navalGame.FillMap(navalMap)
         ElseIf Not endGame Then
             navalGame.Attack(obj.IndexX, obj.IndexY)
-            shoot.Play()
+            shoot.Play(menu.Volume, 0, 0)
             navalGame.FillMap(navalMap)
             If navalGame.CurrentPlayer <> PlayerID.Player1 Then
                 GUIController.CurrentContext.MovableCursor = False
@@ -203,7 +203,7 @@ Public Class NavalBattleScene
     End Function
 
     Private Sub CreatePutShipContext()
-        putShipContext = New GUIContext(GUIController.MainContext.Area)
+        putShipContext = New GUIContext(Camera.InternalDimensions)
         For i As Integer = 0 To 3
             Dim num As Integer
             Select Case i
@@ -218,6 +218,7 @@ Public Class NavalBattleScene
             End Select
 
             Dim button As Button = New Button(i, 0, i, New Vector2(0, (i - 1) * 32), num.ToString + " " + labelTexts(i), Vector2.One)
+            button.LayerDetph = 10
             putShipContext.Add(button)
             button.OnFire0 = AddressOf Fire0PutShip
 
@@ -319,20 +320,22 @@ Public Class NavalBattleScene
         MyBase.Update(gameTime)
 
         If Not endGame Then
-            If Not player2IA.IsInProcessing And Not player2IA.IsProcessingComplete() And Not selectedShot Then
-                player2IA.StartAttackProcessing(navalGame.GetEnemyVisionMap(PlayerID.Player1), sizeX, sizeY)
-            ElseIf navalGame.CurrentPlayer = PlayerID.Player2 And player2IA.IsProcessingComplete() Then
-                Dim shoot As (x As Integer, y As Integer) = player2IA.NextResult()
-                GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
-                selectedShot = True
-                navalGame.FillMap(navalMap)
-            End If
-
-            If selectedShot Then
+            If Not selectedShot Then
+                If Not player2IA.IsInProcessing And Not player2IA.IsProcessingComplete() Then
+                    player2IA.StartAttackProcessing(navalGame.GetEnemyVisionMap(PlayerID.Player1), sizeX, sizeY)
+                ElseIf navalGame.CurrentPlayer = PlayerID.Player2 And player2IA.IsProcessingComplete() Then
+                    Dim shoot As (x As Integer, y As Integer) = player2IA.NextResult()
+                    If navalGame.GetEnemyVisionMap(PlayerID.Player1)(shoot.x + shoot.y * sizeX) = HouseStatus.Normal Then
+                        GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
+                        selectedShot = True
+                        navalGame.FillMap(navalMap)
+                    End If
+                End If
+            Else
                 count += gameTime.ElapsedGameTime.TotalSeconds
                 If count > 1.0 Then
                     Dim current As GUIObject = GUIController.CurrentContext.GetCurrent()
-                    shoot.Play()
+                    shoot.Play(menu.Volume, 0, 0)
                     navalGame.Attack(current.IndexX, current.IndexY)
                     navalGame.FillMap(navalMap)
                     count = 0.0
@@ -342,9 +345,10 @@ Public Class NavalBattleScene
                     End If
                 End If
             End If
+
             UpdateLabelName()
             If navalGame.IsEnd() AndAlso navalGame.GetWin() <> PlayerID.Undefined Then
-                winAndLoseContext = New GUIContext(GUIController.CurrentContext.Area)
+                winAndLoseContext = New GUIContext(Camera.InternalDimensions)
                 GUIController.ChangeContext(winAndLoseContext)
 
                 Dim winAndLoseLabel As GUILabel = CreateWinAndLoseLabel()
@@ -355,7 +359,6 @@ Public Class NavalBattleScene
                 Dim guiLabelB As GUILabel = New GUILabel(GUIController.CurrentContext.NextNegative(), 0, 0, labelBPosition, New Label("Press  to return to menu.", Color.YellowGreen, Label.Font))
                 Dim painelSizeB As Vector2 = guiLabelB.Measure() + 2 * Vector2.One
                 Dim colorPainelB As ColorPainel = New ColorPainel(GUIController.CurrentContext.NextNegative(), 0, 0, guiLabelB.Position - painelSizeB / 2.0F, painelSizeB, Color.GhostWhite)
-
 
                 Dim fireBPosition As Vector2 = labelBPosition + Vector2.UnitX * (guiLabelB.MeasureIndex(0, 6).X - guiLabelB.Measure().X / 2)
                 Dim fireB As GUISprite = New GUISprite(GUIController.CurrentContext.NextNegative(), 0, 0, fireBPosition, GUIController.CreateFireSprite(Color.YellowGreen))
@@ -486,7 +489,7 @@ Public Class NavalBattleScene
 
     Private Sub CreateControlsViewer()
         Dim n As Integer = GUIController.MainContext.NextNegative()
-        controlsView = New ControlsViewer(n, 0, n, New Vector2(Camera.InternalDimensions.X / 3, Camera.InternalDimensions.Y * 0.4))
+        controlsView = New ControlsViewer(n, 0, n, Camera.InternalDimensions / 2 - Vector2.UnitX * 64)
         controlsView.Scale = Vector2.One * 0.5F
 
         ''Move
