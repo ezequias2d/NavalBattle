@@ -74,7 +74,11 @@
                 End If
             Next
         Next
-        Return med / div
+        If div <> 0 Then
+            Return med / div
+        Else
+            Return 0
+        End If
     End Function
 
     Public Sub IsolateLargerHouses()
