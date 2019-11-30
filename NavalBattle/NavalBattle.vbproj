@@ -106,6 +106,8 @@
     <Compile Include="Base\GUI\Components\GUISprite.vb" />
     <Compile Include="Base\GUI\Components\NumberSelector.vb" />
     <Compile Include="Base\GUI\Components\ColorPainel.vb" />
+    <Compile Include="Base\GUI\Components\Check.vb" />
+    <Compile Include="Base\GUI\Components\SimpleAlternator.vb" />
     <Compile Include="Base\GUI\CursorMode.vb" />
     <Compile Include="Base\GUI\GUIController.vb" />
     <Compile Include="Base\Input\AxisEqualityComparer.vb" />
@@ -133,7 +135,6 @@
     <Compile Include="Base\Graphic\Tilemap.vb" />
     <Compile Include="Base\ScreenManager.vb" />
     <Compile Include="Game.vb" />
-    <Compile Include="NavalBattle.vb" />
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -172,6 +173,7 @@
     <Compile Include="NavalBattle\Game\Map.vb" />
     <Compile Include="NavalBattle\Game\NavalGame.vb" />
     <Compile Include="NavalBattle\GUI\AIStatusViewer.vb" />
+    <Compile Include="NavalBattle\GUI\BackgroundMenu.vb" />
     <Compile Include="NavalBattle\GUI\ChanceMapViewer.vb" />
     <Compile Include="NavalBattle\GUI\ControlsViewer.vb" />
     <Compile Include="NavalBattle\GUI\NavalMap.vb" />

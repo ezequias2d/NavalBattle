@@ -132,6 +132,14 @@ Public Class GUIController
     End Sub
 
     ''' <summary>
+    ''' Limpa pilha de GUIContext
+    ''' </summary>
+    Public Sub ClearStack()
+        stackContext.Clear()
+        _CurrentContext = MainContext
+    End Sub
+
+    ''' <summary>
     ''' Update do GUIContext.
     ''' Chamado a cada frame quando ativado.
     ''' </summary>

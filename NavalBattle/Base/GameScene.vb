@@ -46,7 +46,7 @@ Public MustInherit Class GameScene
     ''' Contrutor de GameScene
     ''' </summary>
     Public Sub New()
-        Camera = New Camera(ScreenManager.Instance.Dimensions, ScreenManager.Instance.Dimensions / 2.0F, ScreenManager.Instance.SpriteBatch)
+        Camera = New Camera(ScreenManager.Instance.Dimensions / 2.0F, ScreenManager.Instance.SpriteBatch)
         _GUIController = New GUIController(Camera.InternalDimensions)
     End Sub
 
@@ -68,7 +68,7 @@ Public MustInherit Class GameScene
         content.Unload()
         Camera.Drawings.Clear()
         GUIController.MainContext.Clear()
-        GUIController.ChangeContext(GUIController.MainContext)
+        GUIController.ClearStack()
     End Sub
 
     ''' <summary>

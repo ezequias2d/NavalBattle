@@ -38,13 +38,10 @@ Public Class Camera
     ''' Dimenção da janela/tela do jogo
     ''' </summary>
     ''' <returns> Dimenção </returns>
-    Public Property Dimensions As Vector2
+    Public ReadOnly Property Dimensions As Vector2
         Get
-            Return _Dimensions
+            Return ScreenManager.Instance.Dimensions
         End Get
-        Set
-            _Dimensions = Value
-        End Set
     End Property
 
     ''' <summary>
@@ -137,7 +134,6 @@ Public Class Camera
     Public samplerState As SamplerState
 
     Private spriteBatch As SpriteBatch
-    Private _Dimensions As Vector2
     Private _InternalDimensions As Vector2
     Private _ZPosition As Single
     Private _Position As Vector2
@@ -148,14 +144,12 @@ Public Class Camera
     ''' <summary>
     ''' Cria uma nova camera
     ''' </summary>
-    ''' <param name="dimensions"> Dimenção real da tela </param>
     ''' <param name="internalDimensions"> Dimenção virtual </param>
-    Public Sub New(ByVal dimensions As Vector2, ByVal internalDimensions As Vector2, ByRef spriteBatch As SpriteBatch)
-        Me.Dimensions = dimensions
+    Public Sub New(ByVal internalDimensions As Vector2, ByRef spriteBatch As SpriteBatch)
         Me.InternalDimensions = internalDimensions
         Me.spriteBatch = spriteBatch
         Me.samplerState = SamplerState.PointClamp
-        Me.viewport = New Viewport(New Rectangle(0, 0, dimensions.X, dimensions.Y))
+        Me.viewport = New Viewport(New Rectangle(0, 0, Dimensions.X, Dimensions.Y))
         Me.Scale = New Vector2(1.0F, 1.0F)
         Me.ZPosition = 1.0F
         Me.Layers.Add(0L)
@@ -170,6 +164,10 @@ Public Class Camera
             scaleResolution = Dimensions.X / InternalDimensions.X
         Else
             scaleResolution = Dimensions.Y / InternalDimensions.Y
+        End If
+
+        If viewport.Width <> Dimensions.X OrElse viewport.Height <> Dimensions.Y Then
+            viewport = New Viewport(New Rectangle(0, 0, Dimensions.X, Dimensions.Y))
         End If
 
         Dim transform As Matrix = Matrix.CreateTranslation(New Vector3(-Position.X, -Position.Y, 0F)) *

@@ -82,6 +82,9 @@ Public Class AI1Player
 
             If chanceMap.ExistPercentageDiscrepancyValue(0.5F) Then
                 result = chanceMap.GetMaxHouse()
+            ElseIf chanceMap.IsAllAtSame() Then
+                chanceMap.AdjusterInvert()
+                result = Picker.ToRaffle(chanceMap)
             Else
                 result = Picker.ToRaffle(chanceMap)
             End If
