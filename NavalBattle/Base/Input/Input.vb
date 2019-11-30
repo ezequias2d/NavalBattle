@@ -184,7 +184,7 @@ Public Class Input
         Dim value As Single = GetAxisValue(axisToChange)
         If axisTab.ContainsKey(axisToChange) Then
             Dim element As (Single, Boolean, Boolean, HashSet(Of IAxis)) = axisTab(axisToChange)
-            axisTab(axisToChange) = (value, value <> 0 AndAlso Not element.Item3, value <> 0 AndAlso (element.Item2 OrElse element.Item3), element.Item4)
+            axisTab(axisToChange) = (value, (value <> 0) AndAlso (Not element.Item3), value <> 0, element.Item4)
         Else
             axisTab(axisToChange) = (value, value <> 0, value <> 0, New HashSet(Of IAxis)(equalityComparer))
         End If

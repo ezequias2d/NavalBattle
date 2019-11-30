@@ -1,4 +1,6 @@
 ﻿
+Imports System.Runtime.CompilerServices
+
 Module Module1
 
     Sub Main()

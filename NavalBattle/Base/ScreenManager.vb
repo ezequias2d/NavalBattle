@@ -8,6 +8,7 @@ Imports Microsoft.Xna.Framework.Graphics
 Public Class ScreenManager
     Private Shared _Instance As ScreenManager
     Private Shared _Dimensions As Vector2
+    Private Shared _FullScreen As Boolean
     Private _Content As ContentManager
     Private _Current As GameScene
 
@@ -21,7 +22,7 @@ Public Class ScreenManager
     ''' Objeto Game
     ''' </summary>
     ''' <returns> Game </returns>
-    Public Property Game As Microsoft.Xna.Framework.Game
+    Public Property Game As Game
 
     ''' <summary>
     ''' Cena atual
@@ -58,7 +59,25 @@ Public Class ScreenManager
             Return _Dimensions
         End Get
         Set
-            _Dimensions = Value
+            If Value.X <> 0 AndAlso Value.Y <> 0 Then
+                _Dimensions = Value
+                Game.Graphics.PreferredBackBufferWidth = Value.X
+                Game.Graphics.PreferredBackBufferHeight = Value.Y
+                Game.Graphics.ApplyChanges()
+            End If
+        End Set
+    End Property
+
+    Public Property FullScreen As Boolean
+        Get
+            Return _FullScreen
+        End Get
+        Set(value As Boolean)
+            If Game IsNot Nothing Then
+                _FullScreen = value
+                Game.Graphics.IsFullScreen = value
+                Game.Graphics.ApplyChanges()
+            End If
         End Set
     End Property
 
@@ -82,10 +101,10 @@ Public Class ScreenManager
     Public Shared Property BackgroundColor As Color
 
     ''' <summary>
-    ''' Cria novo ScreenManager de relolução 448x512
+    ''' Cria novo ScreenManager
     ''' </summary>
     Private Sub New()
-        Dimensions = New Vector2(448, 512)
+
     End Sub
 
     ''' <summary>
@@ -101,7 +120,7 @@ Public Class ScreenManager
     ''' </summary>
     ''' <param name="newScene"></param>
     Public Sub ChangeScene(ByRef newScene As GameScene)
-        If newScene Is Nothing Then
+        If newScene Is Nothing OrElse newScene Is Current Then
             Return
         End If
 
@@ -140,5 +159,27 @@ Public Class ScreenManager
         If Not Current Is Nothing Then
             Current.Draw(spriteBatch)
         End If
+    End Sub
+
+    Public Function CreateTexture(width As Integer, height As Integer) As Texture2D
+        Dim texture As Texture2D = New Texture2D(Game.GraphicsDevice, width, height)
+
+        Dim data As Color() = New Color(width * height - 1) {}
+        For pixel As Integer = 0 To data.Count - 1
+            data(pixel) = Color.White
+        Next
+        texture.SetData(data)
+
+        Return texture
+    End Function
+
+    Public Sub UpdateTexture(ByRef texture As Texture2D, paint As Func(Of (Integer, Integer), Color))
+        Dim data As Color() = New Color(texture.Width * texture.Height) {}
+        For xPixel As Integer = 0 To texture.Width - 1
+            For yPixel As Integer = 0 To texture.Height - 1
+                data(xPixel + yPixel * texture.Width) = paint((xPixel, yPixel))
+            Next
+        Next
+        texture.SetData(data)
     End Sub
 End Class

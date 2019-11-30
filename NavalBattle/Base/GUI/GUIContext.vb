@@ -18,6 +18,8 @@ Imports NavalBattle
 Public Class GUIContext
     Inherits GUIObject
 
+    Private negativeCounter As Integer = 0
+
     ''' <summary>
     ''' Caixa que envolve o GUIContext para representar a seleção quando um GUIContext é um componente de um GUIContext pai.
     ''' </summary>
@@ -35,6 +37,12 @@ Public Class GUIContext
     ''' </summary>
     ''' <returns> Se cursor é visivel </returns>
     Public Property CursorEnable As Boolean
+
+    ''' <summary>
+    ''' Flag de cursor movivel
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property MovableCursor As Boolean
 
     ''' <summary>
     ''' Velocidade de troca de GUIObject selecionados
@@ -90,6 +98,18 @@ Public Class GUIContext
         End Set
     End Property
 
+    Public ReadOnly Property Area As Vector2
+        Get
+            Return _area
+        End Get
+    End Property
+
+    Public ReadOnly Property CursorPosition As Vector2
+        Get
+            Return _CursorPosition
+        End Get
+    End Property
+
     Public Property CursorMovementAxisMode As AxisMode
 
     ''' <summary>
@@ -107,7 +127,7 @@ Public Class GUIContext
     Private _CursorClove As Frame
     Private _CursorColor As Color
     Private _CursorMode As CursorMode
-    Private _PositionCursor As Vector2
+    Private _CursorPosition As Vector2
     Private _Current As Integer
     Private _area As Vector2
     Private changePosition As Vector2
@@ -160,6 +180,7 @@ Public Class GUIContext
         _VerticalLine.infinity = True
         _area = area
         Me.CursorEnable = True
+        Me.MovableCursor = True
         Me.Scale = Vector2.One
         Me.GUIObjectEnable = True
         Me.CursorColorCurrent = Color.White
@@ -169,6 +190,7 @@ Public Class GUIContext
         Me.SpeedChange = 4
         Me.SpeedCursor = 16
         Me.UpdateEnable = False
+        Me.CursorMovementAxisMode = AxisMode.Click
 
         If selectFrame.texture IsNot Nothing Then
             SelectBox = New Box(area, selectFrame)
@@ -180,10 +202,15 @@ Public Class GUIContext
         lastFocused = Me
 
         AxisModeSetting(Axis.Fire0) = AxisMode.Click
+        AxisModeSetting(Axis.Fire1) = AxisMode.Click
+        AxisModeSetting(Axis.Fire2) = AxisMode.Click
+        AxisModeSetting(Axis.Horizontal) = AxisMode.Click
+        AxisModeSetting(Axis.Vertical) = AxisMode.Click
         AxisModeSetting(Axis.Cancel) = AxisMode.Click
         AxisModeSetting(Axis.Submit) = AxisMode.Click
         OnFire0 = AddressOf SubmitFire0Function
         OnSubmit = AddressOf SubmitFire0Function
+        OnCancel = AddressOf CancelFunction
     End Sub
 
     ''' <summary>
@@ -202,13 +229,13 @@ Public Class GUIContext
             Dim scaleX As Single = _area.X / _HorizontalLine.source.Width
             Dim scaleY As Single = _area.Y / _VerticalLine.source.Height
 
-            _HorizontalLine.Draw(spriteBatch, New Vector2(posScreen.X, _PositionCursor.Y) - _HorizontalLine.origin, New Vector2(scaleX, 1), 0, LayerDetph + layerDepthDelta + 10)
-            _VerticalLine.Draw(spriteBatch, New Vector2(_PositionCursor.X, posScreen.Y) - _VerticalLine.origin, New Vector2(1, scaleY), 0, LayerDetph + layerDepthDelta + 10)
+            _HorizontalLine.Draw(spriteBatch, New Vector2(posScreen.X, _CursorPosition.Y) - _HorizontalLine.origin, New Vector2(scaleX, 1), 0, LayerDetph + layerDepthDelta + 10)
+            _VerticalLine.Draw(spriteBatch, New Vector2(_CursorPosition.X, posScreen.Y) - _VerticalLine.origin, New Vector2(1, scaleY), 0, LayerDetph + layerDepthDelta + 10)
 
             If CursorMode = CursorMode.Arrow Then
-                CursorArrow.Draw(spriteBatch, New Vector2(_PositionCursor.X, _PositionCursor.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
+                CursorArrow.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, UShort.MaxValue / 2)
             ElseIf CursorMode = CursorMode.Clove Then
-                CursorClove.Draw(spriteBatch, New Vector2(_PositionCursor.X, _PositionCursor.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
+                CursorClove.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, UShort.MaxValue / 2)
             End If
         End If
 
@@ -217,7 +244,7 @@ Public Class GUIContext
         End If
 
         For Each guiObj As GUIObject In Controllers.Values
-            If guiObj.DrawEnable Then
+            If guiObj IsNot Nothing AndAlso guiObj.DrawEnable Then
                 guiObj.Draw(spriteBatch, PositionTranslated + positionDelta, Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta)
             End If
         Next
@@ -246,8 +273,18 @@ Public Class GUIContext
     ''' Pega GUIObject selecionado
     ''' </summary>
     ''' <returns></returns>
-    Private Function GetCurrent() As GUIObject
-        Return Controllers(_Current)
+    Public Function GetCurrent() As GUIObject
+        Try
+            Return Controllers(_Current)
+        Catch ex As Exception
+            For Each c In Controllers
+                If c.Value IsNot Nothing Then
+                    _Current = c.Key
+                    Return Controllers(_Current)
+                End If
+            Next
+            Return Nothing
+        End Try
     End Function
 
     ''' <summary>
@@ -311,16 +348,37 @@ Public Class GUIContext
         current.SelectedChange()
 
         current = Nothing
-        While current Is Nothing OrElse Not current.GUIObjectEnable
-            If right AndAlso x > maxX Then
-                x = 0
-            ElseIf left AndAlso x < 0 Then
-                x = maxX
-            ElseIf down AndAlso y < 0 Then
-                y = maxY
-            ElseIf up AndAlso y > maxY Then
-                y = 0
+        Dim countSearchX As UInteger = 0
+        Dim countSearchY As UInteger = 0
+        While (current Is Nothing OrElse Not current.GUIObjectEnable)
+            If countSearchX > 1 Then
+                countSearchX = 0
+                countSearchY += 1
+                y += 1
             End If
+
+            If countSearchY > 1 Then
+                countSearchY = 0
+                countSearchX += 1
+                x += 1
+            End If
+
+            If x > maxX Then
+                x = 0
+                countSearchX += 1
+            ElseIf x < 0 Then
+                x = maxX
+                countSearchX += 1
+            End If
+
+            If y < 0 Then
+                y = maxY
+                countSearchY += 1
+            ElseIf y > maxY Then
+                y = 0
+                countSearchY += 1
+            End If
+
             current = GetObjectOfCoordinates(x, y)
             If right Then
                 x += 1
@@ -332,6 +390,7 @@ Public Class GUIContext
                 y += 1
             End If
         End While
+
         current.Selected = True
         current.SelectedChange()
 
@@ -352,9 +411,33 @@ Public Class GUIContext
     Public Sub Load()
         UpdateEnable = True
         Dim current As GUIObject = GetCurrent()
-        current.Selected = True
-        current.SelectedChange()
-        UpdateCursor(current)
+        If current IsNot Nothing Then
+            current.Selected = True
+            current.SelectedChange()
+            UpdateCursor(current)
+        End If
+    End Sub
+
+    Public Sub SelectObject(x As Integer, y As Integer)
+        Dim newCurrent As GUIObject = GetObjectOfCoordinates(x, y)
+
+        If newCurrent IsNot Nothing Then
+            Dim current As GUIObject = GetCurrent()
+
+            current.Selected = False
+            current.SelectedChange()
+
+            newCurrent.Selected = True
+            newCurrent.SelectedChange()
+
+            CursorMode = newCurrent.CursorMode
+            If newcurrent.CursorColor IsNot Nothing Then
+                CursorColorCurrent = newCurrent.CursorColor.Invoke(newCurrent)
+            Else
+                CursorColorCurrent = Color.White
+            End If
+            _Current = newCurrent.Index
+        End If
     End Sub
 
     ''' <summary>
@@ -363,60 +446,63 @@ Public Class GUIContext
     ''' </summary>
     ''' <param name="gameTime"> Tempo de jogo </param>
     Public Overrides Sub Update(gameTime As GameTime)
-        For Each element As GUIObject In Controllers.Values
-            If element.UpdateEnable Then
+        If Focus Then
+            ' Se focado atualiza.
+            ' Evita que comandos de Input que o destino é o controle focado seja espalhado para o GUIContext atual.
+            Dim elapse As Single = gameTime.ElapsedGameTime.TotalSeconds
+
+            ' Componente selecionado atual
+            Dim current As GUIObject = GetCurrent()
+
+            Dim updatesCursor As Boolean = False
+            updatesCursor = InvokeAxisFulled(gameTime) OrElse updatesCursor
+
+            If CursorEnable AndAlso current IsNot Nothing Then
+                ' Translada pouco a pouco a posição do cursor até o destino.
+                _CursorPosition += ((current.PositionTranslated + current.Origin * current.Scale - _CursorPosition)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
+
+                If MovableCursor Then
+                    If CursorMovementAxisMode = AxisMode.Floating Then
+                        changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
+                    Else
+                        changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
+                    End If
+
+                    If changePosition.X >= 1 Then
+                        'Right
+                        Move(False, False, False, True)
+                        changePosition.X = 0
+                    ElseIf changePosition.X <= -1 Then
+                        'Left
+                        Move(False, False, True, False)
+                        changePosition.X = 0
+                    ElseIf changePosition.Y >= 1 Then
+                        'Up
+                        Move(True, False, False, False)
+                        changePosition.Y = 0
+                    ElseIf changePosition.Y <= -1 Then
+                        'Down
+                        Move(False, True, False, False)
+                        changePosition.Y = 0
+                    End If
+                End If
+
+                updatesCursor = current.InvokeAxisFulled(gameTime) OrElse updatesCursor
+
+                If updatesCursor Then
+                    UpdateCursor(current)
+                End If
+            End If
+
+        End If
+
+        ' Pecorre uma nova lista com os controles (evita erro de alteração)
+        For Each element As GUIObject In New List(Of GUIObject)(Controllers.Values)
+            If element IsNot Nothing AndAlso element.UpdateEnable Then
                 element.Update(gameTime)
             End If
         Next
 
-        If Not Focus Then
-            ' Se não focado, não atualiza.
-            ' Evita que comandos de Input que o destino é o controle focado seja espalhado para o GUIContext atual.
-            Return
-        End If
-
-        Dim elapse As Single = gameTime.ElapsedGameTime.TotalSeconds
-
-        ' Componente selecionado atual
-        Dim current As GUIObject = GetCurrent()
-
-        ' Translada pouco a pouco a posição do cursor até o destino.
-        _PositionCursor += ((current.PositionTranslated + current.Origin * current.Scale - _PositionCursor)) * gameTime.ElapsedGameTime.TotalSeconds * SpeedCursor
-
-
-        If CursorMovementAxisMode = AxisMode.Floating Then
-            changePosition += New Vector2(Input.ReadAxis(Axis.Horizontal), Input.ReadAxis(Axis.Vertical)) * elapse * SpeedChange
-        Else
-            changePosition -= New Vector2(Input.ReadAxisClick(Axis.Horizontal), Input.ReadAxisClick(Axis.Vertical))
-        End If
-
-        If changePosition.X >= 1 Then
-            'Right
-            Move(False, False, False, True)
-            changePosition.X = 0
-        ElseIf changePosition.X <= -1 Then
-            'Left
-            Move(False, False, True, False)
-            changePosition.X = 0
-        ElseIf changePosition.Y >= 1 Then
-            'Up
-            Move(True, False, False, False)
-            changePosition.Y = 0
-        ElseIf changePosition.Y <= -1 Then
-            'Down
-            Move(False, True, False, False)
-            changePosition.Y = 0
-        End If
-
-        Dim updatesCursor As Boolean = False
-
-        updatesCursor = InvokeAxisFulled(gameTime) OrElse updatesCursor
-
-        updatesCursor = current.InvokeAxisFulled(gameTime) OrElse updatesCursor
-
-        If updatesCursor Then
-            UpdateCursor(current)
-        End If
     End Sub
 
     ''' <summary>
@@ -449,10 +535,9 @@ Public Class GUIContext
     ''' </summary>
     ''' <param name="obj"> Objeto para focar </param>
     Public Sub FocusOn(ByRef obj As GUIObject)
-        If obj IsNot lastFocused Then
+        If obj IsNot lastFocused AndAlso obj IsNot Nothing Then
             focusStack.Push(lastFocused)
             lastFocused.Focus = False
-
             lastFocused = obj
             If TypeOf lastFocused Is GUIContext Then
                 Dim lastFocusedContext As GUIContext = TryCast(lastFocused, GUIContext)
@@ -466,11 +551,10 @@ Public Class GUIContext
     ''' Desfoca do objeto atualmente focado e volta a focar o objeto anteriormente focado.
     ''' </summary>
     Public Sub Refocus()
-        If focusStack.Count > 0 Then
-            If TypeOf lastFocused Is GUIContext Then
-                Dim lastFocusedContext As GUIContext = TryCast(lastFocused, GUIContext)
-                ScreenManager.Instance.Current.GUIController.GoBack()
-            End If
+        If TypeOf lastFocused Is GUIContext Then
+            Dim lastFocusedContext As GUIContext = TryCast(lastFocused, GUIContext)
+            ScreenManager.Instance.Current.GUIController.GoBack()
+        ElseIf focusStack.Count > 0 Then
             lastFocused.Focus = False
             lastFocused = focusStack.Pop()
             lastFocused.Focus = True
@@ -484,6 +568,7 @@ Public Class GUIContext
         focusStack.Clear()
         lastFocused.Focus = False
         lastFocused = Me
+        Me.Focus = True
     End Sub
 
     ''' <summary>
@@ -498,5 +583,24 @@ Public Class GUIContext
     ''' </summary>
     Public Overrides Sub SelectedChange()
 
+    End Sub
+
+    ''' <summary>
+    ''' Retorna um valor negativo diferente sempre que chamado.
+    ''' (Contador reseta quando é limpo com Clear())
+    ''' </summary>
+    ''' <returns></returns>
+    Public Function NextNegative() As Integer
+        negativeCounter -= 1
+        Return negativeCounter
+    End Function
+
+    ''' <summary>
+    ''' Limpa todos os controles e reseta contador negativo.
+    ''' </summary>
+    Public Sub Clear()
+        Controllers.Clear()
+        ResetFocus()
+        negativeCounter = 0
     End Sub
 End Class

@@ -16,6 +16,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -101,7 +102,12 @@
     <Compile Include="Base\Graphic\Label\Alignment.vb" />
     <Compile Include="Base\Graphic\Label\Label.vb" />
     <Compile Include="Base\GUI\Components\Button.vb" />
+    <Compile Include="Base\GUI\Components\GUILabel.vb" />
+    <Compile Include="Base\GUI\Components\GUISprite.vb" />
     <Compile Include="Base\GUI\Components\NumberSelector.vb" />
+    <Compile Include="Base\GUI\Components\ColorPainel.vb" />
+    <Compile Include="Base\GUI\Components\Check.vb" />
+    <Compile Include="Base\GUI\Components\SimpleAlternator.vb" />
     <Compile Include="Base\GUI\CursorMode.vb" />
     <Compile Include="Base\GUI\GUIController.vb" />
     <Compile Include="Base\Input\AxisEqualityComparer.vb" />
@@ -129,7 +135,6 @@
     <Compile Include="Base\Graphic\Tilemap.vb" />
     <Compile Include="Base\ScreenManager.vb" />
     <Compile Include="Game.vb" />
-    <Compile Include="NavalBattle.vb" />
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -146,14 +151,35 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="NavalBattle\AI\AI1\AI1Map.vb" />
+    <Compile Include="NavalBattle\AI\AI1\AI1Player.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\SubMap.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\CloatBacktracking.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\Cloat.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\CloatJoin.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\CloatPool.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Cloat\Resolver.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Map\ChanceMap.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Map\DeltaNumber.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Map\Picker.vb" />
+    <Compile Include="NavalBattle\AI\AI1\Tools.vb" />
+    <Compile Include="NavalBattle\AI\IAIMap.vb" />
+    <Compile Include="NavalBattle\AI\IAIPlayer.vb" />
+    <Compile Include="NavalBattle\Enum\HouseStatus.vb" />
+    <Compile Include="NavalBattle\Enum\Orientation.vb" />
+    <Compile Include="NavalBattle\Enum\PlayerID.vb" />
     <Compile Include="NavalBattle\Enum\ShipTilemap.vb" />
-    <Compile Include="NavalBattle\Enum\StatusHouse.vb" />
+    <Compile Include="NavalBattle\Game\House.vb" />
+    <Compile Include="NavalBattle\Game\Map.vb" />
+    <Compile Include="NavalBattle\Game\NavalGame.vb" />
+    <Compile Include="NavalBattle\GUI\AIStatusViewer.vb" />
+    <Compile Include="NavalBattle\GUI\BackgroundMenu.vb" />
+    <Compile Include="NavalBattle\GUI\ChanceMapViewer.vb" />
+    <Compile Include="NavalBattle\GUI\ControlsViewer.vb" />
     <Compile Include="NavalBattle\GUI\NavalMap.vb" />
-    <Compile Include="NavalBattle\Map.vb" />
     <Compile Include="NavalBattle\Enum\Ship.vb" />
     <Compile Include="NavalBattle\Scenes\MenuScene.vb" />
     <Compile Include="NavalBattle\Scenes\NavalBattleScene.vb" />
-    <Compile Include="NavalBattle\Scenes\SceneTest.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

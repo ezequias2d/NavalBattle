@@ -11,7 +11,7 @@
 ''' <summary>
 ''' Animação composta de Sequência de Frames
 ''' </summary>
-Public Structure Animation
+Public Class Animation
     Private _Frames As IEnumerable(Of Frame)
     Private _Enumerator As IEnumerator(Of Frame)
     Private _Frame As Frame
@@ -20,16 +20,16 @@ Public Structure Animation
     ''' Cria nova animação
     ''' </summary>
     ''' <param name="frames"> Frames da animação. </param>
-    Public Sub New(ByRef frames As IEnumerable(Of Frame))
-        Me.New()
+    Public Sub New(ByRef frames As ICollection(Of Frame))
         Me.Frames = frames
+        Me.LoopEnable = True
     End Sub
 
     ''' <summary>
     ''' Frames da animação.
     ''' </summary>
     ''' <returns> Frames </returns>
-    Public Property Frames As IEnumerable(Of Frame)
+    Public Property Frames As ICollection(Of Frame)
         Get
             If _Frames Is Nothing Then
                 _Frames = New LinkedList(Of Frame)
@@ -48,13 +48,23 @@ Public Structure Animation
     End Property
 
     ''' <summary>
+    ''' True para indicar que deve resetar animação sempre que terminar.
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property LoopEnable As Boolean
+
+    ''' <summary>
     ''' Troca frame para o proximo frame
     ''' </summary>
     Public Sub NextFrame()
-        If Not _Enumerator.MoveNext() Then
-            _Enumerator.Reset()
-            _Enumerator.MoveNext()
-        End If
+        Try
+            If Not _Enumerator.MoveNext() And LoopEnable Then
+                _Enumerator.Reset()
+                _Enumerator.MoveNext()
+            End If
+        Catch ex As InvalidOperationException
+            _Enumerator = _Frames.GetEnumerator()
+        End Try
         _Frame = _Enumerator.Current()
     End Sub
 
@@ -81,10 +91,27 @@ Public Structure Animation
         If index >= Frames.Count Then
             Throw New IndexOutOfRangeException("The index '" + index.ToString + "' is not in the range 0 to " + Frames.Count.ToString() + ".")
         End If
-        _Enumerator.Reset()
+
+        Try
+            _Enumerator.Reset()
+        Catch ex As InvalidOperationException
+            _Enumerator = _Frames.GetEnumerator()
+        End Try
+
         For i = 0 To index
             _Enumerator.MoveNext()
         Next
         _Frame = _Enumerator.Current()
     End Sub
-End Structure
+
+    Public Sub Reset()
+        Try
+            _Enumerator.Reset()
+        Catch ex As InvalidOperationException
+            _Enumerator = _Frames.GetEnumerator()
+        End Try
+
+        _Enumerator.MoveNext()
+        _Frame = _Enumerator.Current()
+    End Sub
+End Class
