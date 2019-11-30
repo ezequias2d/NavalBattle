@@ -38,15 +38,21 @@ Public MustInherit Class GameScene
     ''' <summary>
     ''' Coleção de objetos para atualizar
     ''' </summary>
-    Protected updates As ICollection(Of IUpdate)
+    Public ReadOnly Property Updates As ICollection(Of IUpdate)
+        Get
+            Return _updates
+        End Get
+    End Property
 
     Private _GUIController As GUIController
+
+    Protected _updates As ICollection(Of IUpdate)
 
     ''' <summary>
     ''' Contrutor de GameScene
     ''' </summary>
     Public Sub New()
-        Camera = New Camera(ScreenManager.Instance.Dimensions / 2.0F, ScreenManager.Instance.SpriteBatch)
+        Camera = New Camera(New Vector2(1024, 576) / 2.0F, ScreenManager.Instance.SpriteBatch)
         _GUIController = New GUIController(Camera.InternalDimensions)
     End Sub
 

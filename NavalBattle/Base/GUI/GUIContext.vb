@@ -568,6 +568,7 @@ Public Class GUIContext
         focusStack.Clear()
         lastFocused.Focus = False
         lastFocused = Me
+        Me.Focus = True
     End Sub
 
     ''' <summary>

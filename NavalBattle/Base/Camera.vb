@@ -159,12 +159,7 @@ Public Class Camera
     ''' Inicializa o SpriteBatch
     ''' </summary>
     Private Sub BeginSpriteBatch()
-        Dim scaleResolution As Single = 1.0F
-        If Dimensions.X < Dimensions.Y Then
-            scaleResolution = Dimensions.X / InternalDimensions.X
-        Else
-            scaleResolution = Dimensions.Y / InternalDimensions.Y
-        End If
+        Dim scaleResolution As Vector2 = Dimensions / InternalDimensions
 
         If viewport.Width <> Dimensions.X OrElse viewport.Height <> Dimensions.Y Then
             viewport = New Viewport(New Rectangle(0, 0, Dimensions.X, Dimensions.Y))
@@ -172,8 +167,8 @@ Public Class Camera
 
         Dim transform As Matrix = Matrix.CreateTranslation(New Vector3(-Position.X, -Position.Y, 0F)) *
             Matrix.CreateRotationZ(MathHelper.ToRadians(Angle)) *
-            Matrix.CreateScale(New Vector3(Scale.X, Scale.Y, 1.0F) * scaleResolution / ZPosition) *
-            Matrix.CreateTranslation(New Vector3(viewport.Width * 0.5F, viewport.Height * 0.5F, 0F))
+            Matrix.CreateScale(New Vector3(Scale.X * scaleResolution.X, Scale.Y * scaleResolution.Y, 1.0F) / ZPosition) *
+            Matrix.CreateTranslation(New Vector3(Dimensions.X * 0.5F, Dimensions.Y * 0.5F, 0F))
 
         spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, samplerState, Nothing, Nothing, Nothing, transform)
     End Sub

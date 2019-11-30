@@ -38,7 +38,7 @@ Public Class MenuScene
     End Property
 
     Public Sub New(ByRef game As Game)
-        updates = New LinkedList(Of IUpdate)
+        _updates = New LinkedList(Of IUpdate)
         Me.game = game
     End Sub
 
@@ -58,7 +58,8 @@ Public Class MenuScene
 
     Private Sub OkButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
         ScreenManager.Instance.ChangeScene(New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value))
-        ScreenManager.Instance.Current.GUIController.MainContext.Add(bk)
+        ScreenManager.Instance.Current.updates.Add(bk)
+        Camera.Drawings.Add(bk)
         bk.EnableLogo = False
     End Sub
 

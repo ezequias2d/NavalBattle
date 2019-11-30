@@ -47,7 +47,7 @@ Public Class NavalBattleScene
     Private shoot As SoundEffect
 
     Public Sub New(menu As MenuScene, sizeX As Integer, sizeY As Integer)
-        updates = New LinkedList(Of IUpdate)
+        _updates = New LinkedList(Of IUpdate)
         navalGame = New NavalGame(sizeX, sizeY, PlayerID.Player1)
         Dim n As Integer = GUIController.CurrentContext.NextNegative()
         Dim chanceMapViewerPosition As Vector2 = New Vector2(-Camera.InternalDimensions.X / 2, Camera.InternalDimensions.Y / 2 - 32)
@@ -325,9 +325,11 @@ Public Class NavalBattleScene
                     player2IA.StartAttackProcessing(navalGame.GetEnemyVisionMap(PlayerID.Player1), sizeX, sizeY)
                 ElseIf navalGame.CurrentPlayer = PlayerID.Player2 And player2IA.IsProcessingComplete() Then
                     Dim shoot As (x As Integer, y As Integer) = player2IA.NextResult()
-                    GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
-                    selectedShot = True
-                    navalGame.FillMap(navalMap)
+                    If navalGame.GetEnemyVisionMap(PlayerID.Player1)(shoot.x + shoot.y * sizeX) = HouseStatus.Normal Then
+                        GUIController.CurrentContext.SelectObject(shoot.x, shoot.y)
+                        selectedShot = True
+                        navalGame.FillMap(navalMap)
+                    End If
                 End If
             Else
                 count += gameTime.ElapsedGameTime.TotalSeconds

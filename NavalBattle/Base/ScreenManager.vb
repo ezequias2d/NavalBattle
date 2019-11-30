@@ -61,8 +61,8 @@ Public Class ScreenManager
         Set
             If Value.X <> 0 AndAlso Value.Y <> 0 Then
                 _Dimensions = Value
-                Game.Graphics.PreferredBackBufferWidth = ScreenManager.Instance.Dimensions.X
-                Game.Graphics.PreferredBackBufferHeight = ScreenManager.Instance.Dimensions.Y
+                Game.Graphics.PreferredBackBufferWidth = Value.X
+                Game.Graphics.PreferredBackBufferHeight = Value.Y
                 Game.Graphics.ApplyChanges()
             End If
         End Set
