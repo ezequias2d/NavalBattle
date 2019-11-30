@@ -85,7 +85,6 @@ Public Structure SubMap
             weigth += submap.Weight
         Next
 
-        weigth /= num
         Return New SubMap(details, weigth)
     End Function
 
