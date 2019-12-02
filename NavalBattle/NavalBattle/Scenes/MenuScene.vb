@@ -61,8 +61,12 @@ Public Class MenuScene
         End If
     End Sub
 
+    Private Function GetString(str As String) As String
+        Return resource.GetString(str)
+    End Function
+
     Private Function CreateTexts() As String()
-        Dim texts As String() = New String() {resource.GetString("play"), resource.GetString("settings"), resource.GetString("exit")}
+        Dim texts As String() = New String() {"play", "settings", "exit"}
         Return texts
     End Function
 
@@ -106,7 +110,8 @@ Public Class MenuScene
 
         Dim n As Integer = context.NextNegative()
 
-        Dim resolutionLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, -110), New Label(resource.GetString("resolution"), Color.White, Label.Font))
+        Dim resolutionLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, -110), New Label("resolution", Color.White, Label.Font))
+        resolutionLabel.GetStringFunction = AddressOf GetString
 
         Dim resolutions As IDictionary(Of String, (x As UInteger, y As UInteger)) = New Dictionary(Of String, (x As UInteger, y As UInteger))
 
@@ -122,18 +127,21 @@ Public Class MenuScene
         resolutionAlternator = New SimpleAlternator(Of (x As UInteger, y As UInteger))(0, 0, 0, New Vector2(0, -90), resolutions)
 
         n = context.NextNegative()
-        Dim fullscreenLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, -60), New Label(resource.GetString("fullscreen"), Color.White, Label.Font))
-
+        Dim fullscreenLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, -60), New Label("fullscreen", Color.White, Label.Font))
+        fullscreenLabel.GetStringFunction = AddressOf GetString
         check = New Check(1, 0, 1, New Vector2(0, -30))
 
         n = context.NextNegative()
-        Dim volumeLabel As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label(resource.GetString("volume"), Color.White, Label.Font))
+        Dim volumeLabel As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label("volume", Color.White, Label.Font))
+        volumeLabel.GetStringFunction = AddressOf GetString
+
         numberSelectorVolume = New NumberSelector(2, 0, 2, New Vector2(0, 30), 0, 20)
 
         numberSelectorVolume.Value = 10
 
-        Dim languageLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, 60), New Label(resource.GetString("language"), Color.White, Label.Font))
-
+        n = context.NextNegative()
+        Dim languageLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, 60), New Label("language", Color.White, Label.Font))
+        languageLabel.GetStringFunction = AddressOf GetString
         Dim languages As IDictionary(Of String, String) = New Dictionary(Of String, String)
 
         languages.Add("English", "en-EN")
@@ -187,7 +195,8 @@ Public Class MenuScene
     Private Sub OnUnfocusLanguageAlternator(obj As GUIObject)
         Dim languageAlternator As SimpleAlternator(Of String) = obj
         language = languageAlternator.Value
-        game.language = language
+        game.language = Language
+        SetLanguage()
     End Sub
 
     Private Function CreateContextSizeMap() As GUIContext
@@ -197,10 +206,14 @@ Public Class MenuScene
         numberSelectorY = New NumberSelector(1, 0, 1, Vector2.Zero, 6, 20)
         Dim button As Button = New Button(2, 0, 2, Vector2.Zero, "Ok!", Vector2.One)
 
-        Dim gLabelTitle As GUILabel = New GUILabel(3, 0, 3, New Vector2(0, -48.0F), New Label(resource.GetString("map_size"), Color.White, Label.Font))
+        Dim gLabelTitle As GUILabel = New GUILabel(3, 0, 3, New Vector2(0, -48.0F), New Label("map_size", Color.White, Label.Font))
 
-        Dim gLabelW As GUILabel = New GUILabel(4, 0, 4, New Vector2(0, -20.0F), New Label(resource.GetString("width"), Color.White, Label.Font))
-        Dim gLabelH As GUILabel = New GUILabel(5, 0, 5, New Vector2(0, 28.0F), New Label(resource.GetString("height"), Color.White, Label.Font))
+        Dim gLabelW As GUILabel = New GUILabel(4, 0, 4, New Vector2(0, -20.0F), New Label("width", Color.White, Label.Font))
+        Dim gLabelH As GUILabel = New GUILabel(5, 0, 5, New Vector2(0, 28.0F), New Label("height", Color.White, Label.Font))
+
+        gLabelTitle.GetStringFunction = AddressOf GetString
+        gLabelW.GetStringFunction = AddressOf GetString
+        gLabelH.GetStringFunction = AddressOf GetString
 
         gLabelTitle.Scale = Vector2.One * 2.0F
         gLabelW.Scale = Vector2.One * 0.5F
@@ -239,7 +252,9 @@ Public Class MenuScene
 
         GUIController.MainContext.OnFocus = AddressOf OnFocusMainContext
 
-        Dim labelTitle As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label(resource.GetString("naval_battle"), Color.GhostWhite, Label.Font))
+        Dim labelTitle As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label("naval_battle", Color.GhostWhite, Label.Font))
+
+        labelTitle.GetStringFunction = AddressOf GetString
 
         labelTitle.LayerDetph = 5
         labelTitle.Scale = Vector2.One * 1.5F
@@ -248,6 +263,7 @@ Public Class MenuScene
         Dim i As Integer = 0
         For Each text As String In texts
             Dim button As Button = New Button(i, 0, i, New Vector2(0, (i + 4 - texts.Count) * 32.0F), text, Vector2.One)
+            button.GetStringFunction = AddressOf GetString
             GUIController.MainContext.Add(button)
             Select Case i
                 Case 0
@@ -267,7 +283,7 @@ Public Class MenuScene
         labelMove.DrawEnable = True
 
         labelFire0.DrawEnable = True
-        labelFire0.Text = resource.GetString("execute")
+        labelFire0.Text = "execute"
 
         labelCancel.DrawEnable = False
         labelChangeValue.DrawEnable = False
@@ -278,10 +294,10 @@ Public Class MenuScene
         labelMove.DrawEnable = True
 
         labelFire0.DrawEnable = True
-        labelFire0.Text = resource.GetString("select_execute")
+        labelFire0.Text = "select_execute"
 
         labelCancel.DrawEnable = True
-        labelCancel.Text = resource.GetString("return")
+        labelCancel.Text = "return"
 
         labelChangeValue.DrawEnable = False
     End Sub
@@ -292,7 +308,7 @@ Public Class MenuScene
         labelFire0.DrawEnable = False
 
         labelCancel.DrawEnable = True
-        labelCancel.Text = resource.GetString("deselect")
+        labelCancel.Text = "deselect"
 
         labelChangeValue.DrawEnable = True
     End Sub
@@ -305,7 +321,8 @@ Public Class MenuScene
         controlsView.Position = Camera.InternalDimensions / 2 - Vector2.UnitX * 64
 
         ''Move
-        labelMove = New Label(resource.GetString("move"), Color.White, Label.Font)
+        labelMove = New Label("move", Color.White, Label.Font)
+        labelMove.GetStringFunction = AddressOf GetString
 
         Dim analogicMove As Sprite = GUIController.CreateAnalogicSprite(Color.BlanchedAlmond)
         Dim up As Sprite = GUIController.CreateUpSprite(Color.BlanchedAlmond)
@@ -319,7 +336,8 @@ Public Class MenuScene
         controlsView.Add(labelMove, moveList)
 
         ''Fire0
-        labelFire0 = New Label(resource.GetString("execute"), Color.White, Label.Font)
+        labelFire0 = New Label("execute", Color.White, Label.Font)
+        labelFire0.GetStringFunction = AddressOf GetString
 
         Dim Fire0 As Sprite = GUIController.CreateFireSprite(Color.GreenYellow)
         Dim orbFire0 As Sprite = GUIController.CreateOrbSprite(Color.GreenYellow)
@@ -333,7 +351,8 @@ Public Class MenuScene
         controlsView.Add(labelFire0, fire0List)
 
         ''Cancel
-        labelCancel = New Label(resource.GetString("cancel"), Color.White, Label.Font)
+        labelCancel = New Label("cancel", Color.White, Label.Font)
+        labelCancel.GetStringFunction = AddressOf GetString
         labelCancel.DrawEnable = False
 
         Dim cancel As Sprite = GUIController.CreateFireSprite(Color.Red)
@@ -348,7 +367,8 @@ Public Class MenuScene
         controlsView.Add(labelCancel, cancelList)
 
         ''ChangeValue
-        labelChangeValue = New Label(resource.GetString("change"), Color.White, Label.Font)
+        labelChangeValue = New Label("change", Color.White, Label.Font)
+        labelChangeValue.GetStringFunction = AddressOf GetString
         labelChangeValue.DrawEnable = False
 
         Dim left As Sprite = GUIController.CreateLeftSprite(Color.DarkBlue)

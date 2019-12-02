@@ -18,8 +18,13 @@ Public Class Label
     Implements IDrawable
     Implements ITransform
 
+    Public Delegate Function GetString(str As String) As String
+
+
     Public Shared ReadOnly FontName As String = "fonts/GrrMono0.1"
     Private Shared _Font As SpriteFont
+    Private _Text As String
+    Private _GetStringFunction As GetString
 
     Public Shared ReadOnly Property Font As SpriteFont
         Get
@@ -80,6 +85,30 @@ Public Class Label
     ''' </summary>
     ''' <returns> Texto </returns>
     Public Property Text As String
+        Get
+            Return _Text
+        End Get
+        Set(value As String)
+            If _Text <> value Then
+                _Text = value
+            End If
+        End Set
+    End Property
+
+    ''' <summary>
+    ''' Função chamada para converte o texto em outro automaticamente
+    ''' </summary>
+    ''' <returns></returns>
+    Public Property GetStringFunction As GetString
+        Get
+            Return _GetStringFunction
+        End Get
+        Set(value As GetString)
+            If value IsNot _GetStringFunction Then
+                _GetStringFunction = value
+            End If
+        End Set
+    End Property
 
     ''' <summary>
     ''' Cor do texto desenhado
@@ -117,7 +146,7 @@ Public Class Label
     ''' <returns> Variação de posição necessaria para alinhar </returns>
     Private Function CalculateOrigin() As Vector2
         Dim origin As Vector2 = Vector2.Zero
-        Dim size As Vector2 = SpriteFont.MeasureString(Text)
+        Dim size As Vector2 = SpriteFont.MeasureString(ToString())
 
         Select Case AlignmentX
             Case Alignment.Center
@@ -173,7 +202,7 @@ Public Class Label
     ''' <param name="layerDepthDelta"> LayerDepth adicional </param>
     Public Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort) Implements IDrawable.Draw
         Dim origin As Vector2 = CalculateOrigin()
-        spriteBatch.DrawString(SpriteFont, Text, Position + positionDelta, Color, MathHelper.ToRadians(Angle + angleDelta), origin, Scale * scaleDelta, SpriteEffects.None, (LayerDetph + layerDepthDelta) / 65536.0F)
+        spriteBatch.DrawString(SpriteFont, ToString(), Position + positionDelta, Color, MathHelper.ToRadians(Angle + angleDelta), origin, Scale * scaleDelta, SpriteEffects.None, (LayerDetph + layerDepthDelta) / 65536.0F)
     End Sub
 
     ''' <summary>
@@ -182,7 +211,7 @@ Public Class Label
     ''' <param name="scaleDelta"> Escala adicional </param>
     ''' <returns> Tamanho do texto desenhado </returns>
     Public Function Measure(scaleDelta As Vector2) As Vector2
-        Return SpriteFont.MeasureString(Text) * scaleDelta * Scale
+        Return SpriteFont.MeasureString(ToString()) * scaleDelta * Scale
     End Function
 
     ''' <summary>
@@ -190,7 +219,7 @@ Public Class Label
     ''' </summary>
     ''' <returns> Tamanho do texto desenhado </returns>
     Public Function Measure() As Vector2
-        Return SpriteFont.MeasureString(Text) * Scale
+        Return SpriteFont.MeasureString(ToString()) * Scale
     End Function
 
     ''' <summary>
@@ -212,10 +241,20 @@ Public Class Label
     ''' <returns> Tamanho da substring desenhado </returns>
     Public Function MeasureIndex(startIndex As UInteger, size As Single, scaleDelta As Vector2) As Vector2
         Dim sizeInt As Integer = size - (size Mod 1)
-        Dim output As Vector2 = SpriteFont.MeasureString(Text.Substring(startIndex, sizeInt)) * Scale * scaleDelta
+        Dim output As Vector2 = SpriteFont.MeasureString(ToString().Substring(startIndex, sizeInt)) * Scale * scaleDelta
 
-        output += Vector2.UnitX * SpriteFont.MeasureString(Text.Substring(startIndex + sizeInt, 1)).X * Scale * scaleDelta * (size Mod 1)
+        output += Vector2.UnitX * SpriteFont.MeasureString(ToString().Substring(startIndex + sizeInt, 1)).X * Scale * scaleDelta * (size Mod 1)
 
         Return output
     End Function
+
+
+    Public Overrides Function ToString() As String
+        Dim text As String = Me.Text
+        If GetStringFunction IsNot Nothing Then
+            text = GetStringFunction.Invoke(text)
+        End If
+        Return text
+    End Function
+
 End Class
