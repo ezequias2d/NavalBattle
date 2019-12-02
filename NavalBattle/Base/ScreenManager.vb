@@ -125,6 +125,7 @@ Public Class ScreenManager
         End If
 
         If Not Current Is Nothing Then
+            newScene.Language = Current.Language
             Current.UnloadContent()
         End If
 

@@ -19,6 +19,15 @@ Public Class Button
     Public Property BoxSelected As Box
     Public Property Label As Label
 
+    Public Property GetStringFunction As Label.GetString
+        Get
+            Return Label.GetStringFunction
+        End Get
+        Set(value As Label.GetString)
+            Label.GetStringFunction = value
+        End Set
+    End Property
+
     ''' <summary>
     ''' Construtor de botão
     ''' </summary>
@@ -113,6 +122,14 @@ Public Class Button
     Public Overrides Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort)
         Dim pos As Vector2 = PositionTranslated + positionDelta + Origin * Scale * scaleDelta
 
+        If Label IsNot Nothing Then
+            Dim textSize As Vector2 = Label.Measure()
+            textSize.X = Math.Max(textSize.X + 12.0F, 16.0F)
+            textSize.Y = Math.Max(textSize.Y + 12.0F, 16.0F)
+            BoxSelected.Size = textSize
+            Box.Size = textSize
+        End If
+
         If Label IsNot Nothing AndAlso Label.DrawEnable Then
             Label.Draw(spriteBatch, pos, Scale * scaleDelta, Angle + angleDelta, layerDepthDelta + LayerDetph)
         End If
@@ -129,3 +146,4 @@ Public Class Button
     End Sub
 
 End Class
+

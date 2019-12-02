@@ -32,7 +32,6 @@ Public Class SimpleAlternator(Of T)
         End Get
         Set(value As UInteger)
             _count = value
-            UpdateBoxSizeAndLabel()
         End Set
     End Property
 
@@ -40,6 +39,15 @@ Public Class SimpleAlternator(Of T)
         Get
             Return alternative.Keys(count)
         End Get
+    End Property
+
+    Public Property GetStringFunction As Label.GetString
+        Get
+            Return label.GetStringFunction
+        End Get
+        Set(value As Label.GetString)
+            label.GetStringFunction = value
+        End Set
     End Property
 
     ''' <summary>
@@ -106,6 +114,7 @@ Public Class SimpleAlternator(Of T)
     End Sub
 
     Public Overrides Sub Draw(ByRef spriteBatch As SpriteBatch, positionDelta As Vector2, scaleDelta As Vector2, angleDelta As Single, layerDepthDelta As UShort)
+        UpdateBoxSizeAndLabel()
         If Selected Then
             boxSelect.Draw(spriteBatch, positionDelta + Position, scaleDelta * Scale, Angle + angleDelta, layerDepthDelta + LayerDetph + 1)
         Else

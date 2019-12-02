@@ -13,6 +13,15 @@ Public Class GUILabel
     ''' <returns> Label </returns>
     Public Property Label As Label
 
+    Public Property GetStringFunction As Label.GetString
+        Get
+            Return Label.GetStringFunction
+        End Get
+        Set(value As Label.GetString)
+            Label.GetStringFunction = value
+        End Set
+    End Property
+
     ''' <summary>
     ''' Construtor de GUIObject
     ''' </summary>

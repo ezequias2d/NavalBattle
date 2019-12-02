@@ -134,12 +134,32 @@
     <Compile Include="Base\Graphic\Sprite\Sprite.vb" />
     <Compile Include="Base\Graphic\Tilemap.vb" />
     <Compile Include="Base\ScreenManager.vb" />
+    <Compile Include="enEN.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>enEN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="esES.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>esES.resx</DependentUpon>
+    </Compile>
+    <Compile Include="frFR.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>frFR.resx</DependentUpon>
+    </Compile>
     <Compile Include="Game.vb" />
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resource1.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -180,13 +200,43 @@
     <Compile Include="NavalBattle\Enum\Ship.vb" />
     <Compile Include="NavalBattle\Scenes\MenuScene.vb" />
     <Compile Include="NavalBattle\Scenes\NavalBattleScene.vb" />
+    <Compile Include="ptBR.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ptBR.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="enEN.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>enEN.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="esES.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>esES.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frFR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>frFR.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resource1.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ptBR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ptBR.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -205,13 +255,13 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
-  <Import Project="..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Este projeto faz referência a pacotes do NuGet que não estão presentes neste computador. Use a Restauração de Pacotes do NuGet para baixá-los.  Para obter mais informações, consulte http://go.microsoft.com/fwlink/?LinkID=322105. O arquivo ausente é {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets'))" />
     <Error Condition="!Exists('..\packages\JDG.MonoGame.Content.Builder.1.0.1\build\JDG.MonoGame.Content.Builder.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JDG.MonoGame.Content.Builder.1.0.1\build\JDG.MonoGame.Content.Builder.targets'))" />
+    <Error Condition="!Exists('..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets'))" />
   </Target>
   <Import Project="..\packages\JDG.MonoGame.Content.Builder.1.0.1\build\JDG.MonoGame.Content.Builder.targets" Condition="Exists('..\packages\JDG.MonoGame.Content.Builder.1.0.1\build\JDG.MonoGame.Content.Builder.targets')" />
+  <Import Project="..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('..\packages\MonoGame.Framework.DesktopGL.3.7.1.189\build\MonoGame.Framework.DesktopGL.targets')" />
 </Project>

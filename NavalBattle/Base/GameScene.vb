@@ -1,4 +1,5 @@
-﻿Imports Microsoft.Xna.Framework
+﻿Imports System.CodeDom.Compiler
+Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Content
 Imports Microsoft.Xna.Framework.Graphics
 
@@ -11,13 +12,23 @@ Imports Microsoft.Xna.Framework.Graphics
 #End Region
 
 ''' <summary>
-''' Classe abstrata base de sena de jogo
+''' Classe abstrata base de cena de jogo
 ''' </summary>
 Public MustInherit Class GameScene
     ''' <summary>
     ''' Gerenciador de conteudo(usado para carregar recursos como textura e audio)
     ''' </summary>
     Protected content As ContentManager
+    Private _language As String
+
+    Public Property Language As String
+        Get
+            Return _language
+        End Get
+        Set(language As String)
+            _language = language
+        End Set
+    End Property
 
     ''' <summary>
     ''' Camera padrão

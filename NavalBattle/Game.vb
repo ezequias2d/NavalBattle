@@ -6,6 +6,8 @@ Public Class Game
     Inherits Microsoft.Xna.Framework.Game
 
     Public ReadOnly Property Graphics As GraphicsDeviceManager
+    Public language As String
+
     Private spriteBatch As SpriteBatch
 
     ''' <summary>

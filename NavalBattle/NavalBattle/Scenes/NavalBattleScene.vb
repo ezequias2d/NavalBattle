@@ -23,7 +23,7 @@ Public Class NavalBattleScene
     Private battleShipNum As Integer = 1
     Private destroyerNum As Integer = 2
     Private submarineNum As Integer = 1
-    Private labelTexts As String() = New String() {"Porta Avioes", "Navio de Guerra", "Encouracado", "Submarino"}
+    Private labelTexts As String()
     Private toPut As Ship
     Private orientation As Orientation
 
@@ -44,7 +44,30 @@ Public Class NavalBattleScene
 
     Private chanceMapViewer As ChanceMapViewer
 
+    Private resource As Resources.ResourceManager
+
     Private shoot As SoundEffect
+    Public Sub SetLanguage()
+        If Language IsNot Nothing Then
+            Select Case (Language)
+                Case "pt-BR"
+                    resource = My.Resources.ptBR.ResourceManager
+                Case "en-EN"
+                    resource = My.Resources.enEN.ResourceManager
+                Case "es-ES"
+                    resource = My.Resources.esES.ResourceManager
+                Case "fr-FR"
+                    resource = My.Resources.frFR.ResourceManager
+            End Select
+        Else
+            resource = My.Resources.enEN.ResourceManager
+        End If
+    End Sub
+
+    Private Function CreateTexts() As String()
+        Dim labelTexts As String() = New String() {resource.GetString("carrier"), resource.GetString("battleship"), resource.GetString("destroyer"), resource.GetString("submarine")}
+        Return labelTexts
+    End Function
 
     Public Sub New(menu As MenuScene, sizeX As Integer, sizeY As Integer)
         _updates = New LinkedList(Of IUpdate)
@@ -233,11 +256,11 @@ Public Class NavalBattleScene
         finalText.Scale = 2 * Vector2.One
         If navalGame.GetWin() = PlayerID.Player1 Then
             'Win
-            finalText.Label.Text = "Win Game"
+            finalText.Label.Text = resource.GetString("you_won")
             finalText.Label.Color = Color.DarkGreen
         Else
             'Lose
-            finalText.Label.Text = "Lose Game"
+            finalText.Label.Text = resource.GetString("you_lost")
             finalText.Label.Color = Color.DarkRed
         End If
         Return finalText
@@ -265,14 +288,16 @@ Public Class NavalBattleScene
     Private Sub UpdateLabelName()
         Select Case navalGame.CurrentPlayer
             Case PlayerID.Player1
-                playerLabel.Label.Text = "Player 1"
+                playerLabel.Label.Text = resource.GetString("player_1")
             Case PlayerID.Player2
-                playerLabel.Label.Text = "Player 2"
+                playerLabel.Label.Text = resource.GetString("player_2")
         End Select
     End Sub
 
     Public Overrides Sub LoadContent()
+        SetLanguage()
         MyBase.LoadContent()
+        labelTexts = CreateTexts()
         CreateControlsViewer()
         CreatePutShipContext()
         CreateLabel()
@@ -356,21 +381,23 @@ Public Class NavalBattleScene
                 Dim colorPainel As ColorPainel = New ColorPainel(GUIController.CurrentContext.NextNegative(), 0, 0, -painelSize / 2.0F, painelSize, Color.GhostWhite)
 
                 Dim labelBPosition As Vector2 = winAndLoseLabel.Position + New Vector2(0, winAndLoseLabel.Measure().Y / 2 + 32)
-                Dim guiLabelB As GUILabel = New GUILabel(GUIController.CurrentContext.NextNegative(), 0, 0, labelBPosition, New Label("Press  to return to menu.", Color.YellowGreen, Label.Font))
+                Dim guiLabelB As GUILabel = New GUILabel(GUIController.CurrentContext.NextNegative(), 0, 0, labelBPosition, New Label(resource.GetString("return_menu"), Color.YellowGreen, Label.Font))
                 Dim painelSizeB As Vector2 = guiLabelB.Measure() + 2 * Vector2.One
                 Dim colorPainelB As ColorPainel = New ColorPainel(GUIController.CurrentContext.NextNegative(), 0, 0, guiLabelB.Position - painelSizeB / 2.0F, painelSizeB, Color.GhostWhite)
 
-                Dim fireBPosition As Vector2 = labelBPosition + Vector2.UnitX * (guiLabelB.MeasureIndex(0, 6).X - guiLabelB.Measure().X / 2)
+                Dim str As String() = resource.GetString("return_menu").Split(New String() {"  "}, StringSplitOptions.RemoveEmptyEntries)
+                Dim fireBPosition As Vector2 = labelBPosition + Vector2.UnitX * (guiLabelB.MeasureIndex(0, str(0).Length + 1).X - guiLabelB.Measure().X / 2)
                 Dim fireB As GUISprite = New GUISprite(GUIController.CurrentContext.NextNegative(), 0, 0, fireBPosition, GUIController.CreateFireSprite(Color.YellowGreen))
                 Dim fireBScale As Single = guiLabelB.MeasureIndex(5, 1).X / fireB.Sprite.Frame.source.Width
                 fireB.Scale = Vector2.One * fireBScale
 
                 Dim labelMPosition As Vector2 = guiLabelB.Position + New Vector2(0, guiLabelB.Measure().Y / 2 + 16)
-                Dim guiLabelM As GUILabel = New GUILabel(GUIController.CurrentContext.NextNegative(), 0, 0, labelMPosition, New Label("Press  to see the map.", Color.DarkGoldenrod, Label.Font))
+                Dim guiLabelM As GUILabel = New GUILabel(GUIController.CurrentContext.NextNegative(), 0, 0, labelMPosition, New Label(resource.GetString("see_maps"), Color.DarkGoldenrod, Label.Font))
                 Dim painelSizeM As Vector2 = guiLabelM.Measure() + 2 * Vector2.One
                 Dim colorPainelM As ColorPainel = New ColorPainel(GUIController.CurrentContext.NextNegative(), 0, 0, guiLabelM.Position - painelSizeM / 2.0F, painelSizeM, Color.GhostWhite)
 
-                Dim fireMPosition As Vector2 = labelMPosition + Vector2.UnitX * (guiLabelM.MeasureIndex(0, 6).X - guiLabelM.Measure().X / 2)
+                Dim str2 As String() = resource.GetString("see_maps").Split(New String() {"  "}, StringSplitOptions.RemoveEmptyEntries)
+                Dim fireMPosition As Vector2 = labelMPosition + Vector2.UnitX * (guiLabelM.MeasureIndex(0, str2(0).Length + 1).X - guiLabelM.Measure().X / 2)
                 Dim fireM As GUISprite = New GUISprite(GUIController.CurrentContext.NextNegative(), 0, 0, fireMPosition, GUIController.CreateFireSprite(Color.DarkGoldenrod))
                 Dim fireMScale As Single = guiLabelM.MeasureIndex(5, 1).X / fireM.Sprite.Frame.source.Width
                 fireM.Scale = Vector2.One * fireBScale
@@ -436,10 +463,10 @@ Public Class NavalBattleScene
         labelMove.DrawEnable = True
         labelMoveMenu.DrawEnable = False
 
-        labelFire0.Text = "Put"
+        labelFire0.Text = resource.GetString("place")
         labelFire0.DrawEnable = True
 
-        labelFire1.Text = "Rotate"
+        labelFire1.Text = resource.GetString("rotate")
         labelFire1.DrawEnable = True
 
         labelFire2.DrawEnable = False
@@ -463,7 +490,7 @@ Public Class NavalBattleScene
         labelMove.DrawEnable = False
         labelMoveMenu.DrawEnable = True
 
-        labelFire0.Text = "Select"
+        labelFire0.Text = resource.GetString("select")
         labelFire0.DrawEnable = True
 
         labelFire1.DrawEnable = False
@@ -478,7 +505,7 @@ Public Class NavalBattleScene
 
         labelMoveMenu.DrawEnable = False
 
-        labelFire0.Text = "Attack"
+        labelFire0.Text = resource.GetString("attack")
 
         labelFire0.DrawEnable = True
 
@@ -493,7 +520,7 @@ Public Class NavalBattleScene
         controlsView.Scale = Vector2.One * 0.5F
 
         ''Move
-        labelMove = New Label("Move", Color.White, Label.Font)
+        labelMove = New Label(resource.GetString("move"), Color.White, Label.Font)
 
         Dim analogicMove As Sprite = GUIController.CreateAnalogicSprite(Color.BlanchedAlmond)
         Dim up As Sprite = GUIController.CreateUpSprite(Color.BlanchedAlmond)
@@ -511,7 +538,7 @@ Public Class NavalBattleScene
         controlsView.Add(labelMove, moveList)
 
         ''Move menu
-        labelMoveMenu = New Label("Move", Color.White, Label.Font)
+        labelMoveMenu = New Label(resource.GetString("move"), Color.White, Label.Font)
 
         Dim moveMenuList As IList(Of (Sprite, Label)) = New List(Of (Sprite, Label))
         moveMenuList.Add((analogicMove, Nothing))
@@ -520,7 +547,7 @@ Public Class NavalBattleScene
 
         controlsView.Add(labelMoveMenu, moveMenuList)
         ''Fire0
-        labelFire0 = New Label("Put", Color.White, Label.Font)
+        labelFire0 = New Label(resource.GetString("place"), Color.White, Label.Font)
 
         Dim Fire0 As Sprite = GUIController.CreateFireSprite(Color.GreenYellow)
         Dim orbFire0 As Sprite = GUIController.CreateOrbSprite(Color.GreenYellow)
@@ -534,7 +561,7 @@ Public Class NavalBattleScene
         controlsView.Add(labelFire0, fire0List)
 
         ''Fire1
-        labelFire1 = New Label("Rotate", Color.White, Label.Font)
+        labelFire1 = New Label(resource.GetString("rotate"), Color.White, Label.Font)
 
         Dim Fire1 As Sprite = GUIController.CreateFireSprite(Color.DarkRed)
         Dim orbFire1 As Sprite = GUIController.CreateOrbSprite(Color.DarkRed)
@@ -548,7 +575,7 @@ Public Class NavalBattleScene
         controlsView.Add(labelFire1, fire1List)
 
         ''Fire2
-        labelFire2 = New Label("Change map", Color.White, Label.Font)
+        labelFire2 = New Label(resource.GetString("switch_map"), Color.White, Label.Font)
 
         Dim Fire2 As Sprite = GUIController.CreateFireSprite(Color.DarkOrange)
         Dim orbFire2 As Sprite = GUIController.CreateOrbSprite(Color.DarkOrange)
