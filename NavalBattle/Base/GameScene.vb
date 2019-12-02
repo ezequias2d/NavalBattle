@@ -1,4 +1,5 @@
-﻿Imports Microsoft.Xna.Framework
+﻿Imports System.CodeDom.Compiler
+Imports Microsoft.Xna.Framework
 Imports Microsoft.Xna.Framework.Content
 Imports Microsoft.Xna.Framework.Graphics
 
@@ -18,6 +19,16 @@ Public MustInherit Class GameScene
     ''' Gerenciador de conteudo(usado para carregar recursos como textura e audio)
     ''' </summary>
     Protected content As ContentManager
+    Private _language As String
+
+    Public Property Language As String
+        Get
+            Return _language
+        End Get
+        Set(language As String)
+            _language = language
+        End Set
+    End Property
 
     ''' <summary>
     ''' Camera padrão

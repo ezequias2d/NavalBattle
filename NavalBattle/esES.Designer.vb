@@ -344,7 +344,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a ¡Perdiste!.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Perdiste.
         '''</summary>
         Friend Shared ReadOnly Property you_lost() As String
             Get
@@ -353,7 +353,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a ¡Ganaste!.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Ganaste.
         '''</summary>
         Friend Shared ReadOnly Property you_won() As String
             Get

@@ -29,7 +29,6 @@ Public Class MenuScene
     Private sound As SoundEffect
     Private soundEffectInstance As SoundEffectInstance
 
-    Private language As String
     Public resource As Resources.ResourceManager
 
     Dim bk As BackgroundMenu
@@ -77,9 +76,9 @@ Public Class MenuScene
     End Sub
 
     Private Sub OkButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
-        Dim nb As NavalBattleScene = New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value)
-        nb.SetLanguage(game)
-        ScreenManager.Instance.ChangeScene(nb)
+        Dim navalBattle As NavalBattleScene = New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value)
+        navalBattle.Language = Me.Language
+        ScreenManager.Instance.ChangeScene(navalBattle)
         ScreenManager.Instance.Current.Updates.Add(bk)
         ScreenManager.Instance.Current.Updates.Add(bk)
         Camera.Drawings.Add(bk)

@@ -211,9 +211,9 @@
     <value>Anchura</value>
   </data>
   <data name="you_lost" xml:space="preserve">
-    <value>¡Perdiste!</value>
+    <value>Perdiste</value>
   </data>
   <data name="you_won" xml:space="preserve">
-    <value>¡Ganaste!</value>
+    <value>Ganaste</value>
   </data>
 </root>

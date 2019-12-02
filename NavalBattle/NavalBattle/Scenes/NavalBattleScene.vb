@@ -45,13 +45,11 @@ Public Class NavalBattleScene
     Private chanceMapViewer As ChanceMapViewer
 
     Private resource As Resources.ResourceManager
-    Private _game As Game
 
     Private shoot As SoundEffect
-    Public Sub SetLanguage(game)
-        _game = game
-        If game IsNot Nothing AndAlso game.language IsNot Nothing Then
-            Select Case (game.language)
+    Public Sub SetLanguage()
+        If Language IsNot Nothing Then
+            Select Case (Language)
                 Case "pt-BR"
                     resource = My.Resources.ptBR.ResourceManager
                 Case "en-EN"
@@ -297,7 +295,7 @@ Public Class NavalBattleScene
     End Sub
 
     Public Overrides Sub LoadContent()
-        SetLanguage(_game)
+        SetLanguage()
         MyBase.LoadContent()
         labelTexts = CreateTexts()
         CreateControlsViewer()
