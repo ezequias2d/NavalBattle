@@ -14,7 +14,8 @@ Public Class Game
     ''' Cria novo jogo
     ''' </summary>
     Public Sub New()
-        Me.graphics = New GraphicsDeviceManager(Me)
+        Me.Graphics = New GraphicsDeviceManager(Me)
+
         Content.RootDirectory = "Content"
     End Sub
 
@@ -25,7 +26,6 @@ Public Class Game
 	''' And initialize them as well.
     ''' </summary>
     Protected Overrides Sub Initialize()
-
         MyBase.Initialize()
     End Sub
 

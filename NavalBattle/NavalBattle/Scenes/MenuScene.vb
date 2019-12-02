@@ -186,7 +186,9 @@ Public Class MenuScene
         For Each obj As GUIObject In context.Controllers.Values
             If obj.Index >= 0 Then
                 obj.OnFocus = AddressOf OnFocusSettings
-                obj.OnUnfocus = AddressOf OnUnfocusSettings
+                If obj.OnUnfocus Is Nothing Then
+                    obj.OnUnfocus = AddressOf OnUnfocusSettings
+                End If
             End If
         Next
         Return context
@@ -213,6 +215,7 @@ Public Class MenuScene
         Language = languageAlternator.Value
         game.language = Language
         SetLanguage()
+        OnUnfocusSettings(obj)
     End Sub
 
     Private Function CreateContextSizeMap() As GUIContext
