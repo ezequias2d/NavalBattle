@@ -18,10 +18,7 @@ Public Class MenuScene
     Private check As Check
     Private resolutionAlternator As SimpleAlternator(Of (x As UInteger, y As UInteger))
     Private numberSelectorVolume As NumberSelector
-<<<<<<< HEAD
     Private languageAlternator As SimpleAlternator(Of String)
-=======
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
 
     Private controlsView As ControlsViewer
     Private labelMove As Label
@@ -32,12 +29,9 @@ Public Class MenuScene
     Private sound As SoundEffect
     Private soundEffectInstance As SoundEffectInstance
 
-<<<<<<< HEAD
     Private language As String
     Public resource As Resources.ResourceManager
 
-=======
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
     Dim bk As BackgroundMenu
 
     Public ReadOnly Property Volume As Single
@@ -69,11 +63,7 @@ Public Class MenuScene
     End Sub
 
     Private Function CreateTexts() As String()
-<<<<<<< HEAD
         Dim texts As String() = New String() {resource.GetString("play"), resource.GetString("settings"), resource.GetString("exit")}
-=======
-        Dim texts As String() = New String() {"Play", "Settings", "Exit"}
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
         Return texts
     End Function
 
@@ -88,11 +78,8 @@ Public Class MenuScene
 
     Private Sub OkButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
         ScreenManager.Instance.ChangeScene(New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value))
-<<<<<<< HEAD
         ScreenManager.Instance.Current.Updates.Add(bk)
-=======
-        ScreenManager.Instance.Current.updates.Add(bk)
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
+        ScreenManager.Instance.Current.Updates.Add(bk)
         Camera.Drawings.Add(bk)
         bk.EnableLogo = False
     End Sub
@@ -118,11 +105,7 @@ Public Class MenuScene
 
         Dim n As Integer = context.NextNegative()
 
-<<<<<<< HEAD
         Dim resolutionLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, -110), New Label(resource.GetString("resolution"), Color.White, Label.Font))
-=======
-        Dim resolutionLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, -20), New Label("Resolution", Color.White, Label.Font))
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
 
         Dim resolutions As IDictionary(Of String, (x As UInteger, y As UInteger)) = New Dictionary(Of String, (x As UInteger, y As UInteger))
 
@@ -135,7 +118,6 @@ Public Class MenuScene
         resolutions.Add("2560x1600", (2560, 1600))
         resolutions.Add("3840x2160", (3840, 2160))
 
-<<<<<<< HEAD
         resolutionAlternator = New SimpleAlternator(Of (x As UInteger, y As UInteger))(0, 0, 0, New Vector2(0, -90), resolutions)
 
         n = context.NextNegative()
@@ -160,34 +142,14 @@ Public Class MenuScene
 
         languageAlternator = New SimpleAlternator(Of String)(3, 0, 3, New Vector2(0, 90), languages)
 
-
-=======
-
-        resolutionAlternator = New SimpleAlternator(Of (x As UInteger, y As UInteger))(0, 0, 0, Vector2.Zero, resolutions)
-
-        n = context.NextNegative()
-        Dim fullscreenLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, 32), New Label("FullScreen", Color.White, Label.Font))
-
-        Check = New Check(1, 0, 1, New Vector2(0, 52))
-
-        n = context.NextNegative()
-        Dim volumeLabel As GUILabel = New GUILabel(n, 0, n, New Vector2(0, 84), New Label("Volume", Color.White, Label.Font))
-        numberSelectorVolume = New NumberSelector(2, 0, 2, New Vector2(0, 104), 0, 20)
-
-        numberSelectorVolume.Value = 10
-
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
         context.Add(resolutionLabel)
         context.Add(resolutionAlternator)
         context.Add(fullscreenLabel)
         context.Add(check)
         context.Add(volumeLabel)
         context.Add(numberSelectorVolume)
-<<<<<<< HEAD
         context.Add(languageLabel)
         context.Add(languageAlternator)
-=======
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
 
         resolutionLabel.LayerDetph = 10
         resolutionAlternator.LayerDetph = 10
@@ -195,19 +157,13 @@ Public Class MenuScene
         check.LayerDetph = 10
         volumeLabel.LayerDetph = 10
         numberSelectorVolume.LayerDetph = 10
-<<<<<<< HEAD
         languageLabel.LayerDetph = 10
         languageAlternator.LayerDetph = 10
-=======
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
 
         resolutionAlternator.OnUnfocus = AddressOf OnUnfocusResolutionAlternator
         numberSelectorVolume.OnUnfocus = AddressOf OnUnfocusNumberSelectorVolume
         check.OnFire0 = AddressOf OnFire0FullScreen
-<<<<<<< HEAD
         languageAlternator.OnUnfocus = AddressOf OnUnfocusLanguageAlternator
-=======
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
         Return context
     End Function
 
@@ -227,15 +183,12 @@ Public Class MenuScene
         soundEffectInstance.Volume = numberSelectorVolume.Value * 0.05F
     End Sub
 
-<<<<<<< HEAD
     Private Sub OnUnfocusLanguageAlternator(obj As GUIObject)
         Dim languageAlternator As SimpleAlternator(Of String) = obj
         language = languageAlternator.Value
         game.language = language
     End Sub
 
-=======
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
     Private Function CreateContextSizeMap() As GUIContext
         Dim context As GUIContext = New GUIContext(Camera.InternalDimensions)
 
@@ -285,11 +238,8 @@ Public Class MenuScene
 
         GUIController.MainContext.OnFocus = AddressOf OnFocusMainContext
 
-<<<<<<< HEAD
         Dim labelTitle As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label(resource.GetString("naval_battle"), Color.GhostWhite, Label.Font))
-=======
-        Dim labelTitle As GUILabel = New GUILabel(n, 0, n, Vector2.Zero, New Label("NavalBattle", Color.GhostWhite, Label.Font))
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
+
         labelTitle.LayerDetph = 5
         labelTitle.Scale = Vector2.One * 1.5F
         GUIController.MainContext.Add(labelTitle)
@@ -419,12 +369,8 @@ Public Class MenuScene
 
     Public Overrides Sub LoadContent()
         MyBase.LoadContent()
-
-<<<<<<< HEAD
         SetLanguage()
 
-=======
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
         naval = content.Load(Of Texture2D)("naval")
 
         texts = CreateTexts()
@@ -441,11 +387,7 @@ Public Class MenuScene
         bk = New BackgroundMenu(n, 0, n, Vector2.Zero, ScreenManager.Instance.Content.Load(Of Texture2D)("naval2"), Camera.InternalDimensions)
 
         bk.EnableLogo = True
-<<<<<<< HEAD
         Updates.Add(bk)
-=======
-        updates.Add(bk)
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
         Camera.Drawings.Add(bk)
 
         If sound Is Nothing Then

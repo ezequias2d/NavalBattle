@@ -45,7 +45,6 @@ Public Class NavalBattleScene
 
     Private chanceMapViewer As ChanceMapViewer
 
-<<<<<<< HEAD
     Private resource As Resources.ResourceManager
 
     Private shoot As SoundEffect
@@ -70,9 +69,6 @@ Public Class NavalBattleScene
         Dim labelTexts As String() = New String() {resource.GetString("carrier"), resource.GetString("battleship"), resource.GetString("destroyer"), resource.GetString("submarine")}
         Return labelTexts
     End Function
-=======
-    Private shoot As SoundEffect
->>>>>>> 170a8539d797b451d7c850b769592cb02d9f9711
 
     Public Sub New(menu As MenuScene, sizeX As Integer, sizeY As Integer)
         _updates = New LinkedList(Of IUpdate)
