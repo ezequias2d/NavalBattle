@@ -77,6 +77,7 @@ Public Class MenuScene
 
     Private Sub SettingsButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
         GUIController.ChangeContext(contextSettings)
+        ControlsViewUnselectMap()
     End Sub
 
     Private Sub OkButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
@@ -99,6 +100,14 @@ Public Class MenuScene
 
     Private Sub OnUnfocusNumberSelector(obj As GUIObject)
         ControlsViewSizeMap()
+    End Sub
+
+    Private Sub OnFocusSettings(obj As GUIObject)
+        ControlsViewSelectMap()
+    End Sub
+
+    Private Sub OnUnfocusSettings(obj As GUIObject)
+        ControlsViewUnselectMap()
     End Sub
 
     Private Sub ExitButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
@@ -173,6 +182,13 @@ Public Class MenuScene
         numberSelectorVolume.OnUnfocus = AddressOf OnUnfocusNumberSelectorVolume
         check.OnFire0 = AddressOf OnFire0FullScreen
         languageAlternator.OnUnfocus = AddressOf OnUnfocusLanguageAlternator
+
+        For Each obj As GUIObject In context.Controllers.Values
+            If obj.Index >= 0 Then
+                obj.OnFocus = AddressOf OnFocusSettings
+                obj.OnUnfocus = AddressOf OnUnfocusSettings
+            End If
+        Next
         Return context
     End Function
 
@@ -300,6 +316,31 @@ Public Class MenuScene
         labelCancel.Text = "return"
 
         labelChangeValue.DrawEnable = False
+    End Sub
+
+    Private Sub ControlsViewUnselectMap()
+        GUIController.CurrentContext.Add(controlsView)
+        labelMove.DrawEnable = True
+
+        labelFire0.DrawEnable = True
+        labelFire0.Text = "select"
+
+        labelCancel.DrawEnable = True
+        labelCancel.Text = "return"
+
+        labelChangeValue.DrawEnable = False
+    End Sub
+
+    Private Sub ControlsViewSelectMap()
+        GUIController.CurrentContext.Add(controlsView)
+        labelMove.DrawEnable = True
+
+        labelFire0.DrawEnable = False
+
+        labelCancel.DrawEnable = True
+        labelCancel.Text = "deselect"
+
+        labelChangeValue.DrawEnable = True
     End Sub
 
     Private Sub ControlsViewSizeMapSelect()
