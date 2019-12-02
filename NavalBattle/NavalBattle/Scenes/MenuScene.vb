@@ -159,6 +159,7 @@ Public Class MenuScene
         languages.Add("Español", "es-ES")
 
         languageAlternator = New SimpleAlternator(Of String)(3, 0, 3, New Vector2(0, 90), languages)
+        languageAlternator.Value = Language
 
         context.Add(resolutionLabel)
         context.Add(resolutionAlternator)
