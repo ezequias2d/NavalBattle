@@ -385,7 +385,8 @@ Public Class NavalBattleScene
                 Dim painelSizeB As Vector2 = guiLabelB.Measure() + 2 * Vector2.One
                 Dim colorPainelB As ColorPainel = New ColorPainel(GUIController.CurrentContext.NextNegative(), 0, 0, guiLabelB.Position - painelSizeB / 2.0F, painelSizeB, Color.GhostWhite)
 
-                Dim fireBPosition As Vector2 = labelBPosition + Vector2.UnitX * (guiLabelB.MeasureIndex(0, 6).X - guiLabelB.Measure().X / 2)
+                Dim str As String() = resource.GetString("return_menu").Split(New String() {"  "}, StringSplitOptions.RemoveEmptyEntries)
+                Dim fireBPosition As Vector2 = labelBPosition + Vector2.UnitX * (guiLabelB.MeasureIndex(0, str(0).Length + 1).X - guiLabelB.Measure().X / 2)
                 Dim fireB As GUISprite = New GUISprite(GUIController.CurrentContext.NextNegative(), 0, 0, fireBPosition, GUIController.CreateFireSprite(Color.YellowGreen))
                 Dim fireBScale As Single = guiLabelB.MeasureIndex(5, 1).X / fireB.Sprite.Frame.source.Width
                 fireB.Scale = Vector2.One * fireBScale
@@ -395,7 +396,8 @@ Public Class NavalBattleScene
                 Dim painelSizeM As Vector2 = guiLabelM.Measure() + 2 * Vector2.One
                 Dim colorPainelM As ColorPainel = New ColorPainel(GUIController.CurrentContext.NextNegative(), 0, 0, guiLabelM.Position - painelSizeM / 2.0F, painelSizeM, Color.GhostWhite)
 
-                Dim fireMPosition As Vector2 = labelMPosition + Vector2.UnitX * (guiLabelM.MeasureIndex(0, 6).X - guiLabelM.Measure().X / 2)
+                Dim str2 As String() = resource.GetString("see_maps").Split(New String() {"  "}, StringSplitOptions.RemoveEmptyEntries)
+                Dim fireMPosition As Vector2 = labelMPosition + Vector2.UnitX * (guiLabelM.MeasureIndex(0, str2(0).Length + 1).X - guiLabelM.Measure().X / 2)
                 Dim fireM As GUISprite = New GUISprite(GUIController.CurrentContext.NextNegative(), 0, 0, fireMPosition, GUIController.CreateFireSprite(Color.DarkGoldenrod))
                 Dim fireMScale As Single = guiLabelM.MeasureIndex(5, 1).X / fireM.Sprite.Frame.source.Width
                 fireM.Scale = Vector2.One * fireBScale

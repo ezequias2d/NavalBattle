@@ -12,7 +12,7 @@ Imports Microsoft.Xna.Framework.Graphics
 #End Region
 
 ''' <summary>
-''' Classe abstrata base de sena de jogo
+''' Classe abstrata base de cena de jogo
 ''' </summary>
 Public MustInherit Class GameScene
     ''' <summary>
