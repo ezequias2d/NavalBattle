@@ -49,6 +49,7 @@ Public Class AI1Player
 
     Private Sub ThreadTask()
         If Not complete Then
+
             Dim possibleMaps As IList(Of SubMap)
             possibleMaps = Resolver.CalculatePossibleAvailableParts(map, width, height, pieces)
 
@@ -64,10 +65,16 @@ Public Class AI1Player
 
                 chanceMap.ScaleDown(2)
 
+                Dim countNotComplete As ULong = Me.CountNotComplete(possibleMaps)
+                Dim weight As ULong = 2
+                If countNotComplete = 1 Then
+                    weight = 16
+                End If
+
                 For Each submap As SubMap In possibleMaps
                     For Each detail In submap.Details
                         If Not detail.complete Then
-                            chanceMap.ExplicitlyAdd(detail, submap.Weight)
+                            chanceMap.ExplicitlyAdd(detail, submap.Weight * weight)
                         End If
                     Next
                 Next
@@ -93,7 +100,7 @@ Public Class AI1Player
                 chanceMap.Adjuster()
                 chanceMap.IsolateLargerHouses()
 
-                If chanceMap.ExistPercentageDiscrepancyValue(0.5F) Then
+                If chanceMap.ExistPercentageDiscrepancyValue(0.25F) Then
                     result = chanceMap.GetMaxHouse()
                 ElseIf chanceMap.IsAllAtSame() Then
                     chanceMap.AdjusterInvert()

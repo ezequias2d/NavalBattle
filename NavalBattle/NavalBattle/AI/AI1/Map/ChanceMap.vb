@@ -54,11 +54,8 @@
         Dim mini As ULong = Min()
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
-                If _houseStatus(i + j * Width) = HouseStatus.Hit Then
-                    _map(i, j) = 0
-                Else
-                    _map(i, j) = _map(i, j) / mini
-                End If
+                Dim mult As Single = GetHouseMultiplier(i, j)
+                _map(i, j) = _map(i, j) * mult / mini
             Next
         Next
     End Sub
@@ -139,61 +136,28 @@
         Next
     End Sub
 
-    Private Function GetStatus(x As Integer, y As Integer) As (horizontal As Byte, vertical As Byte, diagonal As Byte, miss As Byte)
+    Private Function GetStatus(x As Integer, y As Integer) As (horizontal As Byte, vertical As Byte, diagonal As Byte)
         Dim countHorizontal As Byte = 0
         Dim countVertical As Byte = 0
         Dim countDiagonal As Byte = 0
-        Dim countMiss As Byte = 0
-
-        If x > 0 AndAlso _houseStatus(x - 1 + y * Width) = HouseStatus.Missed Then
-            countMiss += 1
-        End If
-
-        If x < Width - 1 AndAlso _houseStatus(x + 1 + y * Width) = HouseStatus.Missed Then
-            countMiss += 2
-        End If
-
-        If y > 0 AndAlso _houseStatus(x + (y - 1) * Width) = HouseStatus.Missed Then
-            countMiss += 4
-        End If
-
-        If y < Height - 1 AndAlso _houseStatus(x + (y + 1) * Width) = HouseStatus.Missed Then
-            countMiss += 8
-        End If
-
-        If x > 0 AndAlso y > 1 AndAlso _houseStatus(x - 1 + (y - 1) * Width) = HouseStatus.Missed Then
-            countMiss += 16
-        End If
-
-        If x < Width - 1 AndAlso y > 1 AndAlso _houseStatus(x + 1 + (y - 1) * Width) = HouseStatus.Missed Then
-            countMiss += 32
-        End If
-
-        If x > 0 AndAlso y < Height - 1 AndAlso _houseStatus(x - 1 + (y + 1) * Width) = HouseStatus.Missed Then
-            countMiss += 64
-        End If
-
-        If x < Width - 1 AndAlso y < Height - 1 AndAlso _houseStatus(x + 1 + (y + 1) * Width) = HouseStatus.Missed Then
-            countMiss += 128
-        End If
 
         If x > 0 AndAlso _houseStatus((x - 1) + y * Width) = HouseStatus.Hit Then
             countHorizontal += 1
             If y > 0 AndAlso _houseStatus((x - 1) + (y - 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 1
+                countDiagonal += 1
             End If
             If y < Height - 1 AndAlso _houseStatus((x - 1) + (y + 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 2
+                countDiagonal += 1
             End If
         End If
 
         If x < Width - 1 AndAlso _houseStatus((x + 1) + y * Width) = HouseStatus.Hit Then
             countHorizontal += 1
             If y > 0 AndAlso _houseStatus((x + 1) + (y - 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 4
+                countDiagonal += 1
             End If
             If y < Height - 1 AndAlso _houseStatus((x + 1) + (y + 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 8
+                countDiagonal += 1
             End If
         End If
 
@@ -201,23 +165,23 @@
         If y > 0 AndAlso _houseStatus(x + (y - 1) * Width) = HouseStatus.Hit Then
             countVertical += 1
             If x > 0 AndAlso _houseStatus((x - 1) + (y - 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 16
+                countDiagonal += 1
             End If
             If x < Width - 1 AndAlso _houseStatus((x + 1) + (y - 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 32
+                countDiagonal += 1
             End If
         End If
 
         If y < Height - 1 AndAlso _houseStatus(x + (y + 1) * Width) = HouseStatus.Hit Then
             countVertical += 1
             If x > 0 AndAlso _houseStatus((x - 1) + (y + 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 64
+                countDiagonal += 1
             End If
             If x < Width - 1 AndAlso _houseStatus((x + 1) + (y + 1) * Width) = HouseStatus.Hit Then
-                countDiagonal = countDiagonal Or 128
+                countDiagonal += 1
             End If
         End If
-        Return (countHorizontal, countVertical, countDiagonal, countMiss)
+        Return (countHorizontal, countVertical, countDiagonal)
     End Function
 
     Private Function GetHouseMutiplierInvert(x As Integer, y As Integer) As Single
@@ -226,7 +190,7 @@
         End If
 
         Dim output As Single = 0
-        Dim status As (horizontal As Byte, vertical As Byte, diagonal As Byte, miss As Byte) = GetStatus(x, y)
+        Dim status As (horizontal As Byte, vertical As Byte, diagonal As Byte) = GetStatus(x, y)
 
         If status.vertical = 0 AndAlso status.horizontal = 0 Then
             output = 8.0F
@@ -235,6 +199,26 @@
         Else
             output = (status.horizontal + status.vertical) / 2.0F
         End If
+
+        Return output
+    End Function
+
+    Private Function GetHouseMultiplier(x As Integer, y As Integer) As Single
+        If _houseStatus(x + y * Width) <> HouseStatus.Normal Then
+            Return 0
+        End If
+
+        Dim output As Single = 7.5F
+        Dim status As (horizontal As Byte, vertical As Byte, diagonal As Byte) = GetStatus(x, y)
+
+        Dim div As Single = 13 - (status.vertical + status.horizontal + status.diagonal + 1)
+
+        If status.vertical + status.horizontal Mod 2 = 1 AndAlso status.diagonal = 0 Then
+            div *= 5
+        End If
+
+        output = div / output
+
 
         Return output
     End Function
@@ -332,7 +316,11 @@
 
             For i As Integer = x To x + size.width - 1
                 For j As Integer = y To y + size.height - 1
-                    _map(i, j) = _map(i, j) + weight + weightExtra
+                    If weightExtra > 0 Then
+                        _map(i, j) = _map(i, j) + weight * weightExtra * 2
+                    Else
+                        _map(i, j) = _map(i, j) + weight
+                    End If
                 Next
             Next
         End If

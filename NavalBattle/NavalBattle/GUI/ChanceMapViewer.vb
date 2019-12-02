@@ -18,7 +18,7 @@ Public Class ChanceMapViewer
         Dim data As Color() = New Color(texture.Width * texture.Height - 1) {}
         For xPixel As Integer = 0 To texture.Width - 1
             For yPixel As Integer = 0 To texture.Height - 1
-                Dim cor As Byte = (255 * (chanceMap.Item(xPixel, yPixel) / 2)) / (chanceMap.Max / 2)
+                Dim cor As Byte = (255 * (chanceMap.Item(xPixel, yPixel) / 2)) / (chanceMap.Max() / 2)
 
                 data(xPixel + yPixel * texture.Width) = New Color(cor, cor, cor, 255)
             Next
