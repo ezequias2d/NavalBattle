@@ -211,9 +211,9 @@
         Dim output As Single = 7.5F
         Dim status As (horizontal As Byte, vertical As Byte, diagonal As Byte) = GetStatus(x, y)
 
-        Dim div As Single = 13 - (status.vertical + status.horizontal + status.diagonal + 1)
+        Dim div As Single = 13 - (status.vertical + status.horizontal + status.diagonal)
 
-        If status.vertical + status.horizontal Mod 2 = 1 AndAlso status.diagonal = 0 Then
+        If (status.vertical + status.horizontal Mod 2 = 1 AndAlso status.diagonal = 0) OrElse div = 1 Then
             div *= 5
         End If
 
