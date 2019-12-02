@@ -137,7 +137,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Dejar Seleccion.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Dejar Selección.
         '''</summary>
         Friend Shared ReadOnly Property deselect() As String
             Get
@@ -191,7 +191,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Tamano de Mapa.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Tamaño de Mapa.
         '''</summary>
         Friend Shared ReadOnly Property map_size() As String
             Get
@@ -254,7 +254,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Resolucion.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Resolución.
         '''</summary>
         Friend Shared ReadOnly Property resolution() As String
             Get
@@ -299,7 +299,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Configuracion.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Configuración.
         '''</summary>
         Friend Shared ReadOnly Property settings() As String
             Get
@@ -344,7 +344,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Perdiste.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a ¡Perdiste!.
         '''</summary>
         Friend Shared ReadOnly Property you_lost() As String
             Get
@@ -353,7 +353,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Ganaste.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a ¡Ganaste!.
         '''</summary>
         Friend Shared ReadOnly Property you_won() As String
             Get

@@ -145,9 +145,9 @@ Public Class MenuScene
         Dim languages As IDictionary(Of String, String) = New Dictionary(Of String, String)
 
         languages.Add("English", "en-EN")
-        languages.Add("Portugues", "pt-BR")
-        languages.Add("Francais", "fr-FR")
-        languages.Add("Espanol", "es-ES")
+        languages.Add("Português", "pt-BR")
+        languages.Add("Français", "fr-FR")
+        languages.Add("Español", "es-ES")
 
         languageAlternator = New SimpleAlternator(Of String)(3, 0, 3, New Vector2(0, 90), languages)
 

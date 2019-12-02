@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  Uma classe de recurso de tipo de alta segurança, para pesquisar cadeias de caracteres localizadas etc.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute()>  _
     Friend Class ptBR
@@ -137,7 +137,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Sair da Selecao.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Sair da Seleção.
         '''</summary>
         Friend Shared ReadOnly Property deselect() As String
             Get
@@ -146,7 +146,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Encouracado.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Encouraçado.
         '''</summary>
         Friend Shared ReadOnly Property destroyer() As String
             Get
@@ -218,7 +218,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Posicionar Embarcacao.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Posicionar Embarcação.
         '''</summary>
         Friend Shared ReadOnly Property place() As String
             Get
@@ -254,7 +254,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Resolucao.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Resolução.
         '''</summary>
         Friend Shared ReadOnly Property resolution() As String
             Get
@@ -272,7 +272,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Girar Embarcacao.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Girar Embarcação.
         '''</summary>
         Friend Shared ReadOnly Property rotate() As String
             Get
@@ -299,7 +299,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Configuracoes.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Configurações.
         '''</summary>
         Friend Shared ReadOnly Property settings() As String
             Get
@@ -344,7 +344,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Voce Perdeu!.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Você Perdeu!.
         '''</summary>
         Friend Shared ReadOnly Property you_lost() As String
             Get
@@ -353,7 +353,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Voce Ganhou!.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Você Ganhou!.
         '''</summary>
         Friend Shared ReadOnly Property you_won() As String
             Get

@@ -83,7 +83,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Selectionner.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Sélectionner.
         '''</summary>
         Friend Shared ReadOnly Property _select() As String
             Get
@@ -137,7 +137,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Deselectionner.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Désélectionner.
         '''</summary>
         Friend Shared ReadOnly Property deselect() As String
             Get
@@ -155,7 +155,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Executer.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Exécuter.
         '''</summary>
         Friend Shared ReadOnly Property execute() As String
             Get
@@ -164,7 +164,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Plein Ecran.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Plein Écran.
         '''</summary>
         Friend Shared ReadOnly Property fullscreen() As String
             Get
@@ -254,7 +254,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Resolution.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Résolution.
         '''</summary>
         Friend Shared ReadOnly Property resolution() As String
             Get
@@ -290,7 +290,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Selectionner/Executer.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Sélectionner/Exécuter.
         '''</summary>
         Friend Shared ReadOnly Property select_execute() As String
             Get
@@ -299,7 +299,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Parametres.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Paramètres.
         '''</summary>
         Friend Shared ReadOnly Property settings() As String
             Get
@@ -353,7 +353,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Consulta uma cadeia de caracteres localizada semelhante a Tu as Gagne!.
+        '''  Consulta uma cadeia de caracteres localizada semelhante a Tu as Gagné!.
         '''</summary>
         Friend Shared ReadOnly Property you_won() As String
             Get
