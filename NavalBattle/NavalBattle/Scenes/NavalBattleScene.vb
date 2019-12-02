@@ -15,7 +15,6 @@ Public Class NavalBattleScene
     Private font As SpriteFont
 
     Private navalGame As NavalGame
-    Private game As Game
 
     Private putShipContext As GUIContext
     Private winAndLoseGameContext As GUIContext
@@ -46,9 +45,11 @@ Public Class NavalBattleScene
     Private chanceMapViewer As ChanceMapViewer
 
     Private resource As Resources.ResourceManager
+    Private _game As Game
 
     Private shoot As SoundEffect
-    Private Sub SetLanguage()
+    Public Sub SetLanguage(game)
+        _game = game
         If game IsNot Nothing AndAlso game.language IsNot Nothing Then
             Select Case (game.language)
                 Case "pt-BR"
@@ -296,7 +297,7 @@ Public Class NavalBattleScene
     End Sub
 
     Public Overrides Sub LoadContent()
-        SetLanguage()
+        SetLanguage(_game)
         MyBase.LoadContent()
         labelTexts = CreateTexts()
         CreateControlsViewer()

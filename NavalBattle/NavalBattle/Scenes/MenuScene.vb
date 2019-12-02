@@ -7,7 +7,7 @@ Public Class MenuScene
     Private naval As Texture2D
 
     Private texts As String()
-    Private game As Game
+    Public game As Game
 
     Private contextSizeMap As GUIContext
     Private contextSettings As GUIContext
@@ -77,7 +77,9 @@ Public Class MenuScene
     End Sub
 
     Private Sub OkButton(controller As GUIContext, obj As GUIObject, axisValue As Single, axis As Axis)
-        ScreenManager.Instance.ChangeScene(New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value))
+        Dim nb As NavalBattleScene = New NavalBattleScene(Me, numberSelectorX.Value, numberSelectorY.Value)
+        nb.SetLanguage(game)
+        ScreenManager.Instance.ChangeScene(nb)
         ScreenManager.Instance.Current.Updates.Add(bk)
         ScreenManager.Instance.Current.Updates.Add(bk)
         Camera.Drawings.Add(bk)
