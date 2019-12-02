@@ -133,10 +133,10 @@
     <value>Alterar</value>
   </data>
   <data name="deselect" xml:space="preserve">
-    <value>Sair da Selecao</value>
+    <value>Sair da Seleção</value>
   </data>
   <data name="destroyer" xml:space="preserve">
-    <value>Encouracado</value>
+    <value>Encouraçado</value>
   </data>
   <data name="execute" xml:space="preserve">
     <value>Executar</value>
@@ -163,7 +163,7 @@
     <value>Batalha Naval</value>
   </data>
   <data name="place" xml:space="preserve">
-    <value>Posicionar Embarcacao</value>
+    <value>Posicionar Embarcação</value>
   </data>
   <data name="play" xml:space="preserve">
     <value>Jogar</value>
@@ -175,7 +175,7 @@
     <value>Jogador 2</value>
   </data>
   <data name="resolution" xml:space="preserve">
-    <value>Resolucao</value>
+    <value>Resolução</value>
   </data>
   <data name="return" xml:space="preserve">
     <value>Voltar</value>
@@ -184,7 +184,7 @@
     <value>Pressione  para voltar ao menu.</value>
   </data>
   <data name="rotate" xml:space="preserve">
-    <value>Girar Embarcacao</value>
+    <value>Girar Embarcação</value>
   </data>
   <data name="see_maps" xml:space="preserve">
     <value>Pressione  para ver os mapas.</value>
@@ -196,7 +196,7 @@
     <value>Selecionar/Executar</value>
   </data>
   <data name="settings" xml:space="preserve">
-    <value>Configuracoes</value>
+    <value>Configurações</value>
   </data>
   <data name="submarine" xml:space="preserve">
     <value>Submarino</value>
@@ -211,9 +211,9 @@
     <value>Largura</value>
   </data>
   <data name="you_lost" xml:space="preserve">
-    <value>Voce Perdeu!</value>
+    <value>Você Perdeu!</value>
   </data>
   <data name="you_won" xml:space="preserve">
-    <value>Voce Ganhou!</value>
+    <value>Você Ganhou!</value>
   </data>
 </root>

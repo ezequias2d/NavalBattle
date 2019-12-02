@@ -133,19 +133,19 @@
     <value>Changer</value>
   </data>
   <data name="deselect" xml:space="preserve">
-    <value>Deselectionner</value>
+    <value>Désélectionner</value>
   </data>
   <data name="destroyer" xml:space="preserve">
     <value>Sous-Marin</value>
   </data>
   <data name="execute" xml:space="preserve">
-    <value>Executer</value>
+    <value>Exécuter</value>
   </data>
   <data name="exit" xml:space="preserve">
     <value>Quitter</value>
   </data>
   <data name="fullscreen" xml:space="preserve">
-    <value>Plein Ecran</value>
+    <value>Plein Écran</value>
   </data>
   <data name="height" xml:space="preserve">
     <value>Hauteur</value>
@@ -175,7 +175,7 @@
     <value>Joueur 2</value>
   </data>
   <data name="resolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Résolution</value>
   </data>
   <data name="return" xml:space="preserve">
     <value>Retourner</value>
@@ -190,13 +190,13 @@
     <value>Appuyez sur  pour voir les cartes.</value>
   </data>
   <data name="select" xml:space="preserve">
-    <value>Selectionner</value>
+    <value>Sélectionner</value>
   </data>
   <data name="select_execute" xml:space="preserve">
-    <value>Selectionner/Executer</value>
+    <value>Sélectionner/Exécuter</value>
   </data>
   <data name="settings" xml:space="preserve">
-    <value>Parametres</value>
+    <value>Paramètres</value>
   </data>
   <data name="submarine" xml:space="preserve">
     <value>Torpilleur</value>
@@ -214,6 +214,6 @@
     <value>Tu as Perdu!</value>
   </data>
   <data name="you_won" xml:space="preserve">
-    <value>Tu as Gagne!</value>
+    <value>Tu as Gagné!</value>
   </data>
 </root>
