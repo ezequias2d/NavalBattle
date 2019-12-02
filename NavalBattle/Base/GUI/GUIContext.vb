@@ -233,9 +233,9 @@ Public Class GUIContext
             _VerticalLine.Draw(spriteBatch, New Vector2(_CursorPosition.X, posScreen.Y) - _VerticalLine.origin, New Vector2(1, scaleY), 0, LayerDetph + layerDepthDelta + 10)
 
             If CursorMode = CursorMode.Arrow Then
-                CursorArrow.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
+                CursorArrow.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, UShort.MaxValue / 2)
             ElseIf CursorMode = CursorMode.Clove Then
-                CursorClove.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, LayerDetph + layerDepthDelta + 11)
+                CursorClove.Draw(spriteBatch, New Vector2(_CursorPosition.X, _CursorPosition.Y), Scale * scaleDelta, Angle + angleDelta, UShort.MaxValue / 2)
             End If
         End If
 
@@ -568,6 +568,7 @@ Public Class GUIContext
         focusStack.Clear()
         lastFocused.Focus = False
         lastFocused = Me
+        Me.Focus = True
     End Sub
 
     ''' <summary>
@@ -599,6 +600,7 @@ Public Class GUIContext
     ''' </summary>
     Public Sub Clear()
         Controllers.Clear()
+        ResetFocus()
         negativeCounter = 0
     End Sub
 End Class

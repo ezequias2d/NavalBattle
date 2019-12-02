@@ -11,7 +11,7 @@
     <AssemblyName>NavalBattle</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -80,9 +80,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -109,6 +106,8 @@
     <Compile Include="Base\GUI\Components\GUISprite.vb" />
     <Compile Include="Base\GUI\Components\NumberSelector.vb" />
     <Compile Include="Base\GUI\Components\ColorPainel.vb" />
+    <Compile Include="Base\GUI\Components\Check.vb" />
+    <Compile Include="Base\GUI\Components\SimpleAlternator.vb" />
     <Compile Include="Base\GUI\CursorMode.vb" />
     <Compile Include="Base\GUI\GUIController.vb" />
     <Compile Include="Base\Input\AxisEqualityComparer.vb" />
@@ -135,13 +134,32 @@
     <Compile Include="Base\Graphic\Sprite\Sprite.vb" />
     <Compile Include="Base\Graphic\Tilemap.vb" />
     <Compile Include="Base\ScreenManager.vb" />
+    <Compile Include="enEN.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>enEN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="esES.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>esES.resx</DependentUpon>
+    </Compile>
+    <Compile Include="frFR.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>frFR.resx</DependentUpon>
+    </Compile>
     <Compile Include="Game.vb" />
-    <Compile Include="NavalBattle.vb" />
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resource1.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -167,7 +185,6 @@
     <Compile Include="NavalBattle\AI\AI1\Tools.vb" />
     <Compile Include="NavalBattle\AI\IAIMap.vb" />
     <Compile Include="NavalBattle\AI\IAIPlayer.vb" />
-    <Compile Include="NavalBattle\MultiSounds.vb" />
     <Compile Include="NavalBattle\Enum\HouseStatus.vb" />
     <Compile Include="NavalBattle\Enum\Orientation.vb" />
     <Compile Include="NavalBattle\Enum\PlayerID.vb" />
@@ -176,20 +193,50 @@
     <Compile Include="NavalBattle\Game\Map.vb" />
     <Compile Include="NavalBattle\Game\NavalGame.vb" />
     <Compile Include="NavalBattle\GUI\AIStatusViewer.vb" />
+    <Compile Include="NavalBattle\GUI\BackgroundMenu.vb" />
     <Compile Include="NavalBattle\GUI\ChanceMapViewer.vb" />
     <Compile Include="NavalBattle\GUI\ControlsViewer.vb" />
     <Compile Include="NavalBattle\GUI\NavalMap.vb" />
     <Compile Include="NavalBattle\Enum\Ship.vb" />
-    <Compile Include="NavalBattle\Scenes\CreditsScene.vb" />
     <Compile Include="NavalBattle\Scenes\MenuScene.vb" />
     <Compile Include="NavalBattle\Scenes\NavalBattleScene.vb" />
+    <Compile Include="ptBR.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ptBR.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="enEN.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>enEN.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="esES.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>esES.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frFR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>frFR.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resource1.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ptBR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ptBR.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -69,3 +69,15 @@
 /processorParam:TextureFormat=Color
 /build:naval2.png
 
+#begin somdefundo.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:somdefundo.wav
+
+#begin tiro.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:tiro.wav
+

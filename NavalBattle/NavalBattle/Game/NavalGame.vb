@@ -79,7 +79,6 @@
                 mapPlayer1.Attack(x, y)
                 aux2 = mapPlayer1.IsHitted(x, y)
         End Select
-        My.Computer.Audio.Play("..\Data\tiro.wav", AudioPlayMode.WaitToComplete)
         If (Not aux1) And aux2 Then
             _LastHitted = True
         Else

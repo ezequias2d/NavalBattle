@@ -63,16 +63,22 @@
         Next
     End Sub
 
-    Public Sub IsolateLargerHouses()
+    Public Function AVG() As ULong
         Dim med As ULong = 0
         Dim div As ULong = 0
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
-                med += _map(i, j)
-                div += 1
+                If _map(i, j) > 0 Then
+                    med += _map(i, j)
+                    div += 1
+                End If
             Next
         Next
-        med = med / div
+        Return med / div
+    End Function
+
+    Public Sub IsolateLargerHouses()
+        Dim med As ULong = AVG()
 
         For i As Integer = 0 To _width - 1
             For j As Integer = 0 To _height - 1
@@ -97,7 +103,7 @@
         Next
     End Sub
 
-    Private Sub ScaleDown(minimum As Single)
+    Public Sub ScaleDown(minimum As Single)
         Dim mini As ULong = Min()
         If mini > minimum Then
             For i As Integer = 0 To _width - 1
@@ -414,5 +420,24 @@
             Next
         Next
         Return True
+    End Function
+
+    ''' <summary>
+    ''' Verifica se existe uma casa com valor maior que a media na porcetagem descrita por value.
+    ''' </summary>
+    ''' <param name="value"> Valorde 0.0F a 1.0F </param>
+    ''' <returns></returns>
+    Public Function ExistPercentageDiscrepancyValue(value As Single) As Boolean
+        If value >= 0.0 AndAlso value <= 1.0F Then
+            Dim avg As ULong = Me.AVG()
+            For i = 0 To Width - 1
+                For j = 0 To Height - 1
+                    If _map(i, j) > avg AndAlso _map(i, j) - avg > (avg * value) Then
+                        Return True
+                    End If
+                Next
+            Next
+        End If
+        Return False
     End Function
 End Structure
