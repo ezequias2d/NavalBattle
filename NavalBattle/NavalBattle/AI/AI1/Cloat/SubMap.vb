@@ -136,16 +136,9 @@ Public Structure SubMap
 
         If cloatPool.Count = 0 Then
             Dim subMap As SubMap = New SubMap(a, k)
+
             If Not aiMaps.Contains(subMap) Then
                 aiMaps.Add(subMap)
-            Else
-                For Each mapAux In aiMaps
-                    If subMap.Equals(mapAux) Then
-                        aiMaps.Remove(mapAux)
-                        aiMaps.Add(subMap)
-                        Exit For
-                    End If
-                Next
             End If
         Else
             k += 1

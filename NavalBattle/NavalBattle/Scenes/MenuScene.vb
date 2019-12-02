@@ -221,7 +221,7 @@ Public Class MenuScene
     Private Function CreateContextSizeMap() As GUIContext
         Dim context As GUIContext = New GUIContext(Camera.InternalDimensions)
 
-        numberSelectorX = New NumberSelector(0, 0, 0, Vector2.Zero, 6, 20)
+        numberSelectorX = New NumberSelector(0, 0, 0, Vector2.Zero, 6, 40)
         numberSelectorY = New NumberSelector(1, 0, 1, Vector2.Zero, 6, 20)
         Dim button As Button = New Button(2, 0, 2, Vector2.Zero, "Ok!", Vector2.One)
 
